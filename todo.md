@@ -1,4 +1,7 @@
 - Notifications top right
 - Popup for new exam entry
 - animate exam deletion
+- sounds
+- reading time
+- extra timers
 - 
