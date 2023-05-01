@@ -1,203 +1,463 @@
 <script lang="ts">
-// Make a method that finds the current time and writes it into the varaibale "timestamp" that updates itself every second
+import { defineComponent } from 'vue'
+import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue'
 export default ({
-  data () {
-    return {
-      icon: 'error',
-      title: "Error",
-      text: "This is an error message",
-      timestamp: '',
-      show: false,
-      selectedPeople: [],
-      indeterminate: false,
-      checked: false,
-      isOpen: [],
-      people : [
-        { id: "swrfdsfdf",name: 'Physics Paper 2', start: '9:36', end: '10:36', duration: '1:00', timeleft: '0:30', started: false },
-        { id: "112dferfw31", name: 'Maths Paper 1', start: '9:36', end: '10:36', duration: '2:00', timeleft: '0:30', started: false },
-        { id: "2qdfswer", name: 'English Paper 2', start: '9:36', end: '10:36', duration: '2:15', timeleft: '0:30', started: false },
-        { id: "3wsdfeqr", name: 'Physics', start: '9:36', end: '10:36', duration: '1:00', timeleft: '0:30', started: false },
-        { id: "4fsdfdferf", name: 'Physics', start: '9:36', end: '10:36', duration: '1:00', timeleft: '0:30', started: false },
-        { id: "5edsfwtgw", name: 'Physics', start: '9:36', end: '10:36', duration: '1:00', timeleft: '0:30', started: false },
-        { id: "6esdfwrgwe", name: 'Physics', start: '9:36', end: '10:36', duration: '1:00', timeleft: '0:30', started: false },
-        { id: "7wsdfergwe", name: 'Physics', start: '9:36', end: '10:36', duration: '1:00', timeleft: '0:30', started: false },
-        { id: "8esdwrg", name: 'Physics', start: '9:36', end: '10:36', duration: '1:00', timeleft: '0:30', started: false },
-        { id: "9ssddswdf", name: 'Physics', start: '9:36', end: '10:36', duration: '1:00', timeleft: '0:30', started: false },
-      ],
-      test: 'test',
-    }
-  },
-  mounted() {
-    this.updateTime();
-    // set time left to duration
-    for (var i = 0; i < this.people.length; i++) {
-      this.people[i].timeleft = this.people[i].duration;
-    }
-    // check if there is a list of people in local storage
-    // if (localStorage.getItem('people')) {
-    //   // if there is, then load it into the people array
-    //   this.people = JSON.parse(localStorage.getItem('people') || '{}');
-    // }
-    setInterval(this.updateTime, 100);
-  },
-  watch: {
-    indeterminate () {
-      this.selectedPeople.value.length > 0 && this.selectedPeople.value.length < this.people.length
+    name: 'Modal',
+    components: {
+      Dialog,
+      DialogPanel,
+      DialogTitle,
+      TransitionChild,
+      TransitionRoot
     },
-  },
-  methods: {
-    updateTime() {
-      var d = new Date();
-      var n = d.toLocaleTimeString();
-      this.timestamp = n;
-    },
+    data() {
+        return {
+            // New Exams
+            newexamname: "",
+            newexamduration: "",
+            newexamplannedstart: "",
+            newexamabout: "",
+            // Options
+            newexamextratimeenabled: false,
+            newexamreadingtimeenabled: false,
+            newexamextratime: "",
+            newexamreadingtime: "",
+            newexamminwarning: "5",
 
-    selectAllPeople() {
-      // select or deselect all people by storing all id's in the selectedPeople array
-      if (this.selectedPeople.length == this.people.length) {
-        // if all people are selected, deselect them all
-        this.selectedPeople = [];
-      } else {
-        // if not all people are selected, select them all
-        this.selectedPeople = [];
+            // Notifications
+            icon: "error",
+            title: "Error",
+            text: "This is an error message",
+
+            // Other Stuff
+            timestamp: "",
+            show: false,
+            open: false,
+            selectedPeople: [],
+            indeterminate: false,
+            checked: false,
+            isOpen: [],
+            people: [
+                { id: "swrfdsfdf", name: "Physics Paper 2", start: "9:36", end: "10:36", duration: "1:00", timeleft: "0:30", started: false, about: "", extratimeenabled: false, readingtimeenabled: false, extratime: "", readingtime: "", minwarning: "5", status: "inactive" },
+            ],
+            test: "test",
+        };
+    },
+    mounted() {
+        this.updateTime();
+        // set time left to duration
         for (var i = 0; i < this.people.length; i++) {
-          this.selectedPeople.push(this.people[i].id);
+            this.people[i].timeleft = this.people[i].duration;
         }
-      }
-      
-      
+        // check if there is a list of people in local storage
+        // if (localStorage.getItem('people')) {
+        //   // if there is, then load it into the people array
+        //   this.people = JSON.parse(localStorage.getItem('people') || '{}');
+        // }
+        setInterval(this.updateTime, 100);
     },
-    popup(id: string) {
-      // check if id is in the array if not add id, if it is remove it
-      if (this.isOpen.includes(id)) {
-        // remove id from array
-        this.isOpen.splice(this.isOpen.indexOf(id), 1);
-      } else {
-        // add id to array
-        this.isOpen.push(id);
-      }
-      
-    },
-    notification(icon: string, title: string, text: string) {
-      // show notification
-      this.show = false;
-      this.icon = icon;
-      this.title = title;
-      this.text = text;
-      this.show = true;
-      setTimeout(() => {
-        this.show = false;
-      }, 2000);
-    },
-    deleteButton(personid: string) {
-      // delete the person with the id personid
-      // find the index of the person in the people array
-      var personIdx = this.people.findIndex(person => person.id == personid);
-      // delete the person
-      this.people.splice(personIdx, 1);
-      // also save it to local storage
-      localStorage.setItem('people', JSON.stringify(this.people));
-      this.notification('success', 'Exam Deleted', 'Exam has been removed from the list');
-    },
-    deleteSelected() {
-      // delete all selected people
-      console.log("this.selectedPeople");
-      for (var i = 0; i < this.selectedPeople.length; i++) {
-        // find the index of the person in the people array
-        var personIdx = this.people.findIndex(person => person.id == this.selectedPeople[i]);
-        // delete the person
-        this.people.splice(personIdx, 1);
-      }
-      // also save it to local storage
-      localStorage.setItem('people', JSON.stringify(this.people));
-    },    // Method that is called when the delete button is pressed and then deletes the according person from the list
-    deletePerson(personIdx: number) {
-      this.people.splice(personIdx, 1);
-      // also save it to local storage
-      localStorage.setItem('people', JSON.stringify(this.people));
-    },
-    stopExam(personIdx: string) {
-      console.log('stop exam')
+    watch: {
+        indeterminate() {
+            this.selectedPeople.value.length > 0 && this.selectedPeople.value.length < this.people.length;
+        },
+        newexamduration() {
+            // watch the duration and replace a : after the first character to have it in H:MM format, but make a backspace work and allow a max of 4 characters
+            let realNumber = this.newexamduration?.replace(/:/gi, '')
 
+            // Generate dashed number but only add a dash after the first one, but this also creates a dash after every character
+            if (realNumber.length != 0) {
+              if (realNumber.length < 3) {
+                var dashedNumber = realNumber.replace(/(.{1,1})/g, "$1:").slice(0, -1)
+                this.newexamduration = dashedNumber
+              }
+            }
+            // also limit it to only 4 characters
+            if (realNumber.length > 3) {
+              this.newexamduration = this.newexamduration.slice(0, -1)
+            }
+            // and only allow numbers
+            if (isNaN(Number(realNumber))) {
+              this.newexamduration = this.newexamduration.slice(0, -1)
+            }
+        },
+        // watch the isOpen array and if it changes wait three seconds and then clear it to close all the open modals
+        isOpen: {
+            deep: true,
+            handler() {
+                setTimeout(() => {
+                    this.isOpen = [];
+                }, 3000);
+            }
+            
+          }
     },
-    // When the button is pressed the exam starts, which should start a timer and set the start time for an exam and calculate the end time using the duration
-    startExam(personIdx: string) {
-      console.log(personIdx)
-      const newpersonid = personIdx;
-      // find id of array based on its id
-      var personIdx = this.people.findIndex(person => person.id == personIdx);
-      this.people[personIdx].started = true;
-      console.log(this.people[personIdx].started)
-      // set the start time
-      this.people[personIdx].start = this.timestamp;
-      // calculate the end time of the exam by adding the duration to the start time (you cant just add the duration because it is a string)
-      // get the current time
-      var start = new Date();
-      var end = new Date();
-      // calculate the end time by adding the duration to the start time and also calculate the start time without the seconds
-      var duration = this.people[personIdx].duration.split(':');
-      end.setHours(end.getHours() + parseInt(duration[0]));
-      end.setMinutes(end.getMinutes() + parseInt(duration[1]));
-      // set the end time
-      this.people[personIdx].end = end.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-      // remove the seconds at the end
-      this.people[personIdx].end = this.people[personIdx].end.slice(0, -3);
-      // remove the seconds at the end
-      this.people[personIdx].start = start.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-      // remove the seconds at the end
-      this.people[personIdx].start = this.people[personIdx].start.slice(0, -3);
+    methods: {
+        updateTime() {
+            var d = new Date();
+            var n = d.toLocaleTimeString();
+            this.timestamp = n;
+        },
+        editButton() {
+        },
+        openModal() {
+            // reset new exam form
+            this.newexamname = "";
+            this.newexamduration = "";
+            this.newexamplannedstart = "";
+            this.newexamabout = "";
+            this.newexamextratimeenabled = false;
+            this.newexamreadingtimeenabled = false;
+            this.newexamextratime = "";
+            this.newexamreadingtime = "";
+            this.newexamminwarning = "5";
+            // open modal
+            this.open = true;
+        },
+        addExam() {
+          // check if all fields are filled in
+          if (this.newexamname == "" || this.newexamduration == "" || this.newexamplannedstart == "") {
+            // show notification
+            this.notification("error", "Error", "Please fill in all fields");
+          }
+          else {
+            // add exam to people array
+            // calculate end time by converting into minutes and hours and adding the duration and adding an hour if the minutes are over 60
+            var start = this.newexamplannedstart.split(":");
+            var duration = this.newexamduration.split(":");
+            var end = parseInt(start[0]) + parseInt(duration[0]) + ":" + (parseInt(start[1]) + parseInt(duration[1]));
+            if (parseInt(end.split(":")[1]) >= 60) {
+              end = (parseInt(end.split(":")[0]) + 1) + ":" + (parseInt(end.split(":")[1]) - 60);
+            }
+            // add exam to people array
+            this.people.push({
+              id: Math.random().toString(36).substr(2, 9),
+              name: this.newexamname,
+              start: this.newexamplannedstart,
+              end: end,
+              duration: this.newexamduration,
+              timeleft: this.newexamduration,
+              started: false,
+              about: this.newexamabout,
+              extratimeenabled: this.newexamextratimeenabled,
+              readingtimeenabled: this.newexamreadingtimeenabled,
+              extratime: this.newexamextratime,
+              readingtime: this.newexamreadingtime,
+              minwarning: this.newexamminwarning,
+              status: "inactive"
+            });
+            this.open = false;
+            // show notification
+            this.notification("success", "Exam Added", this.newexamname + " has been added");
+            // save people array to local storage
+            localStorage.setItem("people", JSON.stringify(this.people));
+            // close modal
+          }
 
-
-      // call the function that calculates the time left and send the needed variables
-      this.calculateTimeLeft(newpersonid, start, end);
-      // also save it to local storage
-      localStorage.setItem('people', JSON.stringify(this.people));
+        },
+        duplicateButton(personid: string) {
+            // find person with id
+            var personIdx = this.people.find(person => person.id == personid);
+            var personId = this.people.findIndex(person => person.id == personid);
+            // duplicate person
+            var newPerson = JSON.parse(JSON.stringify(personIdx));
+            // add new person to people array
+            this.people.push(newPerson);
+            // put make the id a random 8 digit uuid
+            this.people[this.people.length - 1].id = Math.random().toString(36).substr(2, 9);
+            // show notification
+            this.notification("success", "Exam Duplicated", this.people[personId].name + " has been duplicated");
+            // save people array to local storage
+            localStorage.setItem("people", JSON.stringify(this.people));
+        },
+        selectAllPeople() {
+            // select or deselect all people by storing all id's in the selectedPeople array
+            if (this.selectedPeople.length == this.people.length) {
+                // if all people are selected, deselect them all
+                this.selectedPeople = [];
+            }
+            else {
+                // if not all people are selected, select them all
+                this.selectedPeople = [];
+                for (var i = 0; i < this.people.length; i++) {
+                    this.selectedPeople.push(this.people[i].id);
+                }
+            }
+        },
+        popup(id: string) {
+            // check if id is in the array if not add id, if it is remove it
+            if (this.isOpen.includes(id)) {
+                // remove id from array
+                this.isOpen.splice(this.isOpen.indexOf(id), 1);
+            }
+            else {
+                // add id to array
+                this.isOpen.push(id);
+            }
+        },
+        notification(icon: string, title: string, text: string) {
+            // show notification
+            this.show = false;
+            this.icon = icon;
+            this.title = title;
+            this.text = text;
+            this.show = true;
+            setTimeout(() => {
+                this.show = false;
+            }, 2000);
+        },
+        deleteButton(personid: string) {
+            // delete the person with the id personid
+            // find the index of the person in the people array
+            var personIdx = this.people.findIndex(person => person.id == personid);
+            this.notification("success", "Exam Deleted", this.people[personIdx].name + " has been deleted");
+            // delete the person
+            this.people.splice(personIdx, 1);
+            // also save it to local storage
+            localStorage.setItem("people", JSON.stringify(this.people));
+        },
+        deleteSelected() {
+            // delete all selected people
+            console.log("this.selectedPeople");
+            for (var i = 0; i < this.selectedPeople.length; i++) {
+                // find the index of the person in the people array
+                var personIdx = this.people.findIndex(person => person.id == this.selectedPeople[i]);
+                // delete the person
+                this.people.splice(personIdx, 1);
+            }
+            // show notification
+            this.notification("success", "Exams Deleted", "The selected exams have been deleted");
+            // also save it to local storage
+            localStorage.setItem("people", JSON.stringify(this.people));
+        },
+        deletePerson(personIdx: number) {
+            this.people.splice(personIdx, 1);
+            // also save it to local storage
+            localStorage.setItem("people", JSON.stringify(this.people));
+        },
+        stopExam(personIdx: string) {
+            console.log("stop exam");
+        },
+        // When the button is pressed the exam starts, which should start a timer and set the start time for an exam and calculate the end time using the duration
+        startExam(personIdx: string) {
+            console.log(personIdx);
+            const newpersonid = personIdx;
+            // find id of array based on its id
+            var personIdx = this.people.findIndex(person => person.id == personIdx);
+            this.people[personIdx].started = true;
+            console.log(this.people[personIdx].started);
+            // set the start time
+            this.people[personIdx].start = this.timestamp;
+            // calculate the end time of the exam by adding the duration to the start time (you cant just add the duration because it is a string)
+            // get the current time
+            var start = new Date();
+            var end = new Date();
+            // calculate the end time by adding the duration to the start time and also calculate the start time without the seconds
+            var duration = this.people[personIdx].duration.split(":");
+            end.setHours(end.getHours() + parseInt(duration[0]));
+            end.setMinutes(end.getMinutes() + parseInt(duration[1]));
+            // set the end time
+            this.people[personIdx].end = end.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+            // remove the seconds at the end
+            this.people[personIdx].end = this.people[personIdx].end.slice(0, -3);
+            // remove the seconds at the end
+            this.people[personIdx].start = start.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+            // remove the seconds at the end
+            this.people[personIdx].start = this.people[personIdx].start.slice(0, -3);
+            // call the function that calculates the time left and send the needed variables
+            this.calculateTimeLeft(newpersonid, start, end);
+            // also save it to local storage
+            localStorage.setItem("people", JSON.stringify(this.people));
+            this.notification("success", "Exam Started", this.people[personIdx].name + " has been started");
+        },
+        async calculateTimeLeft(personIdx: string, start: Date, end: Date) {
+            setInterval(() => {
+                console.log(this.people);
+                // make sure this updates for each persons id, as when one get deleted, the timer stays locked on the previous list position
+                const newpersonid = this.people.findIndex(person => person.id == personIdx);
+                console.log(newpersonid);
+                // get the current time
+                var now = new Date();
+                // calculate the time left by subtracting the current time from the end time
+                var timeLeft = end.getTime() - now.getTime();
+                // if the time left is less than 0, then the exam is over
+                if (timeLeft < 0) {
+                    // set the time left to 0
+                    this.people[personIdx].timeleft = "00:00";
+                    // set the exam to finished
+                    this.people[personIdx].finished = true;
+                    // also save it to local storage
+                    localStorage.setItem("people", JSON.stringify(this.people));
+                }
+                else {
+                    // if the exam is not over, then calculate the time left
+                    // calculate the hours left
+                    var hoursLeft = Math.floor(timeLeft / 1000 / 60 / 60);
+                    // calculate the minutes left
+                    var minutesLeft = Math.floor(timeLeft / 1000 / 60) - (hoursLeft * 60);
+                    // calculate the seconds left
+                    var secondsLeft = Math.floor(timeLeft / 1000) - (hoursLeft * 60 * 60) - (minutesLeft * 60);
+                    // format the time left
+                    var timeLeftFormatted = hoursLeft.toString().padStart(2, "0") + ":" + minutesLeft.toString().padStart(2, "0") + ":" + secondsLeft.toString().padStart(2, "0");
+                    // remove the seconds at the end
+                    timeLeftFormatted = timeLeftFormatted.slice(0, -3);
+                    // set the time left
+                    this.people[newpersonid].timeleft = timeLeftFormatted;
+                    // also save it to local storage
+                    localStorage.setItem("people", JSON.stringify(this.people));
+                }
+            }, 1000);
+        },
     },
-    async calculateTimeLeft(personIdx: string, start: Date, end: Date) {
-      setInterval(() => {
-        console.log(this.people)
-        // make sure this updates for each persons id, as when one get deleted, the timer stays locked on the previous list position
-        const newpersonid = this.people.findIndex(person => person.id == personIdx);
-        console.log(newpersonid)
-        // get the current time
-        var now = new Date();
-        // calculate the time left by subtracting the current time from the end time
-        var timeLeft = end.getTime() - now.getTime();
-        // if the time left is less than 0, then the exam is over
-        if (timeLeft < 0) {
-          // set the time left to 0
-          this.people[personIdx].timeleft = '00:00';
-          // set the exam to finished
-          this.people[personIdx].finished = true;
-          // also save it to local storage
-          localStorage.setItem('people', JSON.stringify(this.people));
-        } else {
-          // if the exam is not over, then calculate the time left
-          // calculate the hours left
-          var hoursLeft = Math.floor(timeLeft / 1000 / 60 / 60);
-          // calculate the minutes left
-          var minutesLeft = Math.floor(timeLeft / 1000 / 60) - (hoursLeft * 60);
-          // calculate the seconds left
-          var secondsLeft = Math.floor(timeLeft / 1000) - (hoursLeft * 60 * 60) - (minutesLeft * 60);
-          // format the time left
-          var timeLeftFormatted = hoursLeft.toString().padStart(2, '0') + ':' + minutesLeft.toString().padStart(2, '0') + ':' + secondsLeft.toString().padStart(2, '0');
-          // remove the seconds at the end
-          timeLeftFormatted = timeLeftFormatted.slice(0, -3);
-          // set the time left
-          this.people[newpersonid].timeleft = timeLeftFormatted;
-          // also save it to local storage
-          localStorage.setItem('people', JSON.stringify(this.people));
-        }
-      
-      
-        
-        
-      }, 1000);
-    },
-  },
 })
 </script>
+
 <template>
+  <TransitionRoot as="template" :show="open">
+    <Dialog as="div" class="relative z-10" @close="open = false">
+      <TransitionChild as="template" enter="ease-out duration-300" enter-from="opacity-0" enter-to="opacity-100" leave="ease-in duration-200" leave-from="opacity-100" leave-to="opacity-0">
+        <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
+      </TransitionChild>
+
+      <div class="fixed inset-0 z-10 overflow-y-auto">
+        <div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+          <TransitionChild as="template" enter="ease-out duration-300" enter-from="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95" enter-to="opacity-100 translate-y-0 sm:scale-100" leave="ease-in duration-200" leave-from="opacity-100 translate-y-0 sm:scale-100" leave-to="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95">
+            <DialogPanel class="relative transform overflow-hidden rounded-lg bg-white px-4 pt-5 pb-4 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-3xl sm:p-6">
+              <div class="space-y-8 divide-y divide-gray-200">
+                <div class="space-y-8 divide-y divide-gray-200">
+                  <div>
+                    <div>
+                      <h3 class="text-xl font-medium leading-6 text-gray-900">New Exam</h3>
+                      <p class="mt-1 text-sm text-gray-500">Please enter all the details for the new exam.</p>
+                    </div>
+
+                    <div class="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
+                      <div class="sm:col-span-4">
+                        <label for="username" class="block text-sm font-medium text-gray-700">Exam<a class="text-red-600"> *</a></label>
+                        <div class="mt-1 flex rounded-md shadow-sm">
+                          <span class="inline-flex items-center rounded-l-md border border-r-0 border-gray-300 bg-gray-50 px-3 text-gray-500 sm:text-sm">Subject</span>
+                          <input v-model="newexamname" placeholder="Physics Paper 1" type="text" name="examname" id="examname" autocomplete="examname" class="block w-full min-w-0 flex-1 rounded-none rounded-r-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" />
+                        </div>
+                      </div>
+
+                      <div class="sm:col-span-6">
+                        <label for="about" class="block text-sm font-medium text-gray-700">About</label>
+                        <div class="mt-1">
+                          <textarea id="about" name="about" v-model="newexamabout" rows="3" placeholder="Each student recieves one Formula Booklet..." class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" />
+                        </div>
+                        <p class="mt-2 text-sm text-gray-500">Optional</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="pt-8">
+                    <div>
+                      <h3 class="text-lg font-medium leading-6 text-gray-900">Exam Information</h3>
+                      <p class="mt-1 text-sm text-gray-500">Please enter all the time and date information for the exam.</p>
+                    </div>
+                    <div class="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
+                      <div class="sm:col-span-2">
+                        <label for="first-name" class="block text-sm font-medium text-gray-700">Planned Start Time</label>
+                        <div class="mt-1">
+                          <input type="time" name="starttime" placeholder="9:36" v-model="newexamplannedstart" id="starttime" autocomplete="given-name" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" />
+                        </div>
+                      </div>
+
+                      <div class="sm:col-span-2">
+                        <label for="last-name" class="block text-sm font-medium text-gray-700">Duration</label>
+                        <div class="mt-1">
+                          <input type="text" name="Duration" id="duration" v-model="newexamduration" placeholder="2:00" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="pt-8">
+                    <div>
+                      <h3 class="text-lg font-medium leading-6 text-gray-900">Additional Information</h3>
+                      <p class="mt-1 text-sm text-gray-500">Please enter all the additional information for the exam.</p>
+                    </div>
+                    <div class="mt-6">
+                      <fieldset>
+                        <legend class="sr-only">By Email</legend>
+                        <div class="text-base font-medium text-gray-900" aria-hidden="true">Timing Options</div>
+                        <div class="mt-4 space-y-4">
+                          <div class="relative flex items-start">
+                            <div class="flex h-5 items-center">
+                              <input id="comments" name="comments" type="checkbox" v-model="newexamextratimeenabled" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500" />
+                            </div>
+                            <div class="ml-3 text-sm">
+                              <label for="comments" class="font-semibold text-gray-700">Extra Time</label>
+                              <p class="text-gray-500">Check to enable extra time and select the percentage.</p>
+                              <div class="mt-2">
+                                <transition enter-active-class="transform ease-out duration-400 transition" enter-from-class="translate-y-4 opacity-0 sm:translate-y-0 sm:translate-x-2" enter-to-class="translate-y-0 opacity-100 sm:translate-x-0" leave-active-class="transition ease-in duration-100" leave-from-class="opacity-100" leave-to-class="opacity-0">
+                                <select v-if="newexamextratimeenabled === true" id="extratimepercentage" v-model="newexamextratime" class="mt-1 block w-full rounded-md border-gray-300 py-2 pl-3 pr-10 text-base focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm">
+                                  <option>10%</option>
+                                  <option>15%</option>
+                                  <option>20%</option>
+                                  <option selected >25%</option>
+                                  <option>50%</option>
+                                </select>
+                              </transition>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="relative flex items-start">
+                            <div class="flex h-5 items-center">
+                              <input id="candidates" name="candidates" v-model="newexamreadingtimeenabled" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500" />
+                            </div>
+                            <div class="ml-3 text-sm">
+                              <label for="candidates" class="font-medium text-gray-700">Reading Time</label>
+                              <p class="text-gray-500">Check to enable reading time and enter the time</p>
+                              <div class="sm:col-span-2">
+                                <div class="mt-2">
+                                  <transition enter-active-class="transform ease-out duration-400 transition" enter-from-class="translate-y-4 opacity-0 sm:translate-y-0 sm:translate-x-2" enter-to-class="translate-y-0 opacity-100 sm:translate-x-0" leave-active-class="transition ease-in duration-100" leave-from-class="opacity-100" leave-to-class="opacity-0">
+                                  <input v-if="newexamreadingtimeenabled === true" type="text" name="readingtime" v-model="newexamreadingtime" id="readingtime" placeholder='15 min' autocomplete="family-name" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" />
+                                </transition>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </fieldset>
+                      <fieldset class="mt-6">
+                        <legend class="contents text-base font-medium text-gray-900">Reminder Options</legend>
+                        <p class="text-sm text-gray-500">These will show a notification and play a sound.</p>
+                        <div class="mt-4 space-y-4">
+                          <div class="flex items-center">
+                            <input id="push-everything" v-model="newexamminwarning" v-bind:value="'5'" name="push-notifications" type="radio" class="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-500" />
+                            <label for="push-everything" class="ml-3 block text-sm font-medium text-gray-700">5 minutes before end</label>
+                          </div>
+                          <div class="flex items-center">
+                            <input id="push-email" v-model="newexamminwarning" v-bind:value="'30'" name="push-notifications" type="radio" class="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-500" />
+                            <label for="push-email" class="ml-3 block text-sm font-medium text-gray-700">30 minutes before end</label>
+                          </div>
+                          <div class="flex items-center">
+                            <input id="push-nothing" v-model="newexamminwarning" v-bind:value="'35'" name="push-notifications" type="radio" class="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-500" />
+                            <label for="push-nothing" class="ml-3 block text-sm font-medium text-gray-700">30 & 5 minutes before end</label>
+                          </div>
+                          <div class="flex items-center">
+                            <input id="push-nothing" v-model="newexamminwarning" v-bind:value="'0'" name="push-notifications" type="radio" class="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-500" />
+                            <label for="push-nothing" class="ml-3 block text-sm font-medium text-gray-700">No notifications</label>
+                          </div>
+                        </div>
+                      </fieldset>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="pt-5">
+                  <div class="flex justify-end">
+                    <button @click="open = false" class="rounded-md border border-gray-300 bg-white py-2 px-4 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">Cancel</button>
+                    <button @click="addExam" class="ml-3 inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">Add Exam</button>
+                  </div>
+                </div>
+              </div>
+            </DialogPanel>
+          </TransitionChild>
+        </div>
+      </div>
+    </Dialog>
+  </TransitionRoot>
   <div class="px-4 sm:px-6 lg:px-8 lg:pt-8">
     <div class="text-5xl font-bold flex justify-start">Online Exam Timer</div>
     <div class="flex justify-end pt-4">
@@ -225,8 +485,8 @@ export default ({
         <div class="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
           <div class="relative overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
             <div v-if="selectedPeople.length > 0" class="absolute top-0 left-12 flex h-12 items-center space-x-3 bg-gray-50 sm:left-16">
-              <button type="button" class="inline-flex items-center rounded border border-gray-300 bg-white px-2.5 py-1.5 text-xs font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-30">Start Exams</button>
-              <button type="button" class="inline-flex items-center rounded border border-gray-300 bg-white px-2.5 py-1.5 text-xs font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-30" @click="deleteSelected" >Delete</button>
+              <button type="button" class="inline-flex items-center rounded border border-gray-300 bg-white px-2.5 py-1.5 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-30" @click="openModal">Start Exams</button>
+              <button type="button" class="inline-flex items-center rounded border border-gray-300 bg-white px-2.5 py-1.5 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-30" @click="deleteSelected" >Delete</button>
             </div>
             <table class="min-w-full table-fixed divide-y divide-gray-300">
               <thead class="bg-gray-50">
@@ -267,7 +527,9 @@ export default ({
                     {{ person.timeleft }}
                   </td>
                   <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                    <span v-if="person.started" class="inline-flex rounded-full bg-green-100 px-2 text-xs font-semibold leading-5 text-green-800">Active</span>
+                    <span v-if="person.status = 'active'" class="inline-flex rounded-full bg-green-100 px-2 text-xs font-semibold leading-5 text-green-800">Active</span>
+                    <span v-else-if="person.status = 'reading'" class="inline-flex rounded-full bg-yellow-100 px-2 text-xs font-semibold leading-5 text-lightblue-600">Reading Time</span>
+                    <span v-else-if="person.status = 'extra'" class="inline-flex rounded-full bg-blue-100 px-2 text-xs font-semibold leading-5 text-orange-500">Extra Time</span>
                     <span v-else class="inline-flex rounded-full bg-red-100 px-2 text-xs font-semibold leading-5 text-red-800">Inactive</span>
                   </td>
                   <td class="whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
@@ -280,12 +542,12 @@ export default ({
                           <svg v-else class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Pro 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. --><path fill="currentColor" d="M424 216H24C10.75 216 0 205.3 0 192C0 178.7 10.75 168 24 168H424C437.3 168 448 178.7 448 192C448 205.3 437.3 216 424 216zM424 344H24C10.75 344 0 333.3 0 320C0 306.7 10.75 296 24 296H424C437.3 296 448 306.7 448 320C448 333.3 437.3 344 424 344z"/></svg>
                         </MenuButton>
                         <transition v-if="isOpen.includes(person.id)" enter-active-class="transition ease-out duration-100" enter-from-class="transform opacity-0 scale-95" enter-to-class="transform opacity-100 scale-100" leave-active-class="transition ease-in duration-75" leave-from-class="transform opacity-100 scale-100" leave-to-class="transform opacity-0 scale-95">
-                          <MenuItems class="absolute right-0 z-10 mt-10 w-42 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                            <div class="py-1">
+                          <MenuItems class="fixed right-12 z-10 mt-10 w-42 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                            <div class="py-1 top">
                               <MenuItem>
-                                <a @click="item.click" class="hover:bg-gray-100 text-gray-900 block px-4 py-2 text-sm">Change Colour</a>
-                                <a @click="item.click" class="hover:bg-gray-100 text-gray-900 block px-4 py-2 text-sm">Duplicate</a>
+                                <a @click="duplicateButton(person.id)" class="hover:bg-gray-100 text-gray-900 block px-4 py-2 text-sm">Duplicate</a>
                                 <a @click="deleteButton(person.id)" class="hover:bg-gray-100 text-gray-900 block px-4 py-2 text-sm">Delete</a>
+                                <a @click="editButton(person.id)" class="hover:bg-gray-100 text-gray-900 block px-4 py-2 text-sm">Edit</a>
                               </MenuItem>
                             </div>
                           </MenuItems>
