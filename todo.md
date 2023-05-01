@@ -1,0 +1,4 @@
+- Notifications top right
+- Popup for new exam entry
+- animate exam deletion
+- 

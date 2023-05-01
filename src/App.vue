@@ -9,22 +9,17 @@ export default ({
       indeterminate: false,
       checked: false,
       isOpen: [],
-      items: [
-      { name: 'Change Colour', href: '#' },
-      { name: 'Duplicate', href: '#' },
-      { name: 'Delete', href: '#' },
-      ],
       people : [
-        { id: 0,name: 'Physics Paper 2', start: '9:36', end: '10:36', duration: '1:00', timeleft: '0:30', started: false },
-        { id: 1, name: 'Maths Paper 1', start: '9:36', end: '10:36', duration: '2:00', timeleft: '0:30', started: false },
-        { id: 2, name: 'English Paper 2', start: '9:36', end: '10:36', duration: '2:15', timeleft: '0:30', started: false },
-        { id: 3, name: 'Physics', start: '9:36', end: '10:36', duration: '1:00', timeleft: '0:30', started: false },
-        { id: 4, name: 'Physics', start: '9:36', end: '10:36', duration: '1:00', timeleft: '0:30', started: false },
-        { id: 5, name: 'Physics', start: '9:36', end: '10:36', duration: '1:00', timeleft: '0:30', started: false },
-        { id: 6, name: 'Physics', start: '9:36', end: '10:36', duration: '1:00', timeleft: '0:30', started: false },
-        { id: 7, name: 'Physics', start: '9:36', end: '10:36', duration: '1:00', timeleft: '0:30', started: false },
-        { id: 8, name: 'Physics', start: '9:36', end: '10:36', duration: '1:00', timeleft: '0:30', started: false },
-        { id: 9, name: 'Physics', start: '9:36', end: '10:36', duration: '1:00', timeleft: '0:30', started: false },
+        { id: "swrfdsfdf",name: 'Physics Paper 2', start: '9:36', end: '10:36', duration: '1:00', timeleft: '0:30', started: false },
+        { id: "112dferfw31", name: 'Maths Paper 1', start: '9:36', end: '10:36', duration: '2:00', timeleft: '0:30', started: false },
+        { id: "2qdfswer", name: 'English Paper 2', start: '9:36', end: '10:36', duration: '2:15', timeleft: '0:30', started: false },
+        { id: "3wsdfeqr", name: 'Physics', start: '9:36', end: '10:36', duration: '1:00', timeleft: '0:30', started: false },
+        { id: "4fsdfdferf", name: 'Physics', start: '9:36', end: '10:36', duration: '1:00', timeleft: '0:30', started: false },
+        { id: "5edsfwtgw", name: 'Physics', start: '9:36', end: '10:36', duration: '1:00', timeleft: '0:30', started: false },
+        { id: "6esdfwrgwe", name: 'Physics', start: '9:36', end: '10:36', duration: '1:00', timeleft: '0:30', started: false },
+        { id: "7wsdfergwe", name: 'Physics', start: '9:36', end: '10:36', duration: '1:00', timeleft: '0:30', started: false },
+        { id: "8esdwrg", name: 'Physics', start: '9:36', end: '10:36', duration: '1:00', timeleft: '0:30', started: false },
+        { id: "9ssddswdf", name: 'Physics', start: '9:36', end: '10:36', duration: '1:00', timeleft: '0:30', started: false },
       ],
       test: 'test',
     }
@@ -79,6 +74,15 @@ export default ({
       }
       
     },
+    deleteButton(personid: string) {
+      // delete the person with the id personid
+      // find the index of the person in the people array
+      var personIdx = this.people.findIndex(person => person.id == personid);
+      // delete the person
+      this.people.splice(personIdx, 1);
+      // also save it to local storage
+      localStorage.setItem('people', JSON.stringify(this.people));
+    },
     deleteSelected() {
       // delete all selected people
       console.log("this.selectedPeople");
@@ -96,14 +100,18 @@ export default ({
       // also save it to local storage
       localStorage.setItem('people', JSON.stringify(this.people));
     },
-    stopExam(personIdx: number) {
+    stopExam(personIdx: string) {
       console.log('stop exam')
 
     },
     // When the button is pressed the exam starts, which should start a timer and set the start time for an exam and calculate the end time using the duration
-    startExam(personIdx: number) {
-      this.people[personIdx].started = true;
+    startExam(personIdx: string) {
       console.log(personIdx)
+      const newpersonid = personIdx;
+      // find id of array based on its id
+      var personIdx = this.people.findIndex(person => person.id == personIdx);
+      this.people[personIdx].started = true;
+      console.log(this.people[personIdx].started)
       // set the start time
       this.people[personIdx].start = this.timestamp;
       // calculate the end time of the exam by adding the duration to the start time (you cant just add the duration because it is a string)
@@ -125,42 +133,50 @@ export default ({
 
 
       // call the function that calculates the time left and send the needed variables
-      this.calculateTimeLeft(personIdx, start, end);
+      this.calculateTimeLeft(newpersonid, start, end);
       // also save it to local storage
       localStorage.setItem('people', JSON.stringify(this.people));
     },
-    async calculateTimeLeft(personIdx: number, start: Date, end: Date) {
+    async calculateTimeLeft(personIdx: string, start: Date, end: Date) {
       setInterval(() => {
         console.log(this.people)
-        // calculate the minutes and hours left by calculating the diffrance between the end time and the current time
-        // first concvert both the current time and duration into seconds
-        var duration = this.people[personIdx].duration.split(':');
-        var durationSeconds = parseInt(duration[0]) * 3600 + parseInt(duration[1]) * 60;
-        var endSeconds = end.getHours() * 3600 + end.getMinutes() * 60 + end.getSeconds();
-        var startSeconds = start.getHours() * 3600 + start.getMinutes() * 60 + start.getSeconds();
-        var currentSeconds = new Date().getHours() * 3600 + new Date().getMinutes() * 60 + new Date().getSeconds();
-        // calculate the time left in seconds
-        var timeLeftSeconds = endSeconds - currentSeconds;
-        // calculate the time left in minutes
-        var timeLeftMinutes = Math.floor(timeLeftSeconds / 60);
-        // calculate the time left in hours
-        var timeLeftHours = Math.floor(timeLeftMinutes / 60);
-        // calculate the time left in seconds
-        timeLeftSeconds = timeLeftSeconds - timeLeftMinutes * 60;
-        // calculate the time left in minutes
-        timeLeftMinutes = timeLeftMinutes - timeLeftHours * 60;
-        // set the time left
-        // check if seconds or minutes is less than 10 and add a 0 in front if it is
-        if (timeLeftSeconds < 10) {
-          this.people[personIdx].timeleft = timeLeftHours + ':' + timeLeftMinutes + ':0' + timeLeftSeconds;
-        } else if (timeLeftMinutes < 10) {
-          this.people[personIdx].timeleft = timeLeftHours + ':0' + timeLeftMinutes + ':' + timeLeftSeconds;
+        // make sure this updates for each persons id, as when one get deleted, the timer stays locked on the previous list position
+        const newpersonid = this.people.findIndex(person => person.id == personIdx);
+        console.log(newpersonid)
+        // get the current time
+        var now = new Date();
+        // calculate the time left by subtracting the current time from the end time
+        var timeLeft = end.getTime() - now.getTime();
+        // if the time left is less than 0, then the exam is over
+        if (timeLeft < 0) {
+          // set the time left to 0
+          this.people[personIdx].timeleft = '00:00';
+          // set the exam to finished
+          this.people[personIdx].finished = true;
+          // also save it to local storage
+          localStorage.setItem('people', JSON.stringify(this.people));
         } else {
-          this.people[personIdx].timeleft = timeLeftHours + ':' + timeLeftMinutes + ':' + timeLeftSeconds;
+          // if the exam is not over, then calculate the time left
+          // calculate the hours left
+          var hoursLeft = Math.floor(timeLeft / 1000 / 60 / 60);
+          // calculate the minutes left
+          var minutesLeft = Math.floor(timeLeft / 1000 / 60) - (hoursLeft * 60);
+          // calculate the seconds left
+          var secondsLeft = Math.floor(timeLeft / 1000) - (hoursLeft * 60 * 60) - (minutesLeft * 60);
+          // format the time left
+          var timeLeftFormatted = hoursLeft.toString().padStart(2, '0') + ':' + minutesLeft.toString().padStart(2, '0') + ':' + secondsLeft.toString().padStart(2, '0');
+          // remove the seconds at the end
+          timeLeftFormatted = timeLeftFormatted.slice(0, -3);
+          // set the time left
+          this.people[newpersonid].timeleft = timeLeftFormatted;
+          // also save it to local storage
+          localStorage.setItem('people', JSON.stringify(this.people));
         }
+      
+      
         
         
-      }, 100);
+      }, 1000);
     },
   },
 })
@@ -250,8 +266,10 @@ export default ({
                         <transition v-if="isOpen.includes(person.id)" enter-active-class="transition ease-out duration-100" enter-from-class="transform opacity-0 scale-95" enter-to-class="transform opacity-100 scale-100" leave-active-class="transition ease-in duration-75" leave-from-class="transform opacity-100 scale-100" leave-to-class="transform opacity-0 scale-95">
                           <MenuItems class="absolute right-0 z-10 mt-10 w-42 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                             <div class="py-1">
-                              <MenuItem v-for="item in items" :key="item.name">
-                                <a :href="item.href" class="hover:bg-gray-100 text-gray-900 block px-4 py-2 text-sm">{{ item.name }}</a>
+                              <MenuItem>
+                                <a @click="item.click" class="hover:bg-gray-100 text-gray-900 block px-4 py-2 text-sm">Change Colour</a>
+                                <a @click="item.click" class="hover:bg-gray-100 text-gray-900 block px-4 py-2 text-sm">Duplicate</a>
+                                <a @click="deleteButton(person.id)" class="hover:bg-gray-100 text-gray-900 block px-4 py-2 text-sm">Delete</a>
                               </MenuItem>
                             </div>
                           </MenuItems>
