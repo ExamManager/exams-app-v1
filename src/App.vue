@@ -38,7 +38,7 @@ export default ({
             checked: false,
             isOpen: [],
             people: [
-                { id: "swrfdsfdf", name: "Physics Paper 2", start: "9:36", end: "10:36", duration: "1:00", timeleft: "0:30", started: false, about: "", extratimeenabled: false, readingtimeenabled: false, extratime: "", readingtime: "", minwarning: "5", status: "inactive" },
+                { id: "swrfdsfdf", name: "Physics Paper 2", start: "9:36", end: "10:36", duration: "1:00", timeleft: "0:30", started: false, about: "Test", extratimeenabled: true, readingtimeenabled: false, extratime: "", readingtime: "25%", minwarning: "35", status: "inactive" },
             ],
             test: "test",
         };
@@ -80,16 +80,8 @@ export default ({
               this.newexamduration = this.newexamduration.slice(0, -1)
             }
         },
-        // watch the isOpen array and if it changes wait three seconds and then clear it to close all the open modals
-        isOpen: {
-            deep: true,
-            handler() {
-                setTimeout(() => {
-                    this.isOpen = [];
-                }, 3000);
-            }
-            
-          }
+        // a function that watches each person whether they are started, in extra time or in reading time or not started and updates their status
+          
     },
     methods: {
         updateTime() {
@@ -97,7 +89,24 @@ export default ({
             var n = d.toLocaleTimeString();
             this.timestamp = n;
         },
-        editButton() {
+        editButton(personid: string) {
+          this.openModal()
+          // load in all the data from the person
+          // find person with id
+          var personIDx = this.people.findIndex(x => x.id === personid);
+          // load in data
+          this.newexamname = this.people[personIDx].name;
+          this.newexamduration = this.people[personIDx].duration;
+          this.newexamplannedstart = this.people[personIDx].start;
+          this.newexamabout = this.people[personIDx].about;
+          this.newexamextratimeenabled = this.people[personIDx].extratimeenabled;
+          this.newexamreadingtimeenabled = this.people[personIDx].readingtimeenabled;
+          this.newexamextratime = this.people[personIDx].extratime;
+          this.newexamreadingtime = this.people[personIDx].readingtime;
+          this.newexamminwarning = this.people[personIDx].minwarning;
+          // open modal
+
+
         },
         openModal() {
             // reset new exam form
@@ -185,13 +194,18 @@ export default ({
         },
         popup(id: string) {
             // check if id is in the array if not add id, if it is remove it
-            if (this.isOpen.includes(id)) {
-                // remove id from array
-                this.isOpen.splice(this.isOpen.indexOf(id), 1);
-            }
-            else {
-                // add id to array
-                this.isOpen.push(id);
+            // grab the person with the id
+            var personIdx = this.people.findIndex(person => person.id == id);
+
+            if (this.people[personIdx].started === false) {
+              if (this.isOpen.includes(id)) {
+                  // remove id from array
+                  this.isOpen.splice(this.isOpen.indexOf(id), 1);
+              }
+              else {
+                  // add id to array
+                  this.isOpen.push(id);
+              }
             }
         },
         notification(icon: string, title: string, text: string) {
@@ -471,21 +485,35 @@ export default ({
       </div>
     </div>
     
-    <!-- <div class="sm:flex sm:items-center">
-      <div class="sm:flex-auto">
-        <h1 class="text-xl font-semibold text-gray-900">Users</h1>
-        <p class="mt-2 text-sm text-gray-700">A list of all the users in your account including their name, start, end and duration.</p>
+    <div class="sm:flex sm:items-center">
+      
+      <div class="mt-4 space-x-4 sm:mt-0 sm:flex-none">
+        <span class="isolate inline-flex rounded-md shadow-sm">
+          <button type="button" class="relative inline-flex items-center rounded-l-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500" @click="openModal">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="-ml-1 mr-2 h-5 w-5 text-gray-400">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+
+            Add Exam
+          </button>
+          <button type="button" class="relative -ml-px inline-flex items-center rounded-r-md border border-gray-300 bg-white px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500">
+            <span class="sr-only">Sort</span>
+            <!-- Heroicon name: solid/sort-ascending -->
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class=" h-5 w-5 text-gray-700">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M10.343 3.94c.09-.542.56-.94 1.11-.94h1.093c.55 0 1.02.398 1.11.94l.149.894c.07.424.384.764.78.93.398.164.855.142 1.205-.108l.737-.527a1.125 1.125 0 011.45.12l.773.774c.39.389.44 1.002.12 1.45l-.527.737c-.25.35-.272.806-.107 1.204.165.397.505.71.93.78l.893.15c.543.09.94.56.94 1.109v1.094c0 .55-.397 1.02-.94 1.11l-.893.149c-.425.07-.765.383-.93.78-.165.398-.143.854.107 1.204l.527.738c.32.447.269 1.06-.12 1.45l-.774.773a1.125 1.125 0 01-1.449.12l-.738-.527c-.35-.25-.806-.272-1.203-.107-.397.165-.71.505-.781.929l-.149.894c-.09.542-.56.94-1.11.94h-1.094c-.55 0-1.019-.398-1.11-.94l-.148-.894c-.071-.424-.384-.764-.781-.93-.398-.164-.854-.142-1.204.108l-.738.527c-.447.32-1.06.269-1.45-.12l-.773-.774a1.125 1.125 0 01-.12-1.45l.527-.737c.25-.35.273-.806.108-1.204-.165-.397-.505-.71-.93-.78l-.894-.15c-.542-.09-.94-.56-.94-1.109v-1.094c0-.55.398-1.02.94-1.11l.894-.149c.424-.07.765-.383.93-.78.165-.398.143-.854-.107-1.204l-.527-.738a1.125 1.125 0 01.12-1.45l.773-.773a1.125 1.125 0 011.45-.12l.737.527c.35.25.807.272 1.204.107.397-.165.71-.505.78-.929l.15-.894z" />
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+
+          </button>
+        </span>
       </div>
-      <div class="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
-        <button type="button" class="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto">Add user</button>
-      </div>
-    </div> -->
-    <div class="mt-8 flex flex-col">
+    </div>
+    <div class="mt-4 flex flex-col">
       <div class="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
         <div class="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
           <div class="relative overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
             <div v-if="selectedPeople.length > 0" class="absolute top-0 left-12 flex h-12 items-center space-x-3 bg-gray-50 sm:left-16">
-              <button type="button" class="inline-flex items-center rounded border border-gray-300 bg-white px-2.5 py-1.5 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-30" @click="openModal">Start Exams</button>
+              <button type="button" class="inline-flex items-center rounded border border-gray-300 bg-white px-2.5 py-1.5 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-30" @click="startmultipleExams">Start Exams</button>
               <button type="button" class="inline-flex items-center rounded border border-gray-300 bg-white px-2.5 py-1.5 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-30" @click="deleteSelected" >Delete</button>
             </div>
             <table class="min-w-full table-fixed divide-y divide-gray-300">
@@ -527,10 +555,10 @@ export default ({
                     {{ person.timeleft }}
                   </td>
                   <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                    <span v-if="person.status = 'active'" class="inline-flex rounded-full bg-green-100 px-2 text-xs font-semibold leading-5 text-green-800">Active</span>
-                    <span v-else-if="person.status = 'reading'" class="inline-flex rounded-full bg-yellow-100 px-2 text-xs font-semibold leading-5 text-lightblue-600">Reading Time</span>
-                    <span v-else-if="person.status = 'extra'" class="inline-flex rounded-full bg-blue-100 px-2 text-xs font-semibold leading-5 text-orange-500">Extra Time</span>
-                    <span v-else class="inline-flex rounded-full bg-red-100 px-2 text-xs font-semibold leading-5 text-red-800">Inactive</span>
+                    <span v-if="person.status === 'active'" class="inline-flex rounded-full bg-green-100 px-2 text-xs font-semibold leading-5 text-green-800">Active</span>
+                    <span v-else-if="person.status === 'reading'" class="inline-flex rounded-full bg-yellow-100 px-2 text-xs font-semibold leading-5 text-lightblue-600">Reading Time</span>
+                    <span v-else-if="person.status === 'extra'" class="inline-flex rounded-full bg-blue-100 px-2 text-xs font-semibold leading-5 text-orange-500">Extra Time</span>
+                    <span v-else-if="person.status === 'inactive'" class="inline-flex rounded-full bg-red-100 px-2 text-xs font-semibold leading-5 text-red-800">Inactive</span>
                   </td>
                   <td class="whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
                     <div class="inline-flex rounded-md shadow-sm">
@@ -542,8 +570,8 @@ export default ({
                           <svg v-else class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Pro 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. --><path fill="currentColor" d="M424 216H24C10.75 216 0 205.3 0 192C0 178.7 10.75 168 24 168H424C437.3 168 448 178.7 448 192C448 205.3 437.3 216 424 216zM424 344H24C10.75 344 0 333.3 0 320C0 306.7 10.75 296 24 296H424C437.3 296 448 306.7 448 320C448 333.3 437.3 344 424 344z"/></svg>
                         </MenuButton>
                         <transition v-if="isOpen.includes(person.id)" enter-active-class="transition ease-out duration-100" enter-from-class="transform opacity-0 scale-95" enter-to-class="transform opacity-100 scale-100" leave-active-class="transition ease-in duration-75" leave-from-class="transform opacity-100 scale-100" leave-to-class="transform opacity-0 scale-95">
-                          <MenuItems class="fixed right-12 z-10 mt-10 w-42 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                            <div class="py-1 top">
+                          <MenuItems class="fixed right-14 z-10 mt-10 w-42 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                            <div class="py-1 ">
                               <MenuItem>
                                 <a @click="duplicateButton(person.id)" class="hover:bg-gray-100 text-gray-900 block px-4 py-2 text-sm">Duplicate</a>
                                 <a @click="deleteButton(person.id)" class="hover:bg-gray-100 text-gray-900 block px-4 py-2 text-sm">Delete</a>
