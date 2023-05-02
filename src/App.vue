@@ -30,7 +30,9 @@ export default ({
             text: "This is an error message",
 
             // Other Stuff
+            popupedit: false,
             timestamp: "",
+            datestamp: "",
             show: false,
             open: false,
             selectedPeople: [],
@@ -38,12 +40,13 @@ export default ({
             checked: false,
             isOpen: [],
             people: [
-                { id: "swrfdsfdf", name: "Physics Paper 2", start: "9:36", end: "10:36", duration: "1:00", timeleft: "0:30", started: false, about: "Test", extratimeenabled: true, readingtimeenabled: false, extratime: "", readingtime: "25%", minwarning: "35", status: "inactive" },
+                { id: "swrfdsfdf", name: "Physics Paper 2", start: "9:36", end: "10:36", duration: "1:00", timeleft: "0:30", started: false, about: "Test", extratimeenabled: false, readingtimeenabled: true, extratime: "", readingtime: "1", minwarning: "35", status: "inactive" },
             ],
             test: "test",
         };
     },
     mounted() {
+        this.updateDate();
         this.updateTime();
         // set time left to duration
         for (var i = 0; i < this.people.length; i++) {
@@ -54,7 +57,10 @@ export default ({
         //   // if there is, then load it into the people array
         //   this.people = JSON.parse(localStorage.getItem('people') || '{}');
         // }
-        setInterval(this.updateTime, 100);
+        setInterval(() => {
+            this.updateTime();
+            this.updateDate();
+        }, 100);
     },
     watch: {
         indeterminate() {
@@ -89,8 +95,14 @@ export default ({
             var n = d.toLocaleTimeString();
             this.timestamp = n;
         },
+        updateDate() {
+            var d = new Date();
+            var n = d.toLocaleDateString();
+            this.datestamp = n;
+        },
         editButton(personid: string) {
-          this.openModal()
+          this.popupedit = true;
+          this.open = true;
           // load in all the data from the person
           // find person with id
           var personIDx = this.people.findIndex(x => x.id === personid);
@@ -109,6 +121,7 @@ export default ({
 
         },
         openModal() {
+            this.popupedit = false;
             // reset new exam form
             this.newexamname = "";
             this.newexamduration = "";
@@ -130,21 +143,44 @@ export default ({
           }
           else {
             // add exam to people array
-            // calculate end time by converting into minutes and hours and adding the duration and adding an hour if the minutes are over 60
-            var start = this.newexamplannedstart.split(":");
+            // calculate end time by converting into minutes and hours and adding the duration and adding an hour if the minutes are over 60 and start again at 0 hours when it is over 24 hours and if it is over 12 hours allow it to be in 24 hour format
             var duration = this.newexamduration.split(":");
-            var end = parseInt(start[0]) + parseInt(duration[0]) + ":" + (parseInt(start[1]) + parseInt(duration[1]));
-            if (parseInt(end.split(":")[1]) >= 60) {
-              end = (parseInt(end.split(":")[0]) + 1) + ":" + (parseInt(end.split(":")[1]) - 60);
+            var durationhours = duration[0];
+            var durationminutes = duration[1];
+            var durationminutes = Number(durationminutes) + Number(durationhours) * 60;
+            var durationminutes = Number(durationminutes) + Number(this.newexamplannedstart.split(":")[0]) * 60;
+            var durationminutes = Number(durationminutes) + Number(this.newexamplannedstart.split(":")[1]);
+            var endhours = Math.floor(durationminutes / 60);
+            var endminutes = durationminutes % 60;
+            if (endminutes < 10) {
+              var endminutes = "0" + endminutes;
             }
+            if (endhours > 24) {
+              var endhours = endhours - 24;
+            }
+            var totalduration = this.newexamduration
+            var addedduration = totalduration;
+            var end = endhours + ":" + endminutes + " ";
+            if (this.newexamreadingtimeenabled === true) {
+              var totalduration = this.newexamduration.split(":");
+              var readingtime = this.newexamreadingtime;
+                totalduration[0] = parseInt(totalduration[0])
+                totalduration[1] = parseInt(totalduration[1]) + parseInt(readingtime);
+                if (totalduration[1] >= 60) {
+                    totalduration[0] = parseInt(totalduration[0]) + 1;
+                    totalduration[1] = parseInt(totalduration[1]) - 60;
+                }
+              var addedduration = totalduration[0] + ":" + totalduration[1];
+            }
+            
             // add exam to people array
             this.people.push({
               id: Math.random().toString(36).substr(2, 9),
               name: this.newexamname,
               start: this.newexamplannedstart,
               end: end,
-              duration: this.newexamduration,
-              timeleft: this.newexamduration,
+              duration: addedduration,
+              timeleft: addedduration,
               started: false,
               about: this.newexamabout,
               extratimeenabled: this.newexamextratimeenabled,
@@ -265,18 +301,18 @@ export default ({
             // get the current time
             var start = new Date();
             var end = new Date();
-            // calculate the end time by adding the duration to the start time and also calculate the start time without the seconds
-            var duration = this.people[personIdx].duration.split(":");
-            end.setHours(end.getHours() + parseInt(duration[0]));
-            end.setMinutes(end.getMinutes() + parseInt(duration[1]));
-            // set the end time
-            this.people[personIdx].end = end.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+            // calculate the total duaration, by checking if the reading time is enabled and if it is add the reading time to the duration. Reading time is given in the format of MM or M while duraton is in HH:MM.
+            // Also check that if minutes are larger than 60, add 1 to the hours and remove 60 from the minutes
+            
+            var totalduration = this.people[personIdx].duration.split(":");
+            // calculate the end time by adding the duration to the start time and also calculate the start time without the seconds but keep it in a 24 hour format
+            end.setHours(start.getHours() + parseInt(totalduration[0]));
+            end.setMinutes(start.getMinutes() + parseInt(totalduration[1]));
+            // set the end time in 24 hour format in the format HH:MM
+            this.people[personIdx].end = end.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", hour12: false });
             // remove the seconds at the end
-            this.people[personIdx].end = this.people[personIdx].end.slice(0, -3);
-            // remove the seconds at the end
-            this.people[personIdx].start = start.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
-            // remove the seconds at the end
-            this.people[personIdx].start = this.people[personIdx].start.slice(0, -3);
+            this.people[personIdx].start = start.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", hour12: false });
+
             // call the function that calculates the time left and send the needed variables
             this.calculateTimeLeft(newpersonid, start, end);
             // also save it to local storage
@@ -288,7 +324,69 @@ export default ({
                 console.log(this.people);
                 // make sure this updates for each persons id, as when one get deleted, the timer stays locked on the previous list position
                 const newpersonid = this.people.findIndex(person => person.id == personIdx);
-                console.log(newpersonid);
+                // create 2 vars based on the duration and make one var called onlyduration which is the duration without the reading time and one called totalduration which is the duration with the reading time
+                var onlyduration = this.people[newpersonid].duration.split(":");
+                var totalduration = this.people[newpersonid].duration.split(":");
+                var readingtime = this.people[newpersonid].readingtime
+                // if reading time is enabled, substract the reading time from the total duration to get the only duration
+                // do this by converting the duration into minutes and then substracting the reading time from it and then converting it back to HH:MM format
+                if (this.people[newpersonid].readingtimeenabled == true) {
+                    // convert the duration into minutes
+                    var durationminutes = parseInt(totalduration[0]) * 60 + parseInt(totalduration[1]);
+                    // substract the reading time from the duration
+                    durationminutes = durationminutes - parseInt(readingtime);
+                    // convert the duration back into HH:MM format
+                    onlyduration[0] = Math.floor(durationminutes / 60).toString();
+                    onlyduration[1] = (durationminutes % 60).toString();
+                    // if the minutes are larger than 60, add 1 to the hours and remove 60 from the minutes
+                    if (parseInt(onlyduration[1]) > 60) {
+                        onlyduration[0] = (parseInt(onlyduration[0]) + 1).toString();
+                        onlyduration[1] = (parseInt(onlyduration[1]) - 60).toString();
+                    }
+                    // if the minutes are less than 10, add a 0 in front of it
+                    if (parseInt(onlyduration[1]) < 10) {
+                        onlyduration[1] = "0" + onlyduration[1];
+                    }
+                    console.log(onlyduration);
+                console.log(totalduration);
+                console.log(readingtime)
+                }
+                
+                // the reading time starts when the exam starts. This means that during the reading time I want the status to be 'reading' and after the reading time is over I want the status to be 'started'
+                // make a timer which chenges the status of the exam to started after the reading time is over. While the exam is in reading time, the status is reading#
+
+
+                // if the reading time is enabled, check if the reading time is over and if it is, change the status to started
+                if (this.people[newpersonid].readingtimeenabled == true) {
+                    this.people[newpersonid].status = "reading";
+                    // get the current time
+                    var now = new Date();
+                    // calculate the time left by subtracting the current time from the end time
+                    var timeLeft = end.getTime() - now.getTime();
+                    // if the time left is less than 0, then the reading time is over
+                    if (timeLeft < 0) {
+                        // set the status to started
+                        this.people[newpersonid].status = "active";
+                        // also save it to local storage
+                        localStorage.setItem("people", JSON.stringify(this.people));
+                    }
+                    else {
+                        // if the reading time is not over, then calculate the time left
+                        // calculate the hours left
+                        var hoursLeft = Math.floor(timeLeft / 1000 / 60 / 60);
+                        // calculate the minutes left
+                        var minutesLeft = Math.floor(timeLeft / 1000 / 60) - (hoursLeft * 60);
+                        // calculate the seconds left
+                        var secondsLeft = Math.floor(timeLeft / 1000) - (hoursLeft * 60 * 60) - (minutesLeft * 60);
+                        // set the time left in the format HH:MM:SS
+                        this.people[newpersonid].timeleft = hoursLeft + ":" + minutesLeft + ":" + secondsLeft;
+                        // also save it to local storage
+                        localStorage.setItem("people", JSON.stringify(this.people));
+                    }
+                }
+
+
+
                 // get the current time
                 var now = new Date();
                 // calculate the time left by subtracting the current time from the end time
@@ -296,7 +394,7 @@ export default ({
                 // if the time left is less than 0, then the exam is over
                 if (timeLeft < 0) {
                     // set the time left to 0
-                    this.people[personIdx].timeleft = "00:00";
+                    this.people[personIdx].timeleft = "0:00";
                     // set the exam to finished
                     this.people[personIdx].finished = true;
                     // also save it to local storage
@@ -311,7 +409,7 @@ export default ({
                     // calculate the seconds left
                     var secondsLeft = Math.floor(timeLeft / 1000) - (hoursLeft * 60 * 60) - (minutesLeft * 60);
                     // format the time left
-                    var timeLeftFormatted = hoursLeft.toString().padStart(2, "0") + ":" + minutesLeft.toString().padStart(2, "0") + ":" + secondsLeft.toString().padStart(2, "0");
+                    var timeLeftFormatted = hoursLeft.toString().padStart(1, "0") + ":" + minutesLeft.toString().padStart(2, "0") + ":" + secondsLeft.toString().padStart(2, "0");
                     // remove the seconds at the end
                     timeLeftFormatted = timeLeftFormatted.slice(0, -3);
                     // set the time left
@@ -319,6 +417,7 @@ export default ({
                     // also save it to local storage
                     localStorage.setItem("people", JSON.stringify(this.people));
                 }
+              
             }, 1000);
         },
     },
@@ -462,7 +561,9 @@ export default ({
                 <div class="pt-5">
                   <div class="flex justify-end">
                     <button @click="open = false" class="rounded-md border border-gray-300 bg-white py-2 px-4 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">Cancel</button>
-                    <button @click="addExam" class="ml-3 inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">Add Exam</button>
+                    <button v-if="popupedit === false" @click="addExam" class="ml-3 inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">Add Exam</button>
+                    <button v-if="popupedit === true" @click="addExam" class="ml-3 inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">Update Exam</button>
+
                   </div>
                 </div>
               </div>
@@ -480,7 +581,7 @@ export default ({
           <div class="text-7xl font-bold text-gray-900">{{ timestamp }}</div>
         </div>
         <div class="flex flex-row">
-          <div class="text-2xl font-bold text-gray-900">Monday, 1st March</div>
+          <div class="text-2xl font-bold text-gray-900">{{ datestamp }}</div>
         </div>
       </div>
     </div>
