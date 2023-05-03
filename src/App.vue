@@ -65,7 +65,7 @@ export default ({
     },
     watch: {
         indeterminate() {
-            this.selectedPeople.value.length > 0 && this.selectedPeople.value.length < this.people.length;
+            this.selectedPeople.values.length > 0 && this.selectedPeople.values.length < this.people.length
         },
         newexamduration() {
             // watch the duration and replace a : after the first character to have it in H:MM format, but make a backspace work and allow a max of 4 characters
@@ -258,6 +258,7 @@ export default ({
         editButton(personid: string) {
           this.popupedit = true;
           this.open = true;
+          console.log("PERSONID", personid);
           
         },
         openModal() {
@@ -283,13 +284,13 @@ export default ({
           }
           else {
             // convert duration to minutes
-            var duration = this.converter(this.newexamduration, undefined, "H:MM");
+            var duration = this.converter(this.newexamduration, "", "H:MM");
             // convert planned start to minutes
-            var plannedstart = this.converter(this.newexamplannedstart, undefined, "HH:MM");
+            var plannedstart = this.converter(this.newexamplannedstart, "", "HH:MM");
             // calculate end time
             var endtime = Number(duration) + Number(plannedstart);
             // convert end time to HH:MM format
-            this.newexamplannedend = this.converter(endtime.toString(), undefined , "-HH:MM");
+            this.newexamplannedend = this.converter(endtime.toString(), "" , "-HH:MM");
             // calculate the totalduration by adding the reading time and duration
             var totalduration2 = Number(duration) + Number(this.newexamreadingtime);
             // push new exam to exams array
