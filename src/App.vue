@@ -1,5 +1,4 @@
 <script lang="ts">
-import { defineComponent } from 'vue'
 import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue'
 export default ({
     name: 'Modal',
@@ -23,6 +22,8 @@ export default ({
             newexamextratime: "",
             newexamreadingtime: "",
             newexamminwarning: "5",
+            // new exam others
+            newexamplannedend: "",
 
             // Notifications
             icon: "error",
@@ -40,7 +41,7 @@ export default ({
             checked: false,
             isOpen: [],
             people: [
-                { id: "swrfdsfdf", name: "Physics Paper 2", start: "9:36", end: "10:36", duration: "1:00", timeleft: "0:30", started: false, about: "Test", extratimeenabled: false, readingtimeenabled: true, extratime: "", readingtime: "1", minwarning: "35", status: "inactive" },
+                { id: "swrfdsfdf", name: "Physics Paper 2", start: "9:36", end: "10:36", duration: "3:15", totalduration: "1:01", timeleft: "0:30", started: false, about: "Test", extratimeenabled: false, readingtimeenabled: true, extratime: "", readingtime: "123", minwarning: "35", status: "inactive" },
             ],
             test: "test",
         };
@@ -90,9 +91,163 @@ export default ({
           
     },
     methods: {
+        time(){
+            // returen time in 24 hour format in the format HH:MM and add a zero if the minutes are less than 10 and a zero if the hours are less than 10
+            var date = new Date();
+            var hours = date.getHours();
+            var minutes = date.getMinutes();
+            if (minutes < 10) {
+                var time = hours.toString() + ":0" + minutes.toString();
+            }
+            else {
+                var time = hours.toString() + ":" + minutes.toString();
+            }
+            if (hours < 10) {
+                var time = "0" + time;
+            }
+            return time;
+        },
+        converter(time: string, sectime: string, type: string) {
+            // convert time to minutes
+            // check which format the time is in
+            if (type === "MM") {
+                var minutes = Number(time);
+                return minutes.toString();
+            }
+            else if (type === "H:MM") {
+                // split the time into hours and minutes
+                var splitTime = time.split(":");
+                // convert the hours to minutes and add the minutes
+                var minutes = Number(splitTime[0]) * 60 + Number(splitTime[1]);
+                // return the minutes
+                return minutes.toString();
+            }
+            else if (type === "HH:MM") {
+                // split the time into hours and minutes
+                var splitTime = time.split(":");
+                // convert the hours to minutes and add the minutes
+                var minutes = Number(splitTime[0]) * 60 + Number(splitTime[1]);
+                // return the minutes
+                return minutes.toString();
+            }
+            else if (type === "-HH:MM") {
+                // change minutes back again into time in the format HH:MM with 24 hour time
+                var hours = Math.floor(Number(time) / 60);
+                var minutes = Number(time) % 60;
+                // add a 0 if the minutes are less than 10
+                if (minutes < 10) {
+                    var time = hours.toString() + ":0" + minutes.toString();
+                }
+                else {
+                    var time = hours.toString() + ":" + minutes.toString();
+                }
+                if (hours < 10) {
+                    var time = "0" + time;
+                }
+                // check that if the hours are over 24, then subtract 24 from them but make sure to add the 0 back if the hours are less than 10
+                if (hours > 24) {
+                    var hours = hours - 24;
+                    if (hours < 10) {
+                        var time = "0" + hours.toString() + ":" + minutes.toString();
+                    }
+                    else {
+                        var time = hours.toString() + ":" + minutes.toString();
+                    }
+                }
+                return time.toString();
+            }
+            else if (type === "-H:MM") {
+                // change minutes back again into time in the format H:MM with 24 hour time
+                var hours = Math.floor(Number(time) / 60);
+                var minutes = Number(time) % 60;
+                // add a 0 if the minutes are less than 10
+                if (minutes < 10) {
+                    var time = hours.toString() + ":0" + minutes.toString();
+                }
+                else {
+                    var time = hours.toString() + ":" + minutes.toString();
+                }
+                // check that if the hours are over 24, then subtract 24 from them
+                if (hours > 24) {
+                    var hours = hours - 24;
+                    var time = hours.toString() + ":" + minutes.toString();
+                }
+                return time.toString();
+            }
+            else if (type === "addtime") {
+                // two times are given in HH:MM format, add them together and return the result in HH:MM format
+                // be careful about 24 hour time and hours being over 24 and minutes being over 60
+                // split the times into hours and minutes
+                var splitTime2 = time.split(":");
+                var splitTime3 = sectime.split(":");
+                console.log(splitTime2);
+                console.log(splitTime3);
+                // add the hours and minutes together
+                var hours = Number(splitTime2[0]) + Number(splitTime3[0]);
+                var minutes = Number(splitTime2[1]) + Number(splitTime3[1]);
+                // if the minutes are over 60, add an hour and subtract 60 minutes
+                if (minutes >= 60) {
+                    hours = hours + 1;
+                    minutes = minutes - 60;
+                }
+                // if the hours are over 24, subtract 24 hours
+                if (hours >= 24) {
+                    hours = hours - 24;
+                }
+                // add a 0 if the minutes are less than 10
+                if (minutes < 10) {
+                    var time = hours.toString() + ":0" + minutes.toString();
+                }
+                else {
+                    var time = hours.toString() + ":" + minutes.toString();
+                }
+                // check if string is only 4 characters long, if so add a 0 to the beginning
+                if (time.length === 4) {
+                    var time = "0" + time;
+                }
+                return time.toString();
+            }
+            else if (type === "addminutes") {
+                // two times are given one in HH:MM and one in minutes, add them together and return the result in HH:MM format
+                // split time in hours and minutes and then add sectime to minutes
+                // when minutes is over 60, add an hour and subtract 60 minutes
+                // when hours is over 24, subtract 24 hours
+                // add a 0 if the minutes are less than 10
+                // check if string is only 4 characters long, if so add a 0 to the beginning
+                var splitTime2 = time.split(":");
+                var hours = Number(splitTime2[0]);
+                console.log("HOURS", hours);
+                var minutes = Number(splitTime2[1]) + Number(sectime);
+                console.log("MINUTES", minutes);
+                // substract 60 from minutes and add 1 to hours until minutes is less than 60
+                while (minutes >= 60) {
+                    hours = hours + 1;
+                    minutes = minutes - 60;
+                }
+                if (hours >= 24) {
+                    hours = hours - 24;
+                }
+                if (minutes < 10) {
+                    var time = hours.toString() + ":0" + minutes.toString();
+                }
+                else {
+                    var time = hours.toString() + ":" + minutes.toString();
+                }
+                if (time.length === 4) {
+                    var time = "0" + time;
+                }
+                console.log("TIMMMMME", time);
+                return time.toString();
+            }
+            else {
+                // if the time is not in any of the formats, return the time
+                var minutes = Number(time);
+                return minutes.toString();
+            }
+        },
         updateTime() {
             var d = new Date();
-            var n = d.toLocaleTimeString();
+            var n = d.toLocaleTimeString("de-EN");
             this.timestamp = n;
         },
         updateDate() {
@@ -103,22 +258,7 @@ export default ({
         editButton(personid: string) {
           this.popupedit = true;
           this.open = true;
-          // load in all the data from the person
-          // find person with id
-          var personIDx = this.people.findIndex(x => x.id === personid);
-          // load in data
-          this.newexamname = this.people[personIDx].name;
-          this.newexamduration = this.people[personIDx].duration;
-          this.newexamplannedstart = this.people[personIDx].start;
-          this.newexamabout = this.people[personIDx].about;
-          this.newexamextratimeenabled = this.people[personIDx].extratimeenabled;
-          this.newexamreadingtimeenabled = this.people[personIDx].readingtimeenabled;
-          this.newexamextratime = this.people[personIDx].extratime;
-          this.newexamreadingtime = this.people[personIDx].readingtime;
-          this.newexamminwarning = this.people[personIDx].minwarning;
-          // open modal
-
-
+          
         },
         openModal() {
             this.popupedit = false;
@@ -142,62 +282,38 @@ export default ({
             this.notification("error", "Error", "Please fill in all fields");
           }
           else {
-            // add exam to people array
-            // calculate end time by converting into minutes and hours and adding the duration and adding an hour if the minutes are over 60 and start again at 0 hours when it is over 24 hours and if it is over 12 hours allow it to be in 24 hour format
-            var duration = this.newexamduration.split(":");
-            var durationhours = duration[0];
-            var durationminutes = duration[1];
-            var durationminutes = Number(durationminutes) + Number(durationhours) * 60;
-            var durationminutes = Number(durationminutes) + Number(this.newexamplannedstart.split(":")[0]) * 60;
-            var durationminutes = Number(durationminutes) + Number(this.newexamplannedstart.split(":")[1]);
-            var endhours = Math.floor(durationminutes / 60);
-            var endminutes = durationminutes % 60;
-            if (endminutes < 10) {
-              var endminutes = "0" + endminutes;
-            }
-            if (endhours > 24) {
-              var endhours = endhours - 24;
-            }
-            var totalduration = this.newexamduration
-            var addedduration = totalduration;
-            var end = endhours + ":" + endminutes + " ";
-            if (this.newexamreadingtimeenabled === true) {
-              var totalduration = this.newexamduration.split(":");
-              var readingtime = this.newexamreadingtime;
-                totalduration[0] = parseInt(totalduration[0])
-                totalduration[1] = parseInt(totalduration[1]) + parseInt(readingtime);
-                if (totalduration[1] >= 60) {
-                    totalduration[0] = parseInt(totalduration[0]) + 1;
-                    totalduration[1] = parseInt(totalduration[1]) - 60;
-                }
-              var addedduration = totalduration[0] + ":" + totalduration[1];
-            }
-            
-            // add exam to people array
+            // convert duration to minutes
+            var duration = this.converter(this.newexamduration, undefined, "H:MM");
+            // convert planned start to minutes
+            var plannedstart = this.converter(this.newexamplannedstart, undefined, "HH:MM");
+            // calculate end time
+            var endtime = Number(duration) + Number(plannedstart);
+            // convert end time to HH:MM format
+            this.newexamplannedend = this.converter(endtime.toString(), undefined , "-HH:MM");
+            // calculate the totalduration by adding the reading time and duration
+            var totalduration2 = Number(duration) + Number(this.newexamreadingtime);
+            // push new exam to exams array
             this.people.push({
               id: Math.random().toString(36).substr(2, 9),
               name: this.newexamname,
+              duration: this.newexamduration,
+              totalduration: totalduration2.toString(),
+              timeleft: this.newexamduration,
               start: this.newexamplannedstart,
-              end: end,
-              duration: addedduration,
-              timeleft: addedduration,
-              started: false,
+              end: this.newexamplannedend,
               about: this.newexamabout,
               extratimeenabled: this.newexamextratimeenabled,
               readingtimeenabled: this.newexamreadingtimeenabled,
               extratime: this.newexamextratime,
               readingtime: this.newexamreadingtime,
               minwarning: this.newexamminwarning,
+              started: false,
               status: "inactive"
             });
+            // close modal and then show notification
             this.open = false;
-            // show notification
             this.notification("success", "Exam Added", this.newexamname + " has been added");
-            // save people array to local storage
-            localStorage.setItem("people", JSON.stringify(this.people));
-            // close modal
           }
-
         },
         duplicateButton(personid: string) {
             // find person with id
@@ -289,135 +405,37 @@ export default ({
         },
         // When the button is pressed the exam starts, which should start a timer and set the start time for an exam and calculate the end time using the duration
         startExam(personIdx: string) {
-            console.log(personIdx);
-            const newpersonid = personIdx;
-            // find id of array based on its id
+            // find person with id
             var personIdx = this.people.findIndex(person => person.id == personIdx);
-            this.people[personIdx].started = true;
-            console.log(this.people[personIdx].started);
             // set the start time
-            this.people[personIdx].start = this.timestamp;
-            // calculate the end time of the exam by adding the duration to the start time (you cant just add the duration because it is a string)
-            // get the current time
-            var start = new Date();
-            var end = new Date();
-            // calculate the total duaration, by checking if the reading time is enabled and if it is add the reading time to the duration. Reading time is given in the format of MM or M while duraton is in HH:MM.
-            // Also check that if minutes are larger than 60, add 1 to the hours and remove 60 from the minutes
+            this.people[personIdx].start = this.time()
+            var duration = this.converter(String(this.people[personIdx].duration),"","H:MM");
+            // check if there is reading time and if so calculate the end time with the converter "addtime2" 
+            var durationandreading = Number(duration) + Number(this.people[personIdx].readingtime);
+            console.log(this.people[personIdx].readingtimeenabled)
+            if (this.people[personIdx].readingtimeenabled === true) {
+                this.people[personIdx].end = this.converter(String(this.people[personIdx].start),String(durationandreading),"addminutes");
+                console.log("1")
+            }
+            else {
+                // calculate the new end time with the converter
+                var endtime = this.converter(String(this.people[personIdx].start),String(this.people[personIdx].duration),"addtime");
+                // set the end time
+                this.people[personIdx].end = endtime;
+                console.log("2")
+            }
             
-            var totalduration = this.people[personIdx].duration.split(":");
-            // calculate the end time by adding the duration to the start time and also calculate the start time without the seconds but keep it in a 24 hour format
-            end.setHours(start.getHours() + parseInt(totalduration[0]));
-            end.setMinutes(start.getMinutes() + parseInt(totalduration[1]));
-            // set the end time in 24 hour format in the format HH:MM
-            this.people[personIdx].end = end.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", hour12: false });
-            // remove the seconds at the end
-            this.people[personIdx].start = start.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", hour12: false });
 
-            // call the function that calculates the time left and send the needed variables
-            this.calculateTimeLeft(newpersonid, start, end);
-            // also save it to local storage
-            localStorage.setItem("people", JSON.stringify(this.people));
-            this.notification("success", "Exam Started", this.people[personIdx].name + " has been started");
+
         },
         async calculateTimeLeft(personIdx: string, start: Date, end: Date) {
             setInterval(() => {
-                console.log(this.people);
-                // make sure this updates for each persons id, as when one get deleted, the timer stays locked on the previous list position
-                const newpersonid = this.people.findIndex(person => person.id == personIdx);
-                // create 2 vars based on the duration and make one var called onlyduration which is the duration without the reading time and one called totalduration which is the duration with the reading time
-                var onlyduration = this.people[newpersonid].duration.split(":");
-                var totalduration = this.people[newpersonid].duration.split(":");
-                var readingtime = this.people[newpersonid].readingtime
-                // if reading time is enabled, substract the reading time from the total duration to get the only duration
-                // do this by converting the duration into minutes and then substracting the reading time from it and then converting it back to HH:MM format
-                if (this.people[newpersonid].readingtimeenabled == true) {
-                    // convert the duration into minutes
-                    var durationminutes = parseInt(totalduration[0]) * 60 + parseInt(totalduration[1]);
-                    // substract the reading time from the duration
-                    durationminutes = durationminutes - parseInt(readingtime);
-                    // convert the duration back into HH:MM format
-                    onlyduration[0] = Math.floor(durationminutes / 60).toString();
-                    onlyduration[1] = (durationminutes % 60).toString();
-                    // if the minutes are larger than 60, add 1 to the hours and remove 60 from the minutes
-                    if (parseInt(onlyduration[1]) > 60) {
-                        onlyduration[0] = (parseInt(onlyduration[0]) + 1).toString();
-                        onlyduration[1] = (parseInt(onlyduration[1]) - 60).toString();
-                    }
-                    // if the minutes are less than 10, add a 0 in front of it
-                    if (parseInt(onlyduration[1]) < 10) {
-                        onlyduration[1] = "0" + onlyduration[1];
-                    }
-                    console.log(onlyduration);
-                console.log(totalduration);
-                console.log(readingtime)
-                }
                 
-                // the reading time starts when the exam starts. This means that during the reading time I want the status to be 'reading' and after the reading time is over I want the status to be 'started'
-                // make a timer which chenges the status of the exam to started after the reading time is over. While the exam is in reading time, the status is reading#
-
-
-                // if the reading time is enabled, check if the reading time is over and if it is, change the status to started
-                if (this.people[newpersonid].readingtimeenabled == true) {
-                    this.people[newpersonid].status = "reading";
-                    // get the current time
-                    var now = new Date();
-                    // calculate the time left by subtracting the current time from the end time
-                    var timeLeft = end.getTime() - now.getTime();
-                    // if the time left is less than 0, then the reading time is over
-                    if (timeLeft < 0) {
-                        // set the status to started
-                        this.people[newpersonid].status = "active";
-                        // also save it to local storage
-                        localStorage.setItem("people", JSON.stringify(this.people));
-                    }
-                    else {
-                        // if the reading time is not over, then calculate the time left
-                        // calculate the hours left
-                        var hoursLeft = Math.floor(timeLeft / 1000 / 60 / 60);
-                        // calculate the minutes left
-                        var minutesLeft = Math.floor(timeLeft / 1000 / 60) - (hoursLeft * 60);
-                        // calculate the seconds left
-                        var secondsLeft = Math.floor(timeLeft / 1000) - (hoursLeft * 60 * 60) - (minutesLeft * 60);
-                        // set the time left in the format HH:MM:SS
-                        this.people[newpersonid].timeleft = hoursLeft + ":" + minutesLeft + ":" + secondsLeft;
-                        // also save it to local storage
-                        localStorage.setItem("people", JSON.stringify(this.people));
-                    }
-                }
-
-
-
-                // get the current time
-                var now = new Date();
-                // calculate the time left by subtracting the current time from the end time
-                var timeLeft = end.getTime() - now.getTime();
-                // if the time left is less than 0, then the exam is over
-                if (timeLeft < 0) {
-                    // set the time left to 0
-                    this.people[personIdx].timeleft = "0:00";
-                    // set the exam to finished
-                    this.people[personIdx].finished = true;
-                    // also save it to local storage
-                    localStorage.setItem("people", JSON.stringify(this.people));
-                }
-                else {
-                    // if the exam is not over, then calculate the time left
-                    // calculate the hours left
-                    var hoursLeft = Math.floor(timeLeft / 1000 / 60 / 60);
-                    // calculate the minutes left
-                    var minutesLeft = Math.floor(timeLeft / 1000 / 60) - (hoursLeft * 60);
-                    // calculate the seconds left
-                    var secondsLeft = Math.floor(timeLeft / 1000) - (hoursLeft * 60 * 60) - (minutesLeft * 60);
-                    // format the time left
-                    var timeLeftFormatted = hoursLeft.toString().padStart(1, "0") + ":" + minutesLeft.toString().padStart(2, "0") + ":" + secondsLeft.toString().padStart(2, "0");
-                    // remove the seconds at the end
-                    timeLeftFormatted = timeLeftFormatted.slice(0, -3);
-                    // set the time left
-                    this.people[newpersonid].timeleft = timeLeftFormatted;
-                    // also save it to local storage
-                    localStorage.setItem("people", JSON.stringify(this.people));
-                }
-              
+            }, 1000);
+        },
+        async calculateStatus(personIdx: string, start: Date, end: Date) {
+            setInterval(() => {
+                
             }, 1000);
         },
     },
