@@ -41,7 +41,7 @@ export default ({
             checked: false,
             isOpen: [],
             people: [
-                { id: "swrfdsfdf", name: "Physics Paper 2", start: "9:36", end: "10:36", duration: "3:15", totalduration: "1:01", timeleft: "0:30", started: false, about: "Test", extratimeenabled: false, readingtimeenabled: true, extratime: "", readingtime: "123", minwarning: "35", status: "inactive" },
+                { id: "swrfdsfdf", name: "Physics Paper 2", start: "9:36", end: "10:36", duration: "3:00", totalduration: "1:01", timeleft: "0:15", started: false, about: "Test", extratimeenabled: false, readingtimeenabled: true, extratime: "", readingtime: "1", minwarning: "35", status: "inactive" },
             ],
             test: "test",
         };
@@ -105,7 +105,32 @@ export default ({
             if (hours < 10) {
                 var time = "0" + time;
             }
+            console.log("Time Created", time);
             return time;
+        },
+        accuratetime() {
+          // returen time in 24 hour format in the format HH:MM:SS and add a zero if the minutes are less than 10 and a zero if the hours are less than 10 and a zero if the seconds are less than 10
+          var date = new Date();
+          var hours = date.getHours();
+          var minutes = date.getMinutes();
+          var seconds = date.getSeconds();
+          if (minutes < 10) {
+              var time = hours.toString() + ":0" + minutes.toString();
+          }
+          else {
+              var time = hours.toString() + ":" + minutes.toString();
+          }
+          if (hours < 10) {
+              var time = "0" + time;
+          }
+          if (seconds < 10) {
+              var time = time + ":0" + seconds.toString();
+          }
+          else {
+              var time = time + ":" + seconds.toString();
+          }
+          return time;
+
         },
         converter(time: string, sectime: string, type: string) {
             // convert time to minutes
@@ -239,6 +264,81 @@ export default ({
                 console.log("TIMMMMME", time);
                 return time.toString();
             }
+            else if (type === "addminutesexact") {
+                // two times are given one in HH:MM and one in minutes, add them together and return the result in HH:MM:SS format
+                // split time in hours and minutes and then add sectime to minutes
+                // when minutes is over 60, add an hour and subtract 60 minutes
+                // when hours is over 24, subtract 24 hours
+                // add a 0 if the minutes are less than 10
+                // check if string is only 4 characters long, if so add a 0 to the beginning
+                // first time is in HH:MM:SS and second time in minutes
+                var splitTime2 = time.split(":");
+                var hours = Number(splitTime2[0]);
+                var minutes = Number(splitTime2[1]) + Number(sectime);
+                var seconds = Number(splitTime2[2]);
+                // substract 60 from minutes and add 1 to hours until minutes is less than 60
+                while (minutes >= 60) {
+                    hours = hours + 1;
+                    minutes = minutes - 60;
+                }
+                if (hours >= 24) {
+                    hours = hours - 24;
+                }
+                // in HH:MM:SS format
+                if (minutes < 10) {
+                    var time = hours.toString() + ":0" + minutes.toString() + ":" + seconds.toString();
+                }
+                else {
+                    var time = hours.toString() + ":" + minutes.toString() + ":" + seconds.toString();
+                }
+                // in HH:MM:SS format
+                if (time.length === 7) {
+                    var time = "0" + time;
+                }
+                console.log("TIMMMMME", time);
+                return time.toString();
+            }
+            else if (type === "timeleft") {
+                // time one is given in HH:MM:SS the second one in HH:MM:SS, subtract the second from the first and return the result in HH:MM:SS format
+                // be careful about 24 hour time and hours being over 24 and minutes being over 60
+                // split the times into hours and minutes and seconds
+                var splitTime2 = time.split(":");
+                var splitTime3 = sectime.split(":");
+                // subtract the hours and minutes and seconds
+                var hours = Number(splitTime2[0]) - Number(splitTime3[0]);
+                var minutes = Number(splitTime2[1]) - Number(splitTime3[1]);
+                var seconds = Number(splitTime2[2]) - Number(splitTime3[2]);
+                // if the seconds are less than 0, add 60 seconds and subtract 1 minute
+                if (seconds < 0) {
+                    minutes = minutes - 1;
+                    seconds = seconds + 60;
+                }
+                // if the minutes are less than 0, add 60 minutes and subtract 1 hour
+                if (minutes < 0) {
+                    hours = hours - 1;
+                    minutes = minutes + 60;
+                }
+                // if the hours are less than 0, add 24 hours
+                if (hours < 0) {
+                    hours = hours + 24;
+                }
+                // add a 0 if the minutes are less than 10 and add a 0 if the seconds are less than 10
+                if (minutes < 10) {
+                    var time = hours.toString() + ":0" + minutes.toString();
+                }
+                else {
+                    var time = hours.toString() + ":" + minutes.toString();
+                }
+                if (seconds < 10) {
+                    var time = time + ":0" + seconds.toString();
+                }
+                else {
+                    var time = time + ":" + seconds.toString();
+                }
+
+                
+                return time.toString();
+            }
             else {
                 // if the time is not in any of the formats, return the time
                 var minutes = Number(time);
@@ -349,7 +449,7 @@ export default ({
             // check if id is in the array if not add id, if it is remove it
             // grab the person with the id
             var personIdx = this.people.findIndex(person => person.id == id);
-
+          
             if (this.people[personIdx].started === false) {
               if (this.isOpen.includes(id)) {
                   // remove id from array
@@ -370,7 +470,7 @@ export default ({
             this.show = true;
             setTimeout(() => {
                 this.show = false;
-            }, 2000);
+            }, 3000);
         },
         deleteButton(personid: string) {
             // delete the person with the id personid
@@ -408,31 +508,82 @@ export default ({
         startExam(personIdx: string) {
             // find person with id
             var personIdx = this.people.findIndex(person => person.id == personIdx);
-            // set the start time
-            this.people[personIdx].start = this.time()
-            var duration = this.converter(String(this.people[personIdx].duration),"","H:MM");
-            // check if there is reading time and if so calculate the end time with the converter "addtime2" 
-            var durationandreading = Number(duration) + Number(this.people[personIdx].readingtime);
-            console.log(this.people[personIdx].readingtimeenabled)
+            // set the status to active
+            this.people[personIdx].started = true;
+            
+            // set the start time which is the current time + the reading time
+            
+            
             if (this.people[personIdx].readingtimeenabled === true) {
-                this.people[personIdx].end = this.converter(String(this.people[personIdx].start),String(durationandreading),"addminutes");
+                this.notification("reading", "Reading Time Started", this.people[personIdx].name + " has started reading time");
+                var starttime = this.converter(this.accuratetime(), String(this.people[personIdx].readingtime),"addminutesexact");
+                this.people[personIdx].start = this.converter(this.time(), String(this.people[personIdx].readingtime),"addminutes");
+                var duration = this.converter(String(this.people[personIdx].duration),"","H:MM");
+                // check if there is reading time and if so calculate the end time with the converter "addtime2" 
+                var durationandreading = Number(duration) + Number(this.people[personIdx].readingtime);
+                this.people[personIdx].status = "reading";
+                this.people[personIdx].end = this.converter(String(this.people[personIdx].start),String(duration),"addminutes");
+                var endtime = this.converter(String(starttime),String(duration),"addminutesexact");
                 console.log("1")
+                
+
+                this.calculateTimeLeft(personIdx, starttime, endtime, this.people[personIdx].readingtime);
             }
             else {
                 // calculate the new end time with the converter
-                var endtime = this.converter(String(this.people[personIdx].start),String(this.people[personIdx].duration),"addtime");
-                // set the end time
-                this.people[personIdx].end = endtime;
+                this.notification("success", "Exam Started", this.people[personIdx].name + " has been started");
+                this.people[personIdx].start = this.time();
+                var durationinminutes = this.converter(String(this.people[personIdx].duration),"","H:MM");
+                this.people[personIdx].end = this.converter(String(this.time()),String(durationinminutes),"addminutes");
+                var endtime = this.converter(String(this.accuratetime()),String(durationinminutes),"addminutesexact");
+                console.log("endtime",endtime)
+                console.log("starttime",this.people[personIdx].start)
+                // set the status to active
+                this.people[personIdx].status = "active";
                 console.log("2")
+                this.calculateTimeLeft(personIdx, this.people[personIdx].start, endtime, "null");
+                // console log the sent variables
+                console.log("starttime",this.people[personIdx].start)
+                console.log("endtime",endtime)
             }
+            // calculate the time left
             
-
-
+            
         },
-        async calculateTimeLeft(personIdx: string, start: Date, end: Date) {
+        async calculateTimeLeft(personIdx: string, start: string, end: string, readingtime: string) {
             setInterval(() => {
-                
-            }, 1000);
+                // start and end are strings in the format of HH:MM
+                // if reading time is disabled, the readingtime variable is null
+                // reading time is the time the reading time ends in the format of HH:MM
+                // console log all the variables
+                // get the current time
+                var now = this.accuratetime();
+                if (readingtime === "null") {
+                  var timeleft2 = this.converter(end, now, "timeleft");
+                    this.people[personIdx].timeleft = timeleft2;
+                    console.log("Active")
+                }
+                else {
+                  // calculate the reading time left and set it to the time left varaible. When the reading time is over, start calculating the time left for the exam without reading time
+                  if (this.people[personIdx].status === "reading") {
+                    var timeleft = this.converter(start, now, "timeleft");
+                    // timeleft is in HH:MM:SS but make another var that is only HH:MM
+
+                    this.people[personIdx].timeleft = timeleft;
+                    console.log("Reading")
+                    if (start == now) {
+                      this.people[personIdx].status = "active";
+                      console.log("Reading time is over");
+                      this.notification("success", "Exam Started", this.people[personIdx].name + " has been started");
+                    }
+                  }
+                  else {
+                    var timeleft2 = this.converter(end, now, "timeleft");
+                    this.people[personIdx].timeleft = timeleft2;
+                    console.log("Active")
+                  }
+                }
+            }, 100);
         },
         async calculateStatus(personIdx: string, start: Date, end: Date) {
             setInterval(() => {
@@ -676,8 +827,8 @@ export default ({
                   </td>
                   <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                     <span v-if="person.status === 'active'" class="inline-flex rounded-full bg-green-100 px-2 text-xs font-semibold leading-5 text-green-800">Active</span>
-                    <span v-else-if="person.status === 'reading'" class="inline-flex rounded-full bg-yellow-100 px-2 text-xs font-semibold leading-5 text-lightblue-600">Reading Time</span>
-                    <span v-else-if="person.status === 'extra'" class="inline-flex rounded-full bg-blue-100 px-2 text-xs font-semibold leading-5 text-orange-500">Extra Time</span>
+                    <span v-else-if="person.status === 'reading'" class="inline-flex rounded-full bg-orange-100 px-2 text-xs font-semibold leading-5 text-orange-500">Reading Time</span>
+                    <span v-else-if="person.status === 'extra'" class="inline-flex rounded-full bg-blue-100 px-2 text-xs font-semibold leading-5 text-blue-500">Extra Time</span>
                     <span v-else-if="person.status === 'inactive'" class="inline-flex rounded-full bg-red-100 px-2 text-xs font-semibold leading-5 text-red-800">Inactive</span>
                   </td>
                   <td class="whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
@@ -720,6 +871,9 @@ export default ({
             <div class="flex items-start">
               <div class="flex-shrink-0">
                 <svg v-if="this.icon === 'success'" class="h-6 w-6 text-green-400" x-description="Heroicon name: outline/check-circle" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                <svg v-if="this.icon === 'reading'" class="h-6 w-6 text-orange-400" x-description="Heroicon name: outline/check-circle" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                 </svg>
                 <svg v-if="this.icon === 'error'" class="h-6 w-6 text-red-400" x-description="Heroicon name: outline/x-circle" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
