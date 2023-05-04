@@ -833,7 +833,7 @@ export default ({
                   </td>
                   <td class="whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
                     <div class="inline-flex rounded-md shadow-sm">
-                      <button type="button" class="relative inline-flex items-center rounded-l-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500" @click="startExam(person.id)"  >{{ person.started ? 'Stop Exam' : 'Start Exam' }}</button>
+                      <button type="button" class="relative inline-flex items-center rounded-l-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500" @click="person.started ? stopExam(person.id) : startExam(person.id) "  >{{ person.started ? 'Stop Exam' : 'Start Exam' }}</button>
                       <Menu as="div" class="relative -ml-px block">
                         <MenuButton class="relative inline-flex items-center rounded-r-md border border-gray-300 bg-white px-2 py-2 text-sm font-medium text-gray-500 hover:bg-gray-50 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500" @click="popup(person.id)">
                           <span class="sr-only">Open options</span>
