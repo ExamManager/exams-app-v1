@@ -45,7 +45,7 @@ export default ({
             checked: false,
             isOpen: "",
             people: [
-                { id: "swrfdsfdf", name: "Physics Paper 2", start: "9:36", end: "10:36", duration: "0:01", totalduration: "0:01", timeleft: "0:15", started: false, about: "Test", extratimeenabled: true, readingtimeenabled: false, extratime: "50", readingtime: "", min5warning: true, min15warning: false, min30warning: false , status: "inactive" },
+                { id: "swrfdsfdf", name: "Physics Paper 2", start: "9:36", end: "10:36", duration: "0:01", totalduration: "0:03", timeleft: "0:15", started: false, about: "Test", extratimeenabled: true, readingtimeenabled: false, extratime: "50", readingtime: "", min5warning: true, min15warning: false, min30warning: false , status: "inactive" },
             ],
             test: "test",
         };
@@ -274,6 +274,51 @@ export default ({
                     var time = hours.toString() + ":" + minutes.toString() + ":" + seconds.toString();
                 }
                 // in HH:MM:SS format
+                if (time.length === 7) {
+                    var time = "0" + time;
+                }
+                console.log("TIMMMMME", time);
+                return time.toString();
+            }
+            else if (type === "addminutesexacter") {
+                // one time is given in the format HH:MM:SS and the other one in minutes but can be a decimal like 1.5 minutes or 1.25 minutes
+                // calculate the seconds from the decimal and add them to the seconds
+                // split the time into hours and minutes and seconds
+                var splitTime2 = time.split(":");
+                var hours = Number(splitTime2[0]);
+                var minutes = Number(splitTime2[1]);
+                var seconds = Number(splitTime2[2]);
+                // sec time is in decimal minutes, so calculate the minutes and seconds
+                var splitTime3 = sectime.toString().split(".");
+                var minutes2 = Number(splitTime3[0]);
+                var seconds2 = Number(splitTime3[1]);
+                // calculate the seconds by multiplying the decimal with 60
+                seconds2 = seconds2 * 60 / 10;
+                // add the minutes and seconds
+                var minutes = minutes + minutes2;
+                var seconds = seconds + seconds2;
+                // if the seconds are over 60, add a minute and subtract 60 seconds
+                while (seconds >= 60) {
+                    minutes = minutes + 1;
+                    seconds = seconds - 60;
+                }
+                // if the minutes are over 60, add an hour and subtract 60 minutes
+                while (minutes >= 60) {
+                    hours = hours + 1;
+                    minutes = minutes - 60;
+                }
+                // if the hours are over 24, subtract 24 hours
+                if (hours >= 24) {
+                    hours = hours - 24;
+                }
+                // add a 0 if the minutes are less than 10
+                if (minutes < 10) {
+                    var time = hours.toString() + ":0" + minutes.toString() + ":" + seconds.toString();
+                }
+                else {
+                    var time = hours.toString() + ":" + minutes.toString() + ":" + seconds.toString();
+                }
+                // check if string is only 4 characters long, if so add a 0 to the beginning
                 if (time.length === 7) {
                     var time = "0" + time;
                 }
@@ -621,7 +666,7 @@ export default ({
             
         },
         async calculateTimeLeft(personIdx: string, start: string, end: string, readingtime: string) {
-            var interval = setInterval((id) => {
+            var interval = setInterval(() => {
                 // start and end are strings in the format of HH:MM
                 // if reading time is disabled, the readingtime variable is null
                 // reading time is the time the reading time ends in the format of HH:MM
@@ -678,6 +723,13 @@ export default ({
             }, 100);
         },
         async calculateExtratime(personIdx: string, start: string, end: string) {
+            console.log("Start Time",start)
+            console.log("End Time",end)
+            console.log("Person Index",personIdx)
+            // set the status to extratime
+            this.people[Number(personIdx)].status = "extra";
+            // send notification
+            this.notification("extra", "Extra Time", this.people[Number(personIdx)].name + " has started extra time");
             // grab extra time which is in percentage
             var extratime = this.people[Number(personIdx)].extratime;
             // convert the percentage into a decimal
@@ -689,7 +741,12 @@ export default ({
             // calculate the extra time in minutes
             var extratime3 = Number(duration2) * extratime2;
             // add the minutes to the end time
-            var extratimeend = this.converter(end, String(extratime3), "addminutesexact");
+            console.log("durartion1",duration) // correct
+            console.log("duration",duration2) // correct
+            console.log("extratime3",extratime3)
+            console.log("end",end)
+            var extratimeend = this.converter(end, String(extratime3), "addminutesexacter");
+            console.log("This is messed up",extratimeend)
             
             setInterval(() => {
                 // start and end are strings in the format of HH:MM
@@ -1000,6 +1057,9 @@ export default ({
                   <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                 </svg>
                 <svg v-if="this.icon === 'reading'" class="h-6 w-6 text-orange-400" x-description="Heroicon name: outline/check-circle" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                <svg v-if="this.icon === 'extra'" class="h-6 w-6 text-blue-400" x-description="Heroicon name: outline/check-circle" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                 </svg>
                 <svg v-if="this.icon === 'error'" class="h-6 w-6 text-red-400" x-description="Heroicon name: outline/x-circle" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
