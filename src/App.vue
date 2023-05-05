@@ -34,7 +34,7 @@ export default ({
             text: "This is an error message",
 
             // Other Stuff
-            clearinterval: false,
+            clearinterval: 110000000000000,
             popupedit: false,
             popupediting: "",
             timestamp: "",
@@ -537,7 +537,12 @@ export default ({
             var personId = this.people.findIndex(person => person.id == personid);
             // duplicate person
             var newPerson = JSON.parse(JSON.stringify(personIdx));
+            console.log(newPerson);
             // add new person to people array
+            
+            // make the status of the new person inactive always when duplicating
+            newPerson.status = "inactive";
+            newPerson.timeleft = newPerson.duration;
             this.people.push(newPerson);
             // put make the id a random 8 digit uuid
             this.people[this.people.length - 1].id = Math.random().toString(36).substr(2, 9);
@@ -620,9 +625,10 @@ export default ({
         stopExam(personIdx: string) {
             // set timeleft to 0
             console.log("stop exam");
-            clearInterval(interval)
-            clearInterval(interval2)
-
+            // find person with id
+            var personIdx = this.people.findIndex(person => person.id == personIdx);
+            this.clearinterval = Number(personIdx);
+            console.log(this.clearinterval);
             this.people[personIdx].timeleft = "0:00";
             // set status to inactive
             this.people[personIdx].status = "finished";
@@ -682,14 +688,17 @@ export default ({
             
         },
         async calculateTimeLeft(personIdx: string, start: string, end: string, readingtime: string) {
+            console.log("calculate time left")
+            console.log("personIdx",personIdx)
+            const newperid = String(personIdx)
             var interval = setInterval(() => {
                 // start and end are strings in the format of HH:MM
                 // if reading time is disabled, the readingtime variable is null
                 // reading time is the time the reading time ends in the format of HH:MM
                 // console log all the variables
                 // get the current time
-
-                if (this.clearinterval === true)
+                
+                if (this.clearinterval == Number(personIdx))
                 {
                   clearInterval(interval);
                 }
@@ -708,7 +717,9 @@ export default ({
                       }
                       else {
                         clearInterval(interval);
-                        this.stopExam(personIdx);
+                        console.log("clear interval")
+                        console.log("personIdx",newperid)
+                        this.stopExam(newperid);
                       }
                     }
 
@@ -780,7 +791,7 @@ export default ({
                 // reading time is the time the reading time ends in the format of HH:MM
                 // console log all the variables
                 // get the current time
-                if (this.clearinterval === true)
+                if (this.clearinterval == Number(personIdx))
                 {
                   clearInterval(interval2);
                 }
@@ -791,9 +802,11 @@ export default ({
                 // if the time left is 0:00:00, stop the exam
                 if (this.people[Number(personIdx)].timeleft === "0:00:00") {
                     clearInterval(interval2);
+                    console.log("clear interval")
+                    console.log("personIdx",personIdx)
                     this.stopExam(personIdx);
                 }
-            }, 20);
+            }, 200);
         },
     },
 })
