@@ -617,7 +617,19 @@ export default ({
             localStorage.setItem("people", JSON.stringify(this.people));
         },
         stopExam(personIdx: string) {
+            // set timeleft to 0
             console.log("stop exam");
+            this.people[personIdx].timeleft = "0:00";
+            // set status to inactive
+            this.people[personIdx].status = "finished";
+            // show notification
+            this.notification("success", "Exam Finished", this.people[personIdx].name + " has just finished");
+            // set started to false
+            this.people[personIdx].started = false;
+            // set the end time to the current time
+            this.people[personIdx].end = this.time();
+
+
         },
         // When the button is pressed the exam starts, which should start a timer and set the start time for an exam and calculate the end time using the duration
         startExam(personIdx: string) {
@@ -678,15 +690,16 @@ export default ({
                     this.people[Number(personIdx)].timeleft = timeleft2;
                     console.log(this.people[Number(personIdx)].timeleft)
                     console.log(this.people[Number(personIdx)].extratimeenabled)
-                    if (this.people[Number(personIdx)].extratimeenabled === true) {
+                    if (this.people[Number(personIdx)].timeleft === "0:00:00") {
                       console.log("balis")
-                      if (this.people[Number(personIdx)].timeleft === "0:00:00") {
+                      if (this.people[Number(personIdx)].extratimeenabled === true) {
                         clearInterval(interval);
                         this.calculateExtratime(personIdx, start, end)
                         // break interval
-                        
-
-                      
+                      }
+                      else {
+                        clearInterval(interval);
+                        this.stopExam(personIdx);
                       }
                     }
 
@@ -710,17 +723,21 @@ export default ({
                     this.people[Number(personIdx)].timeleft = timeleft2;
                     console.log(this.people[Number(personIdx)].timeleft)
                     console.log(this.people[Number(personIdx)].extratimeenabled)
-                    if (this.people[Number(personIdx)].extratimeenabled === true) {
-                      console.log("bolus")
-                      if (this.people[Number(personIdx)].timeleft === "0:00:00") {
-                        clearInterval(interval)
+                    if (this.people[Number(personIdx)].timeleft === "0:00:00") {
+                      console.log("balis")
+                      if (this.people[Number(personIdx)].extratimeenabled === true) {
+                        clearInterval(interval);
                         this.calculateExtratime(personIdx, start, end)
-                      
+                        // break interval
+                      }
+                      else {
+                        clearInterval(interval);
+                        this.stopExam(personIdx);
                       }
                     }
                   }
                 }
-            }, 100);
+            }, 200);
         },
         async calculateExtratime(personIdx: string, start: string, end: string) {
             console.log("Start Time",start)
@@ -748,7 +765,7 @@ export default ({
             var extratimeend = this.converter(end, String(extratime3), "addminutesexacter");
             console.log("This is messed up",extratimeend)
             
-            setInterval(() => {
+            var interval2 = setInterval(() => {
                 // start and end are strings in the format of HH:MM
                 // if reading time is disabled, the readingtime variable is null
                 // reading time is the time the reading time ends in the format of HH:MM
@@ -758,10 +775,12 @@ export default ({
                 var timeleft = this.converter(extratimeend, now, "timeleft");
                 // timeleft is in HH:MM:SS but make another var that is only HH:MM
                 this.people[Number(personIdx)].timeleft = timeleft;
-
-
-                
-            }, 100);
+                // if the time left is 0:00:00, stop the exam
+                if (this.people[Number(personIdx)].timeleft === "0:00:00") {
+                    clearInterval(interval2);
+                    this.stopExam(personIdx);
+                }
+            }, 20);
         },
     },
 })
@@ -1013,6 +1032,7 @@ export default ({
                     <span v-else-if="person.status === 'reading'" class="inline-flex rounded-full bg-orange-100 px-2 text-xs font-semibold leading-5 text-orange-500">Reading Time</span>
                     <span v-else-if="person.status === 'extra'" class="inline-flex rounded-full bg-blue-100 px-2 text-xs font-semibold leading-5 text-blue-500">Extra Time</span>
                     <span v-else-if="person.status === 'inactive'" class="inline-flex rounded-full bg-red-100 px-2 text-xs font-semibold leading-5 text-red-800">Inactive</span>
+                    <span v-else-if="person.status === 'finished'" class="inline-flex rounded-full bg-gray-100 px-2 text-xs font-semibold leading-5 text-gray-800">Finished</span>
                   </td>
                   <td class="whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
                     <div class="inline-flex rounded-md shadow-sm">
