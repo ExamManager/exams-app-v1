@@ -569,7 +569,7 @@ export default ({
             // check if clicked person is in the string, if it is remove it if it isn't add it
             // check if th exam is already started and if so dont save the id
             var personIdx = this.people.findIndex(person => person.id == id);
-            if (this.people[personIdx].started == true) {
+            if (this.people[personIdx].status == "active", "finished") {
                 // dont save the id
             }
             else {
@@ -1057,7 +1057,7 @@ export default ({
                     <span v-if="person.status === 'active'" class="inline-flex rounded-full bg-green-100 px-2 text-xs font-semibold leading-5 text-green-800">Active</span>
                     <span v-else-if="person.status === 'reading'" class="inline-flex rounded-full bg-orange-100 px-2 text-xs font-semibold leading-5 text-orange-500">Reading Time</span>
                     <span v-else-if="person.status === 'extra'" class="inline-flex rounded-full bg-blue-100 px-2 text-xs font-semibold leading-5 text-blue-500">Extra Time</span>
-                    <span v-else-if="person.status === 'inactive'" class="inline-flex rounded-full bg-red-100 px-2 text-xs font-semibold leading-5 text-red-800">Inactive</span>
+                    <span v-else-if="person.status === 'inactive'" class="inline-flex rounded-full bg-red-100 px-2 text-xs font-semibold leading-5 text-red-800">Not Started</span>
                     <span v-else-if="person.status === 'finished'" class="inline-flex rounded-full bg-gray-100 px-2 text-xs font-semibold leading-5 text-gray-800">Finished</span>
                   </td>
                   <td class="whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
