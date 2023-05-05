@@ -34,6 +34,7 @@ export default ({
             text: "This is an error message",
 
             // Other Stuff
+            clearinterval: false,
             popupedit: false,
             popupediting: "",
             timestamp: "",
@@ -619,6 +620,9 @@ export default ({
         stopExam(personIdx: string) {
             // set timeleft to 0
             console.log("stop exam");
+            clearInterval(interval)
+            clearInterval(interval2)
+
             this.people[personIdx].timeleft = "0:00";
             // set status to inactive
             this.people[personIdx].status = "finished";
@@ -684,6 +688,11 @@ export default ({
                 // reading time is the time the reading time ends in the format of HH:MM
                 // console log all the variables
                 // get the current time
+
+                if (this.clearinterval === true)
+                {
+                  clearInterval(interval);
+                }
                 var now = this.accuratetime();
                 if (readingtime === "null") {
                   var timeleft2 = this.converter(end, now, "timeleft");
@@ -771,6 +780,10 @@ export default ({
                 // reading time is the time the reading time ends in the format of HH:MM
                 // console log all the variables
                 // get the current time
+                if (this.clearinterval === true)
+                {
+                  clearInterval(interval2);
+                }
                 var now = this.accuratetime();
                 var timeleft = this.converter(extratimeend, now, "timeleft");
                 // timeleft is in HH:MM:SS but make another var that is only HH:MM
