@@ -569,17 +569,14 @@ export default ({
             // check if clicked person is in the string, if it is remove it if it isn't add it
             // check if th exam is already started and if so dont save the id
             var personIdx = this.people.findIndex(person => person.id == id);
-            if (this.people[personIdx].status == "active", "finished") {
-                // dont save the id
-            }
-            else {
+            if (this.people[personIdx].status == "inactive", "finished") {
                 // check if the id is already in the string
                 if (this.isOpen == id) {
-                this.isOpen = "";
-                }
-                else {
-                    this.isOpen = id;
-                }
+                  this.isOpen = "";
+                  }
+                  else {
+                      this.isOpen = id;
+                  }
             }
         },
         notification(icon: string, title: string, text: string) {
@@ -1075,7 +1072,7 @@ export default ({
                               <MenuItem>
                                 <a @click="duplicateButton(person.id)" class="hover:bg-gray-100 text-gray-900 block px-4 py-2 text-sm">Duplicate</a>
                                 <a @click="deleteButton(person.id)" class="hover:bg-gray-100 text-gray-900 block px-4 py-2 text-sm">Delete</a>
-                                <a @click="editButton(person.id)" class="hover:bg-gray-100 text-gray-900 block px-4 py-2 text-sm">Edit</a>
+                                <a @click="editButton(person.id)" v-if="person.status === 'inactive'" class="hover:bg-gray-100 text-gray-900 block px-4 py-2 text-sm">Edit</a>
                               </MenuItem>
                             </div>
                           </MenuItems>
