@@ -1,5 +1,6 @@
 <script lang="ts">
 import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue'
+import { NewspaperIcon } from '@heroicons/vue/24/solid';
 export default ({
     name: 'Modal',
     components: {
@@ -19,9 +20,11 @@ export default ({
             // Options
             newexamextratimeenabled: false,
             newexamreadingtimeenabled: false,
-            newexamextratime: "",
+            newexamextratime: "25",
             newexamreadingtime: "",
-            newexamminwarning: "5",
+            newexam5min: true,
+            newexam15min: false,
+            newexam30min: false,
             // new exam others
             newexamplannedend: "",
 
@@ -32,6 +35,7 @@ export default ({
 
             // Other Stuff
             popupedit: false,
+            popupediting: "",
             timestamp: "",
             datestamp: "",
             show: false,
@@ -39,9 +43,9 @@ export default ({
             selectedPeople: [],
             indeterminate: false,
             checked: false,
-            isOpen: [],
+            isOpen: "",
             people: [
-                { id: "swrfdsfdf", name: "Physics Paper 2", start: "9:36", end: "10:36", duration: "3:00", totalduration: "1:01", timeleft: "0:15", started: false, about: "Test", extratimeenabled: false, readingtimeenabled: true, extratime: "", readingtime: "1", minwarning: "35", status: "inactive" },
+                { id: "swrfdsfdf", name: "Physics Paper 2", start: "9:36", end: "10:36", duration: "0:01", totalduration: "0:01", timeleft: "0:15", started: false, about: "Test", extratimeenabled: true, readingtimeenabled: false, extratime: "50", readingtime: "", min5warning: true, min15warning: false, min30warning: false , status: "inactive" },
             ],
             test: "test",
         };
@@ -67,28 +71,6 @@ export default ({
         indeterminate() {
             this.selectedPeople.values.length > 0 && this.selectedPeople.values.length < this.people.length
         },
-        newexamduration() {
-            // watch the duration and replace a : after the first character to have it in H:MM format, but make a backspace work and allow a max of 4 characters
-            let realNumber = this.newexamduration?.replace(/:/gi, '')
-
-            // Generate dashed number but only add a dash after the first one, but this also creates a dash after every character
-            if (realNumber.length != 0) {
-              if (realNumber.length < 3) {
-                var dashedNumber = realNumber.replace(/(.{1,1})/g, "$1:").slice(0, -1)
-                this.newexamduration = dashedNumber
-              }
-            }
-            // also limit it to only 4 characters
-            if (realNumber.length > 3) {
-              this.newexamduration = this.newexamduration.slice(0, -1)
-            }
-            // and only allow numbers
-            if (isNaN(Number(realNumber))) {
-              this.newexamduration = this.newexamduration.slice(0, -1)
-            }
-        },
-        // a function that watches each person whether they are started, in extra time or in reading time or not started and updates their status
-          
     },
     methods: {
         time(){
@@ -356,10 +338,93 @@ export default ({
             this.datestamp = n;
         },
         editButton(personid: string) {
+          // find the person in the database
+          var personIdx = this.people.findIndex(person => person.id === personid);
           this.popupedit = true;
+          this.popupediting = String(personIdx);
+          // get the person from the database and fill in the form
+          this.newexamname = this.people[personIdx].name;
+          this.newexamduration = this.people[personIdx].duration;
+          this.newexamplannedstart = this.people[personIdx].start;
+          this.newexamabout = this.people[personIdx].about;
+          this.newexamextratimeenabled = this.people[personIdx].extratimeenabled;
+          this.newexamreadingtimeenabled = this.people[personIdx].readingtimeenabled;
+          this.newexamextratime = this.people[personIdx].extratime;
+          this.newexamreadingtime = this.people[personIdx].readingtime;
+          this.newexam5min = this.people[personIdx].min5warning;
+          this.newexam15min = this.people[personIdx].min15warning;
+          this.newexam30min = this.people[personIdx].min30warning;
+
+          // open modal
           this.open = true;
-          console.log("PERSONID", personid);
+          this.isOpen = ""
+          console.log(this.popupedit)
           
+        },
+        updateExam() {
+          // check if any fields have changed
+          var changed = false;
+          var thisid = Number(this.popupediting);
+          var personIdx = this.people.findIndex(person => person.id === this.people[thisid].id);
+          if (this.newexamname != this.people[personIdx].name) {
+            changed = true;
+          }
+          if (this.newexamduration != this.people[personIdx].duration) {
+            changed = true;
+          }
+          if (this.newexamplannedstart != this.people[personIdx].start) {
+            changed = true;
+          }
+          if (this.newexamabout != this.people[personIdx].about) {
+            changed = true;
+          }
+          if (this.newexamextratimeenabled != this.people[personIdx].extratimeenabled) {
+            changed = true;
+          }
+          if (this.newexamreadingtimeenabled != this.people[personIdx].readingtimeenabled) {
+            changed = true;
+          }
+          if (this.newexamextratime != this.people[personIdx].extratime) {
+            changed = true;
+          }
+          if (this.newexamreadingtime != this.people[personIdx].readingtime) {
+            changed = true;
+          }
+          if (this.newexam5min != this.people[personIdx].min5warning) {
+            changed = true;
+          }
+          if (this.newexam15min != this.people[personIdx].min15warning) {
+            changed = true;
+          }
+          if (this.newexam30min != this.people[personIdx].min30warning) {
+            changed = true;
+          }
+          // if no fields have changed, show notification
+          if (changed == false) {
+            this.notification("error", "Error", "No fields have changed");
+          }
+          else {
+            // if fields have changed, update the person in the database
+            this.people[personIdx].name = this.newexamname;
+            this.people[personIdx].duration = this.newexamduration;
+            this.people[personIdx].plannedstart = this.newexamplannedstart;
+            this.people[personIdx].about = this.newexamabout;
+            this.people[personIdx].extratimeenabled = this.newexamextratimeenabled;
+            this.people[personIdx].readingtimeenabled = this.newexamreadingtimeenabled;
+            this.people[personIdx].extratime = this.newexamextratime;
+            this.people[personIdx].readingtime = this.newexamreadingtime;
+            this.people[personIdx].min5warning = this.newexam5min;
+            this.people[personIdx].min15warning = this.newexam15min;
+            this.people[personIdx].min30warning = this.newexam30min;
+            this.open = false;
+            this.isOpen = ""
+            // show notification
+            this.notification("success", "Success", "Exam updated");
+            // close modal
+            
+          }
+
+
         },
         openModal() {
             this.popupedit = false;
@@ -372,7 +437,9 @@ export default ({
             this.newexamreadingtimeenabled = false;
             this.newexamextratime = "";
             this.newexamreadingtime = "";
-            this.newexamminwarning = "5";
+            this.newexam5min = true;
+            this.newexam15min = false;
+            this.newexam30min = false;
             // open modal
             this.open = true;
         },
@@ -407,7 +474,9 @@ export default ({
               readingtimeenabled: this.newexamreadingtimeenabled,
               extratime: this.newexamextratime,
               readingtime: this.newexamreadingtime,
-              minwarning: this.newexamminwarning,
+              min5warning: this.newexam5min,
+              min15warning: this.newexam15min,
+              min30warning: this.newexam30min,
               started: false,
               status: "inactive"
             });
@@ -446,19 +515,20 @@ export default ({
             }
         },
         popup(id: string) {
-            // check if id is in the array if not add id, if it is remove it
-            // grab the person with the id
+            // check if clicked person is in the string, if it is remove it if it isn't add it
+            // check if th exam is already started and if so dont save the id
             var personIdx = this.people.findIndex(person => person.id == id);
-          
-            if (this.people[personIdx].started === false) {
-              if (this.isOpen.includes(id)) {
-                  // remove id from array
-                  this.isOpen.splice(this.isOpen.indexOf(id), 1);
-              }
-              else {
-                  // add id to array
-                  this.isOpen.push(id);
-              }
+            if (this.people[personIdx].started == true) {
+                // dont save the id
+            }
+            else {
+                // check if the id is already in the string
+                if (this.isOpen == id) {
+                this.isOpen = "";
+                }
+                else {
+                    this.isOpen = id;
+                }
             }
         },
         notification(icon: string, title: string, text: string) {
@@ -551,7 +621,7 @@ export default ({
             
         },
         async calculateTimeLeft(personIdx: string, start: string, end: string, readingtime: string) {
-            setInterval(() => {
+            var interval = setInterval((id) => {
                 // start and end are strings in the format of HH:MM
                 // if reading time is disabled, the readingtime variable is null
                 // reading time is the time the reading time ends in the format of HH:MM
@@ -560,35 +630,81 @@ export default ({
                 var now = this.accuratetime();
                 if (readingtime === "null") {
                   var timeleft2 = this.converter(end, now, "timeleft");
-                    this.people[personIdx].timeleft = timeleft2;
-                    console.log("Active")
+                    this.people[Number(personIdx)].timeleft = timeleft2;
+                    console.log(this.people[Number(personIdx)].timeleft)
+                    console.log(this.people[Number(personIdx)].extratimeenabled)
+                    if (this.people[Number(personIdx)].extratimeenabled === true) {
+                      console.log("balis")
+                      if (this.people[Number(personIdx)].timeleft === "0:00:00") {
+                        clearInterval(interval);
+                        this.calculateExtratime(personIdx, start, end)
+                        // break interval
+                        
+
+                      
+                      }
+                    }
+
                 }
                 else {
                   // calculate the reading time left and set it to the time left varaible. When the reading time is over, start calculating the time left for the exam without reading time
-                  if (this.people[personIdx].status === "reading") {
+                  if (this.people[Number(personIdx)].status === "reading") {
                     var timeleft = this.converter(start, now, "timeleft");
                     // timeleft is in HH:MM:SS but make another var that is only HH:MM
 
-                    this.people[personIdx].timeleft = timeleft;
+                    this.people[Number(personIdx)].timeleft = timeleft;
                     console.log("Reading")
                     if (start == now) {
-                      this.people[personIdx].status = "active";
+                      this.people[Number(personIdx)].status = "active";
                       console.log("Reading time is over");
-                      this.notification("success", "Exam Started", this.people[personIdx].name + " has been started");
+                      this.notification("success", "Exam Started", this.people[Number(personIdx)].name + " has been started");
                     }
                   }
                   else {
                     var timeleft2 = this.converter(end, now, "timeleft");
-                    this.people[personIdx].timeleft = timeleft2;
-                    console.log("Active")
+                    this.people[Number(personIdx)].timeleft = timeleft2;
+                    console.log(this.people[Number(personIdx)].timeleft)
+                    console.log(this.people[Number(personIdx)].extratimeenabled)
+                    if (this.people[Number(personIdx)].extratimeenabled === true) {
+                      console.log("bolus")
+                      if (this.people[Number(personIdx)].timeleft === "0:00:00") {
+                        clearInterval(interval)
+                        this.calculateExtratime(personIdx, start, end)
+                      
+                      }
+                    }
                   }
                 }
             }, 100);
         },
-        async calculateStatus(personIdx: string, start: Date, end: Date) {
+        async calculateExtratime(personIdx: string, start: string, end: string) {
+            // grab extra time which is in percentage
+            var extratime = this.people[Number(personIdx)].extratime;
+            // convert the percentage into a decimal
+            var extratime2 = Number(extratime) / 100;
+            // grab the duration of the exam
+            var duration = this.people[Number(personIdx)].duration;
+            // convert the duration into minutes
+            var duration2 = this.converter(duration,"","H:MM");
+            // calculate the extra time in minutes
+            var extratime3 = Number(duration2) * extratime2;
+            // add the minutes to the end time
+            var extratimeend = this.converter(end, String(extratime3), "addminutesexact");
+            
             setInterval(() => {
+                // start and end are strings in the format of HH:MM
+                // if reading time is disabled, the readingtime variable is null
+                // reading time is the time the reading time ends in the format of HH:MM
+                // console log all the variables
+                // get the current time
+                var now = this.accuratetime();
+                var timeleft = this.converter(extratimeend, now, "timeleft");
+                // timeleft is in HH:MM:SS but make another var that is only HH:MM
+                this.people[Number(personIdx)].timeleft = timeleft;
+
+
                 
-            }, 1000);
+            }, 100);
         },
     },
 })
@@ -641,14 +757,14 @@ export default ({
                       <div class="sm:col-span-2">
                         <label for="first-name" class="block text-sm font-medium text-gray-700">Planned Start Time</label>
                         <div class="mt-1">
-                          <input type="time" name="starttime" placeholder="9:36" v-model="newexamplannedstart" id="starttime" autocomplete="given-name" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" />
+                          <input type="time" name="starttime" placeholder="9:37" v-model="newexamplannedstart" id="starttime" autocomplete="given-name" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" />
                         </div>
                       </div>
 
                       <div class="sm:col-span-2">
                         <label for="last-name" class="block text-sm font-medium text-gray-700">Duration</label>
                         <div class="mt-1">
-                          <input type="text" name="Duration" id="duration" v-model="newexamduration" placeholder="2:00" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" />
+                          <input type="text" name="Duration" id="duration" v-mask="'#:##'" v-model="newexamduration" placeholder="2:00" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" />
                         </div>
                       </div>
                     </div>
@@ -673,13 +789,12 @@ export default ({
                               <p class="text-gray-500">Check to enable extra time and select the percentage.</p>
                               <div class="mt-2">
                                 <transition enter-active-class="transform ease-out duration-400 transition" enter-from-class="translate-y-4 opacity-0 sm:translate-y-0 sm:translate-x-2" enter-to-class="translate-y-0 opacity-100 sm:translate-x-0" leave-active-class="transition ease-in duration-100" leave-from-class="opacity-100" leave-to-class="opacity-0">
-                                <select v-if="newexamextratimeenabled === true" id="extratimepercentage" v-model="newexamextratime" class="mt-1 block w-full rounded-md border-gray-300 py-2 pl-3 pr-10 text-base focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm">
-                                  <option>10%</option>
-                                  <option>15%</option>
-                                  <option>20%</option>
-                                  <option selected >25%</option>
-                                  <option>50%</option>
-                                </select>
+                                  <div v-if="newexamextratimeenabled" class="flex-auto items-center space-x-2">
+                                    <div class="mt-1 flex rounded-md shadow-sm">
+                                      <input v-model="newexamextratime" placeholder="15" type="text" v-mask="'##'" name="examname" id="examname" autocomplete="examname" class="block w-full min-w-0 flex-1 rounded-none rounded-l-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" />
+                                      <span class="inline-flex items-center rounded-r-md border border-l-0 border-gray-300 bg-gray-50 px-3 text-gray-500 sm:text-sm">Percent</span>
+                                    </div>
+                                  </div>
                               </transition>
                               </div>
                             </div>
@@ -694,7 +809,10 @@ export default ({
                               <div class="sm:col-span-2">
                                 <div class="mt-2">
                                   <transition enter-active-class="transform ease-out duration-400 transition" enter-from-class="translate-y-4 opacity-0 sm:translate-y-0 sm:translate-x-2" enter-to-class="translate-y-0 opacity-100 sm:translate-x-0" leave-active-class="transition ease-in duration-100" leave-from-class="opacity-100" leave-to-class="opacity-0">
-                                  <input v-if="newexamreadingtimeenabled === true" type="text" name="readingtime" v-model="newexamreadingtime" id="readingtime" placeholder='15 min' autocomplete="family-name" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" />
+                                    <div v-if="newexamreadingtimeenabled === true" class="mt-1 flex rounded-md shadow-sm">
+                                      <input v-model="newexamreadingtime" placeholder="15" type="text" v-mask="'##'" name="examname" id="examname" autocomplete="examname" class="block w-full min-w-0 flex-1 rounded-none rounded-l-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" />
+                                      <span class="inline-flex items-center rounded-r-md border border-l-0 border-gray-300 bg-gray-50 px-3 text-gray-500 sm:text-sm">Minutes</span>
+                                    </div>
                                 </transition>
                                 </div>
                               </div>
@@ -705,23 +823,32 @@ export default ({
                       <fieldset class="mt-6">
                         <legend class="contents text-base font-medium text-gray-900">Reminder Options</legend>
                         <p class="text-sm text-gray-500">These will show a notification and play a sound.</p>
-                        <div class="mt-4 space-y-4">
-                          <div class="flex items-center">
-                            <input id="push-everything" v-model="newexamminwarning" v-bind:value="'5'" name="push-notifications" type="radio" class="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-500" />
-                            <label for="push-everything" class="ml-3 block text-sm font-medium text-gray-700">5 minutes before end</label>
-                          </div>
-                          <div class="flex items-center">
-                            <input id="push-email" v-model="newexamminwarning" v-bind:value="'30'" name="push-notifications" type="radio" class="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-500" />
-                            <label for="push-email" class="ml-3 block text-sm font-medium text-gray-700">30 minutes before end</label>
-                          </div>
-                          <div class="flex items-center">
-                            <input id="push-nothing" v-model="newexamminwarning" v-bind:value="'35'" name="push-notifications" type="radio" class="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-500" />
-                            <label for="push-nothing" class="ml-3 block text-sm font-medium text-gray-700">30 & 5 minutes before end</label>
-                          </div>
-                          <div class="flex items-center">
-                            <input id="push-nothing" v-model="newexamminwarning" v-bind:value="'0'" name="push-notifications" type="radio" class="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-500" />
-                            <label for="push-nothing" class="ml-3 block text-sm font-medium text-gray-700">No notifications</label>
-                          </div>
+                        <div class="relative flex items-start mt-4">
+                            <div class="flex h-5 items-center">
+                              <input id="candidates" name="candidates" v-model="newexam5min" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500" />
+                            </div>
+                            <div class="ml-3 text-sm">
+                              <label for="candidates" class="font-medium text-gray-700">5 Minutes</label>
+                              <p class="text-gray-500">Get a reminder 5 minutes before the exam ends.</p>
+                            </div>
+                        </div>
+                        <div class="relative flex items-start mt-4">
+                            <div class="flex h-5 items-center">
+                              <input id="candidates" name="candidates" v-model="newexam15min" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500" />
+                            </div>
+                            <div class="ml-3 text-sm">
+                              <label for="candidates" class="font-medium text-gray-700">15 Minutes</label>
+                              <p class="text-gray-500">Get a reminder 15 minutes before the exam ends.</p>
+                            </div>
+                        </div>
+                        <div class="relative flex items-start mt-4">
+                            <div class="flex h-5 items-center">
+                              <input id="candidates" name="candidates" v-model="newexam30min" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500" />
+                            </div>
+                            <div class="ml-3 text-sm">
+                              <label for="candidates" class="font-medium text-gray-700">30 Minutes</label>
+                              <p class="text-gray-500">Get a reminder 30 minutes before the exam ends.</p>
+                            </div>
                         </div>
                       </fieldset>
                     </div>
@@ -731,8 +858,7 @@ export default ({
                 <div class="pt-5">
                   <div class="flex justify-end">
                     <button @click="open = false" class="rounded-md border border-gray-300 bg-white py-2 px-4 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">Cancel</button>
-                    <button v-if="popupedit === false" @click="addExam" class="ml-3 inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">Add Exam</button>
-                    <button v-if="popupedit === true" @click="addExam" class="ml-3 inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">Update Exam</button>
+                    <button @click=" popupedit ? updateExam(people) : addExam() " class="ml-3 inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">{{ popupedit ? 'Update Exam' : 'Add Exam' }}</button>
 
                   </div>
                 </div>
@@ -841,7 +967,7 @@ export default ({
                           <svg v-else class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Pro 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. --><path fill="currentColor" d="M424 216H24C10.75 216 0 205.3 0 192C0 178.7 10.75 168 24 168H424C437.3 168 448 178.7 448 192C448 205.3 437.3 216 424 216zM424 344H24C10.75 344 0 333.3 0 320C0 306.7 10.75 296 24 296H424C437.3 296 448 306.7 448 320C448 333.3 437.3 344 424 344z"/></svg>
                         </MenuButton>
                         <transition v-if="isOpen.includes(person.id)" enter-active-class="transition ease-out duration-100" enter-from-class="transform opacity-0 scale-95" enter-to-class="transform opacity-100 scale-100" leave-active-class="transition ease-in duration-75" leave-from-class="transform opacity-100 scale-100" leave-to-class="transform opacity-0 scale-95">
-                          <MenuItems class="fixed right-14 z-10 mt-10 w-42 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                          <MenuItems class="fixed right-14 z-10 mt-10 w-42 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                             <div class="py-1 ">
                               <MenuItem>
                                 <a @click="duplicateButton(person.id)" class="hover:bg-gray-100 text-gray-900 block px-4 py-2 text-sm">Duplicate</a>
@@ -899,3 +1025,14 @@ export default ({
     </div>
   </div>
 </template>
+
+<style >
+
+.blah {
+  @apply absolute;
+  top: 0;
+  right: 0;
+  z-index: 1000;
+}
+
+</style>
