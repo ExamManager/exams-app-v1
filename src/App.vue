@@ -34,7 +34,7 @@ export default ({
             text: "This is an error message",
 
             // Other Stuff
-            clearinterval: false,
+            clearinterval: 0,
             popupedit: false,
             popupediting: "",
             timestamp: "",
