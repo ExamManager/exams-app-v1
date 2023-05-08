@@ -635,8 +635,17 @@ export default ({
             this.people[personIdx].started = false;
             // set the end time to the current time
             this.people[personIdx].end = this.time();
-
-
+        },
+        startMultipleExams() {
+            // start all selected exams
+            for (var i = 0; i < this.selectedPeople.length; i++) {
+                // find the index of the person in the people array
+                var personIdx = this.people.findIndex(person => person.id == this.selectedPeople[i]);
+                // start the exam
+                this.startExam(this.people[personIdx].id);
+            }
+            // show notification
+            this.notification("success", "Exams Started", "The selected exams have been started");
         },
         // When the button is pressed the exam starts, which should start a timer and set the start time for an exam and calculate the end time using the duration
         startExam(personIdx: string) {
@@ -1009,7 +1018,7 @@ export default ({
         <div class="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
           <div class="relative overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
             <div v-if="selectedPeople.length > 0" class="absolute top-0 left-12 flex h-12 items-center space-x-3 bg-gray-50 sm:left-16">
-              <button type="button" class="inline-flex items-center rounded border border-gray-300 bg-white px-2.5 py-1.5 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-30" @click="startmultipleExams">Start Exams</button>
+              <button type="button" class="inline-flex items-center rounded border border-gray-300 bg-white px-2.5 py-1.5 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-30" @click="startMultipleExams">Start Exams</button>
               <button type="button" class="inline-flex items-center rounded border border-gray-300 bg-white px-2.5 py-1.5 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-30" @click="deleteSelected" >Delete</button>
             </div>
             <table class="min-w-full table-fixed divide-y divide-gray-300">
