@@ -46,7 +46,7 @@ export default ({
             checked: false,
             isOpen: "",
             people: [
-                { id: "swrfdsfdf", name: "Physics Paper 2", start: "9:36", end: "10:36", duration: "0:01", totalduration: "0:03", timeleft: "0:15", started: false, about: "Test", extratimeenabled: true, readingtimeenabled: false, extratime: "50", readingtime: "", min5warning: true, min15warning: false, min30warning: false , status: "inactive" },
+                { id: "swrfdsfdf", name: "Example Paper", start: "9:00", end: "10:00", duration: "1:00", totalduration: "0:03", timeleft: "1:00", started: false, about: "This is an example Paper to demonstrate the functionality of the Webpage", extratimeenabled: true, readingtimeenabled: false, extratime: "50", readingtime: "", min5warning: false, min15warning: false, min30warning: false , status: "inactive" },
             ],
             test: "test",
         };
@@ -467,6 +467,8 @@ export default ({
             // show notification
             this.notification("success", "Success", "Exam updated");
             // close modal
+            // update localstorage
+            localStorage.setItem("people", JSON.stringify(this.people));
             
           }
 
@@ -526,6 +528,8 @@ export default ({
               started: false,
               status: "inactive"
             });
+            // update localstorage
+            localStorage.setItem("people", JSON.stringify(this.people));
             // close modal and then show notification
             this.open = false;
             this.notification("success", "Exam Added", this.newexamname + " has been added");
