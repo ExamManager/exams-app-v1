@@ -374,11 +374,7 @@ export default ({
             }
         },
         toggleFullScreen() {
-            if (!document.fullscreenElement) {
-                document.documentElement.requestFullscreen();
-            } else {
-                document.exitFullscreen();
-            }
+            this.$router.push({ path: '/fullscreen' });
         },
         updateTime() {
             var d = new Date();
