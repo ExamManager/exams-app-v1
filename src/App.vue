@@ -22,7 +22,7 @@ export default ({
             newexamreadingtimeenabled: false,
             newexamextratime: "25",
             newexamreadingtime: "",
-            newexam5min: true,
+            newexam5min: false,
             newexam15min: false,
             newexam30min: false,
             // new exam others
@@ -933,11 +933,11 @@ export default ({
                         </div>
                       </fieldset>
                       <fieldset class="mt-6">
-                        <legend class="contents text-base font-medium text-gray-900">Reminder Options</legend>
+                        <legend class="contents text-base font-medium text-gray-900">Reminder Options <a class="text-gray-300">(Not Implemented)</a></legend>
                         <p class="text-sm text-gray-500">These will show a notification and play a sound.</p>
                         <div class="relative flex items-start mt-4">
                             <div class="flex h-5 items-center">
-                              <input id="candidates" name="candidates" v-model="newexam5min" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500" />
+                              <input id="candidates" name="candidates" v-model="newexam5min" disabled type="checkbox" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500" />
                             </div>
                             <div class="ml-3 text-sm">
                               <label for="candidates" class="font-medium text-gray-700">5 Minutes</label>
@@ -946,7 +946,7 @@ export default ({
                         </div>
                         <div class="relative flex items-start mt-4">
                             <div class="flex h-5 items-center">
-                              <input id="candidates" name="candidates" v-model="newexam15min" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500" />
+                              <input id="candidates" name="candidates" v-model="newexam15min" disabled type="checkbox" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500" />
                             </div>
                             <div class="ml-3 text-sm">
                               <label for="candidates" class="font-medium text-gray-700">15 Minutes</label>
@@ -955,7 +955,7 @@ export default ({
                         </div>
                         <div class="relative flex items-start mt-4">
                             <div class="flex h-5 items-center">
-                              <input id="candidates" name="candidates" v-model="newexam30min" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500" />
+                              <input id="candidates" name="candidates" v-model="newexam30min" disabled type="checkbox" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500" />
                             </div>
                             <div class="ml-3 text-sm">
                               <label for="candidates" class="font-medium text-gray-700">30 Minutes</label>
