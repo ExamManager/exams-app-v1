@@ -58,7 +58,7 @@ export default ({
         for (var i = 0; i < this.people.length; i++) {
             this.people[i].timeleft = this.people[i].duration;
         }
-        // check if there is a list of people in local storage
+        //check if there is a list of people in local storage
         if (localStorage.getItem('people')) {
           // if there is, then load it into the people array
           this.people = JSON.parse(localStorage.getItem('people') || '{}');
