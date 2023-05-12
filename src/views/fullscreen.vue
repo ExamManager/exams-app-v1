@@ -4,18 +4,29 @@ export default {
   data() {
     return {
       fullscreen: false,
+      timestamp: "",
+      datestamp: "",
       people: [
                 { id: "swrfdsfdf", name: "Example Paper", start: "9:00", end: "10:00", duration: "1:00", totalduration: "0:03", timeleft: "1:00", started: false, about: "This is an example Paper to demonstrate the functionality of the Webpage", extratimeenabled: true, readingtimeenabled: false, extratime: "50", readingtime: "", min5warning: false, min15warning: false, min30warning: false , status: "inactive" },
             ],
     };
   },
   methods: {
-    toggleFullscreen() {
-      this.fullscreen = !this.fullscreen;
+    updateTime() {
+        var d = new Date();
+        var n = d.toLocaleTimeString("de-EN");
+        this.timestamp = n;
+    },
+    updateDate() {
+        var d = new Date();
+        var n = d.toLocaleDateString();
+        this.datestamp = n;
     },
   },
   mounted() {
+    // full screen
     setInterval(() => {
+    this.updateTime();
     if (localStorage.getItem('people')) {
       // if there is, then load it into the people array
       this.people = JSON.parse(localStorage.getItem('people') || '{}');
@@ -26,6 +37,15 @@ export default {
 </script>
 
 <template>
+  <div class="px-4 sm:px-6 lg:px-8 lg:pt-4">
+    <div class="flex justify-end">
+      <div class="flex flex-col items-end">
+        <div class="flex flex-row">
+          <div class="text-7xl font-bold text-gray-900">{{ timestamp }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
     <div class="mt-4 flex flex-col mx-4">
       <div class="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
         <div class="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
