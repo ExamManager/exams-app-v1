@@ -62,6 +62,16 @@ export default ({
         if (localStorage.getItem('people')) {
           // if there is, then load it into the people array
           this.people = JSON.parse(localStorage.getItem('people') || '{}');
+          // set any exams that are set to active to inactive and set their time left to their duration and set their started to false
+          for (var i = 0; i < this.people.length; i++) {
+              if (this.people[i].status === "active") {
+                  this.people[i].status = "inactive";
+                  this.people[i].timeleft = this.people[i].duration;
+                  this.people[i].started = false;
+              }
+          }
+          // update local storage
+          localStorage.setItem('people', JSON.stringify(this.people));
         }
         setInterval(() => {
             this.updateTime();
@@ -374,7 +384,9 @@ export default ({
             }
         },
         toggleFullScreen() {
-            this.$router.push({ path: '/fullscreen' });
+            // new page for fullscreen
+            window.open("/fullscreen", '_blank');
+
         },
         updateTime() {
             var d = new Date();
@@ -642,6 +654,7 @@ export default ({
             this.people[personIdx].started = false;
             // set the end time to the current time
             this.people[personIdx].end = this.time();
+            localStorage.setItem("people", JSON.stringify(this.people));
         },
         startMultipleExams() {
             // start all selected exams
@@ -653,6 +666,7 @@ export default ({
             }
             // show notification
             this.notification("success", "Exams Started", "The selected exams have been started");
+            localStorage.setItem("people", JSON.stringify(this.people));
         },
         // When the button is pressed the exam starts, which should start a timer and set the start time for an exam and calculate the end time using the duration
         startExam(personIdx: string) {
@@ -678,6 +692,7 @@ export default ({
                 
 
                 this.calculateTimeLeft(personIdx, starttime, endtime, this.people[personIdx].readingtime);
+                localStorage.setItem("people", JSON.stringify(this.people));
             }
             else {
                 // calculate the new end time with the converter
@@ -770,6 +785,7 @@ export default ({
                     }
                   }
                 }
+                localStorage.setItem("people", JSON.stringify(this.people));
             }, 200);
         },
         async calculateExtratime(personIdx: string, start: string, end: string) {
@@ -819,6 +835,7 @@ export default ({
                     console.log("personIdx",personIdx)
                     this.stopExam(personIdx);
                 }
+                localStorage.setItem("people", JSON.stringify(this.people));
             }, 200);
         },
     },
@@ -1140,19 +1157,5 @@ export default ({
         </div>
       </transition>
     </div>
-  </div>
-  <div class="fixed bottom-0 left-0 p-4">
-    <a href="https://bitstore.dev" target="_blank" class="text-gray-500 hover:text-gray-600 transition duration-150 ease-in-out">
-      <div class="flex items-center space-x-2 drop-shadow-md group/credits">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" class="text-gray-500 h-4 w-4">
-          <path fill-rule="evenodd" d="M2.25 6a3 3 0 013-3h13.5a3 3 0 013 3v12a3 3 0 01-3 3H5.25a3 3 0 01-3-3V6zm3.97.97a.75.75 0 011.06 0l2.25 2.25a.75.75 0 010 1.06l-2.25 2.25a.75.75 0 01-1.06-1.06l1.72-1.72-1.72-1.72a.75.75 0 010-1.06zm4.28 4.28a.75.75 0 000 1.5h3a.75.75 0 000-1.5h-3z" clip-rule="evenodd"/>
-        </svg>
-        <!-- Say creators normally but when hovered expand to "Created by Daniel and Guglielmo" and make it transition -->
-
-        <span class="text-xs md:inline group-hover/credits:hidden">Credits</span>
-        <span class="text-xs collapse md:inline group-hover/credits:visible">Created by Daniel and Guglielmo</span>
-
-      </div>
-    </a>
   </div>
 </template>
