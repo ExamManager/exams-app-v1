@@ -34,6 +34,7 @@ export default {
     // full screen
     setInterval(() => {
     this.updateTime();
+    this.updateDate();
     if (localStorage.getItem('people')) {
       // if there is, then load it into the people array
       this.people = JSON.parse(localStorage.getItem('people') || '{}');
@@ -49,6 +50,9 @@ export default {
       <div class="flex flex-col items-end">
         <div class="flex flex-row">
           <div class="text-7xl font-bold text-gray-900">{{ timestamp }}</div>
+        </div>
+        <div class="flex flex-row">
+          <div class="text-2xl font-bold text-gray-900">{{ datestamp }}</div>
         </div>
       </div>
     </div>
