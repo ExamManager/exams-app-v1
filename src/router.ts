@@ -13,7 +13,7 @@ const router = createRouter({
     },
     {
       path: '/fullscreen',
-      component: () => import('./views/fullscreen.vue'),
+      component: () => import('./views/Fullscreen.vue'),
     },
 ],
 })
