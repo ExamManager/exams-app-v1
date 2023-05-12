@@ -12,6 +12,13 @@ export default {
     };
   },
   methods: {
+    fullscreen1() {
+        if (!document.fullscreenElement) {
+            document.documentElement.requestFullscreen();
+        } else {
+            document.exitFullscreen();
+        }
+    },
     updateTime() {
         var d = new Date();
         var n = d.toLocaleTimeString("de-EN");
@@ -37,12 +44,24 @@ export default {
 </script>
 
 <template>
-  <div class="px-4 sm:px-6 lg:px-8 lg:pt-4">
+  <div class="pr-4 sm:pr-6 lg:pr-8 lg:pt-8">
     <div class="flex justify-end">
       <div class="flex flex-col items-end">
         <div class="flex flex-row">
           <div class="text-7xl font-bold text-gray-900">{{ timestamp }}</div>
         </div>
+      </div>
+    </div>
+  
+  <div class="sm:flex sm:items-center pl-4">
+      
+      <div class="mt-4 space-x-4 sm:mt-0 sm:flex-none">
+        <span class="isolate inline-flex rounded-md shadow-sm">
+          <button type="button" class="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500" @click.native="fullscreen1">
+            <svg class=" h-4 w-4 mr-2 text-gray-700" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Pro 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. --><path fill="currentColor" d="M496 304h-416v-224H32v240c0 17.6 14.4 32 32 32L264 352v47.02l-72 72c-9.354 9.352-9.354 24.52 0 33.88c9.348 9.348 24.51 9.359 33.87 .0195L288 442.9l62.09 62.09c9.391 9.391 24.63 9.348 33.97-.0938c9.301-9.406 9.258-24.55-.0938-33.91L312 399V352L512 352c17.6 0 32-14.4 32-32V80h-48V304zM552 0H23.96C10.72 0 0 10.73 0 23.95S10.72 48 23.96 48h528.1C565.3 48 576 37.27 576 24.05S565.3 0 552 0z"/></svg>
+            Fullscreen
+          </button>
+        </span>
       </div>
     </div>
   </div>
