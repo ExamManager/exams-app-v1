@@ -1,2 +1,1 @@
-- fix timing issue with rows when deleting
 - fix extra time calculation
