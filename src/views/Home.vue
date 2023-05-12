@@ -562,6 +562,7 @@ export default ({
             // make the status of the new person inactive always when duplicating
             newPerson.status = "inactive";
             newPerson.timeleft = newPerson.duration;
+            newPerson.started = false;
             this.people.push(newPerson);
             // put make the id a random 8 digit uuid
             this.people[this.people.length - 1].id = Math.random().toString(36).substr(2, 9);
@@ -671,6 +672,7 @@ export default ({
         // When the button is pressed the exam starts, which should start a timer and set the start time for an exam and calculate the end time using the duration
         startExam(personIdx: string) {
             // find person with id
+            var personid = personIdx;
             var personIdx = this.people.findIndex(person => person.id == personIdx);
             // set the status to active
             this.people[personIdx].started = true;
@@ -691,7 +693,7 @@ export default ({
                 console.log("1")
                 
 
-                this.calculateTimeLeft(personIdx, starttime, endtime, this.people[personIdx].readingtime);
+                this.calculateTimeLeft(personid, starttime, endtime, this.people[personIdx].readingtime);
                 localStorage.setItem("people", JSON.stringify(this.people));
             }
             else {
@@ -706,7 +708,7 @@ export default ({
                 // set the status to active
                 this.people[personIdx].status = "active";
                 console.log("2")
-                this.calculateTimeLeft(personIdx, this.people[personIdx].start, endtime, "null");
+                this.calculateTimeLeft(personid, this.people[personIdx].start, endtime, "null");
                 // console log the sent variables
                 console.log("starttime",this.people[personIdx].start)
                 console.log("endtime",endtime)
@@ -715,11 +717,11 @@ export default ({
             
             
         },
-        async calculateTimeLeft(personIdx: string, start: string, end: string, readingtime: string) {
+        async calculateTimeLeft(personid: string, start: string, end: string, readingtime: string) {
             console.log("calculate time left")
-            console.log("personIdx",personIdx)
-            const newperid = String(personIdx)
+            var personid2 = personid;
             var interval = setInterval(() => {
+                var personIdx = this.people.findIndex(person => person.id == personid);
                 // start and end are strings in the format of HH:MM
                 // if reading time is disabled, the readingtime variable is null
                 // reading time is the time the reading time ends in the format of HH:MM
@@ -740,14 +742,14 @@ export default ({
                       console.log("balis")
                       if (this.people[Number(personIdx)].extratimeenabled === true) {
                         clearInterval(interval);
-                        this.calculateExtratime(personIdx, start, end)
+                        this.calculateExtratime(personid2, start, end)
                         // break interval
                       }
                       else {
                         clearInterval(interval);
                         console.log("clear interval")
-                        console.log("personIdx",newperid)
-                        this.stopExam(newperid);
+                        console.log("personIdx",String(personIdx))
+                        this.stopExam(String(personIdx));
                       }
                     }
 
@@ -775,12 +777,12 @@ export default ({
                       console.log("balis")
                       if (this.people[Number(personIdx)].extratimeenabled === true) {
                         clearInterval(interval);
-                        this.calculateExtratime(personIdx, start, end)
+                        this.calculateExtratime(personid2, start, end)
                         // break interval
                       }
                       else {
                         clearInterval(interval);
-                        this.stopExam(personIdx);
+                        this.stopExam(String(personIdx));
                       }
                     }
                   }
@@ -788,10 +790,10 @@ export default ({
                 localStorage.setItem("people", JSON.stringify(this.people));
             }, 200);
         },
-        async calculateExtratime(personIdx: string, start: string, end: string) {
+        async calculateExtratime(personid: string, start: string, end: string) {
             console.log("Start Time",start)
             console.log("End Time",end)
-            console.log("Person Index",personIdx)
+            var personIdx = this.people.findIndex(person => person.id == personid);
             // set the status to extratime
             this.people[Number(personIdx)].status = "extra";
             // send notification
@@ -815,6 +817,7 @@ export default ({
             console.log("This is messed up",extratimeend)
             
             var interval2 = setInterval(() => {
+                var personIdx = this.people.findIndex(person => person.id == personid);
                 // start and end are strings in the format of HH:MM
                 // if reading time is disabled, the readingtime variable is null
                 // reading time is the time the reading time ends in the format of HH:MM
@@ -833,7 +836,7 @@ export default ({
                     clearInterval(interval2);
                     console.log("clear interval")
                     console.log("personIdx",personIdx)
-                    this.stopExam(personIdx);
+                    this.stopExam(String(personIdx));
                 }
                 localStorage.setItem("people", JSON.stringify(this.people));
             }, 200);
