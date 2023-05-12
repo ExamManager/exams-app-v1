@@ -8,6 +8,10 @@ const router = createRouter({
       component: () => import('./views/Home.vue'),
     },
     {
+      path: '/help',
+      component: () => import('./views/Help.vue'),
+    },
+    {
       path: '/fullscreen',
       component: () => import('./views/fullscreen.vue'),
     },
