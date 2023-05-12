@@ -12,12 +12,17 @@ export default {
     },
   },
   mounted() {
-    // check local storage for a value
-    const show = sessionStorage.getItem('show');
-    if (show === "false") {
+    // check which page is shows, and if it is on "/fullscreen" then hide the navbar always
+    if (window.location.pathname == "/fullscreen") {
+      console.log(window.location.pathname)
+      this.show = false;
+    } else {
+      var show = sessionStorage.getItem('show');
+      if (show === "false") {
       this.show = false;
     } else {
       this.show = true;
+    }
     }
   },
 };
