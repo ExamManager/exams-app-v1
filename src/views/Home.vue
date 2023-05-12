@@ -64,7 +64,7 @@ export default ({
           this.people = JSON.parse(localStorage.getItem('people') || '{}');
           // set any exams that are set to active to inactive and set their time left to their duration and set their started to false
           for (var i = 0; i < this.people.length; i++) {
-              if (this.people[i].status === "active") {
+              if (this.people[i].status === "active", "reading", "extra") {
                   this.people[i].status = "inactive";
                   this.people[i].timeleft = this.people[i].duration;
                   this.people[i].started = false;
