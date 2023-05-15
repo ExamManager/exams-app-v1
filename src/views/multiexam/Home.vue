@@ -62,16 +62,6 @@ export default ({
         if (localStorage.getItem('people')) {
           // if there is, then load it into the people array
           this.people = JSON.parse(localStorage.getItem('people') || '{}');
-          // set any exams that are set to active to inactive and set their time left to their duration and set their started to false
-          for (var i = 0; i < this.people.length; i++) {
-              if (this.people[i].status === "active", "reading", "extra") {
-                  this.people[i].status = "inactive";
-                  this.people[i].timeleft = this.people[i].duration;
-                  this.people[i].started = false;
-              }
-          }
-          // update local storage
-          localStorage.setItem('people', JSON.stringify(this.people));
         }
         setInterval(() => {
             this.updateTime();
@@ -384,9 +374,11 @@ export default ({
             }
         },
         toggleFullScreen() {
-            // new page for fullscreen
-            window.open("/fullscreen", '_blank');
-
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen();
+            } else {
+                document.exitFullscreen();
+            }
         },
         updateTime() {
             var d = new Date();
@@ -562,7 +554,6 @@ export default ({
             // make the status of the new person inactive always when duplicating
             newPerson.status = "inactive";
             newPerson.timeleft = newPerson.duration;
-            newPerson.started = false;
             this.people.push(newPerson);
             // put make the id a random 8 digit uuid
             this.people[this.people.length - 1].id = Math.random().toString(36).substr(2, 9);
@@ -655,7 +646,6 @@ export default ({
             this.people[personIdx].started = false;
             // set the end time to the current time
             this.people[personIdx].end = this.time();
-            localStorage.setItem("people", JSON.stringify(this.people));
         },
         startMultipleExams() {
             // start all selected exams
@@ -667,12 +657,10 @@ export default ({
             }
             // show notification
             this.notification("success", "Exams Started", "The selected exams have been started");
-            localStorage.setItem("people", JSON.stringify(this.people));
         },
         // When the button is pressed the exam starts, which should start a timer and set the start time for an exam and calculate the end time using the duration
         startExam(personIdx: string) {
             // find person with id
-            var personid = personIdx;
             var personIdx = this.people.findIndex(person => person.id == personIdx);
             // set the status to active
             this.people[personIdx].started = true;
@@ -693,8 +681,7 @@ export default ({
                 console.log("1")
                 
 
-                this.calculateTimeLeft(personid, starttime, endtime, this.people[personIdx].readingtime);
-                localStorage.setItem("people", JSON.stringify(this.people));
+                this.calculateTimeLeft(personIdx, starttime, endtime, this.people[personIdx].readingtime);
             }
             else {
                 // calculate the new end time with the converter
@@ -708,7 +695,7 @@ export default ({
                 // set the status to active
                 this.people[personIdx].status = "active";
                 console.log("2")
-                this.calculateTimeLeft(personid, this.people[personIdx].start, endtime, "null");
+                this.calculateTimeLeft(personIdx, this.people[personIdx].start, endtime, "null");
                 // console log the sent variables
                 console.log("starttime",this.people[personIdx].start)
                 console.log("endtime",endtime)
@@ -717,11 +704,11 @@ export default ({
             
             
         },
-        async calculateTimeLeft(personid: string, start: string, end: string, readingtime: string) {
+        async calculateTimeLeft(personIdx: string, start: string, end: string, readingtime: string) {
             console.log("calculate time left")
-            var personid2 = personid;
+            console.log("personIdx",personIdx)
+            const newperid = String(personIdx)
             var interval = setInterval(() => {
-                var personIdx = this.people.findIndex(person => person.id == personid);
                 // start and end are strings in the format of HH:MM
                 // if reading time is disabled, the readingtime variable is null
                 // reading time is the time the reading time ends in the format of HH:MM
@@ -742,14 +729,14 @@ export default ({
                       console.log("balis")
                       if (this.people[Number(personIdx)].extratimeenabled === true) {
                         clearInterval(interval);
-                        this.calculateExtratime(personid2, start, end)
+                        this.calculateExtratime(personIdx, start, end)
                         // break interval
                       }
                       else {
                         clearInterval(interval);
                         console.log("clear interval")
-                        console.log("personIdx",String(personIdx))
-                        this.stopExam(String(personIdx));
+                        console.log("personIdx",newperid)
+                        this.stopExam(newperid);
                       }
                     }
 
@@ -777,23 +764,22 @@ export default ({
                       console.log("balis")
                       if (this.people[Number(personIdx)].extratimeenabled === true) {
                         clearInterval(interval);
-                        this.calculateExtratime(personid2, start, end)
+                        this.calculateExtratime(personIdx, start, end)
                         // break interval
                       }
                       else {
                         clearInterval(interval);
-                        this.stopExam(String(personIdx));
+                        this.stopExam(personIdx);
                       }
                     }
                   }
                 }
-                localStorage.setItem("people", JSON.stringify(this.people));
             }, 200);
         },
-        async calculateExtratime(personid: string, start: string, end: string) {
+        async calculateExtratime(personIdx: string, start: string, end: string) {
             console.log("Start Time",start)
             console.log("End Time",end)
-            var personIdx = this.people.findIndex(person => person.id == personid);
+            console.log("Person Index",personIdx)
             // set the status to extratime
             this.people[Number(personIdx)].status = "extra";
             // send notification
@@ -817,7 +803,6 @@ export default ({
             console.log("This is messed up",extratimeend)
             
             var interval2 = setInterval(() => {
-                var personIdx = this.people.findIndex(person => person.id == personid);
                 // start and end are strings in the format of HH:MM
                 // if reading time is disabled, the readingtime variable is null
                 // reading time is the time the reading time ends in the format of HH:MM
@@ -836,9 +821,8 @@ export default ({
                     clearInterval(interval2);
                     console.log("clear interval")
                     console.log("personIdx",personIdx)
-                    this.stopExam(String(personIdx));
+                    this.stopExam(personIdx);
                 }
-                localStorage.setItem("people", JSON.stringify(this.people));
             }, 200);
         },
     },
@@ -1160,5 +1144,17 @@ export default ({
         </div>
       </transition>
     </div>
+  </div>
+  <div class="fixed bottom-0 left-0 p-4">
+    <a href="https://bitstore.dev" target="_blank" class="text-gray-500 hover:text-gray-600 transition duration-150 ease-in-out">
+      <div class="flex items-center space-x-2 drop-shadow-md group/credits">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" class="text-gray-500 h-4 w-4">
+          <path fill-rule="evenodd" d="M2.25 6a3 3 0 013-3h13.5a3 3 0 013 3v12a3 3 0 01-3 3H5.25a3 3 0 01-3-3V6zm3.97.97a.75.75 0 011.06 0l2.25 2.25a.75.75 0 010 1.06l-2.25 2.25a.75.75 0 01-1.06-1.06l1.72-1.72-1.72-1.72a.75.75 0 010-1.06zm4.28 4.28a.75.75 0 000 1.5h3a.75.75 0 000-1.5h-3z" clip-rule="evenodd"/>
+        </svg>
+        <!-- Say creators normally but when hovered expand to "Created by Daniel and Guglielmo" and make it transition -->
+        <span class="text-xs collapse md:inline group-hover/credits:visible">Programed by Daniel and Guglielmo</span>
+
+      </div>
+    </a>
   </div>
 </template>

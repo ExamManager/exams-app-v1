@@ -5,15 +5,19 @@ const router = createRouter({
   routes: [
     {
       path: '/',
-      component: () => import('./views/Home.vue'),
+      component: () => import('./views/App.vue'),
     },
     {
-      path: '/help',
-      component: () => import('./views/Help.vue'),
+      path: '/multiexam',
+      component: () => import('./views/multiexam/Home.vue'),
     },
     {
-      path: '/fullscreen',
-      component: () => import('./views/Fullscreen.vue'),
+      path: '/premium',
+      component: () => import('./views/premium/Home.vue'),
+    },
+    {
+      path: '/premium/fullscreen',
+      component: () => import('./views/premium/Fullscreen.vue'),
     },
 ],
 })
