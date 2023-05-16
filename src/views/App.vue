@@ -14,6 +14,7 @@ import {
   XMarkIcon,
   BanknotesIcon,
   BuildingOffice2Icon,
+  BookOpenIcon,
   HomeModernIcon,
 } from '@heroicons/vue/24/outline'
 import { ChevronDownIcon } from '@heroicons/vue/20/solid'
@@ -29,7 +30,7 @@ export default {
         {
           name: 'Home',
           description: 'Speak directly to your customers in a more meaningful way.',
-          href: '#',
+          href: '/',
           icon: CursorArrowRaysIcon,
         },
         { name: 'Free Tier',
@@ -53,6 +54,12 @@ export default {
           description: 'Get all of your questions answered in our forums or contact support.',
           href: '#',
           icon: LifebuoyIcon,
+        },
+        {
+          name: "Documentation",
+          description: "Learn how you can get the most out of our platform.",
+          href: "#",
+          icon: BookOpenIcon,
         },
         {
           name: 'Guides',
@@ -105,11 +112,11 @@ export default {
 
 </script>
 <template>
-  <Popover v-if="this.show2" class="relative bg-white">
+  <Popover v-if="this.show2" class="relative bg-white z-30">
     <div class="mx-auto  px-4 sm:px-6">
       <div class="flex items-center justify-between border-b-2 border-gray-100 py-6 md:justify-start md:space-x-10">
         <div class="flex justify-start lg:w-0 lg:flex-1">
-          <a href="#">
+          <a href="/">
             <div class="text-4xl font-bold flex justify-start">Online Exam Timer</div>
           </a>
         </div>
@@ -154,13 +161,10 @@ export default {
             </transition>
           </Popover>
 
-          <a href="#" class="text-base font-medium text-gray-500 hover:text-gray-900">Pricing</a>
-          <a href="#" class="text-base font-medium text-gray-500 hover:text-gray-900">Docs</a>
-
           <Popover class="relative">
             <PopoverButton @click.native="openp2"
               class='text-gray-500 group inline-flex items-center rounded-md bg-white text-base font-medium hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2'>
-              <span >More</span>
+              <span >Support</span>
               <svg xmlns="http://www.w3.org/2000/svg" class='text-gray-400 ml-2 h-5 w-5 group-hover:text-gray-500' fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"/>
               </svg>
@@ -185,6 +189,7 @@ export default {
               </PopoverPanel>
             </transition>
           </Popover>
+          <a href="#" class="text-base font-medium text-gray-500 hover:text-gray-900">Pricing</a>
         </PopoverGroup>
         <!-- Only show when not signed in -->
         <div class="hidden items-center justify-end md:flex md:flex-1 lg:w-0">
