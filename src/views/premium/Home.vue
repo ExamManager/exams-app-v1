@@ -465,11 +465,20 @@ export default ({
             this.notification("error", "Error", "No fields have changed");
           }
           else {
+            var duration = this.converter(this.newexamduration, "", "H:MM");
+            // convert planned start to minutes
+            var plannedstart = this.converter(this.newexamplannedstart, "", "HH:MM");
+            // calculate end time
+            var endtime = Number(duration) + Number(plannedstart);
+            this.newexamplannedend = this.converter(endtime.toString(), "" , "-HH:MM");
+            var totalduration2 = Number(duration) + Number(this.newexamreadingtime);
             // if fields have changed, update the person in the database
             this.people[personIdx].name = this.newexamname;
             this.people[personIdx].duration = this.newexamduration;
-            this.people[personIdx].plannedstart = this.newexamplannedstart;
+            this.people[personIdx].start = this.newexamplannedstart;
+            this.people[personIdx].end = this.newexamplannedend
             this.people[personIdx].about = this.newexamabout;
+            this.people[personIdx].totalduration = totalduration2.toString();
             this.people[personIdx].extratimeenabled = this.newexamextratimeenabled;
             this.people[personIdx].readingtimeenabled = this.newexamreadingtimeenabled;
             this.people[personIdx].extratime = this.newexamextratime;
@@ -847,7 +856,7 @@ export default ({
 
 <template>
   <TransitionRoot as="template" :show="open">
-    <Dialog as="div" class="relative z-10" @close="open = false">
+    <Dialog as="div" class="relative z-40" @close="open = false">
       <TransitionChild as="template" enter="ease-out duration-300" enter-from="opacity-0" enter-to="opacity-100" leave="ease-in duration-200" leave-from="opacity-100" leave-to="opacity-0">
         <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
       </TransitionChild>
@@ -1121,7 +1130,7 @@ export default ({
       </div>
     </div>
   </div>
-  <div aria-live="assertive" class="pointer-events-none fixed inset-0 flex items-end px-4 py-6 sm:items-start sm:p-4">
+  <div aria-live="assertive" class="pointer-events-none z-50 fixed inset-0 flex items-end px-4 py-6 sm:items-start sm:p-4">
     <div class="flex w-full flex-col items-center space-y-4 sm:items-end">
       <!-- Notification panel, dynamically insert this into the live region when it needs to be displayed -->
       <transition enter-active-class="transform ease-out duration-800 transition" enter-from-class="translate-y-2 opacity-0 sm:translate-y-0 sm:translate-x-2" enter-to-class="translate-y-0 opacity-100 sm:translate-x-0" leave-active-class="transition ease-in duration-100" leave-from-class="opacity-100" leave-to-class="opacity-0">

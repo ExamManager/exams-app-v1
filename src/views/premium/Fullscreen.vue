@@ -1,6 +1,11 @@
 <script lang="ts">
+import { HomeIcon, ChevronRightIcon } from '@heroicons/vue/20/solid'
 
 export default {
+  components: {
+    HomeIcon,
+    ChevronRightIcon
+  },
   data() {
     return {
       fullscreen: false,
@@ -45,7 +50,37 @@ export default {
 </script>
 
 <template>
-  <div class="pr-4 sm:pr-6 lg:pr-8 pt-8">
+  <nav class="flex fixed pt-4 pl-4" aria-label="Breadcrumb">
+      <ol role="list" class="flex space-x-4 rounded-md bg-white px-6 shadow">
+        <li class="flex">
+          <div class="flex items-center">
+            <a href="/" class="text-gray-400 flex items-center hover:text-gray-500">
+                <HomeIcon class="h-10 w-4 flex-shrink-0 text-gray-400" aria-hidden="true" />
+                <a class="ml-2 text-sm font-medium text-gray-500 hover:text-gray-700">Home</a>
+            </a>
+          </div>
+        </li>
+        <li class="flex">
+          <div class="flex items-center">
+            <ChevronRightIcon class="h-10 w-6 flex-shrink-0 text-gray-400" aria-hidden="true" />
+            <a href="/premium" class="mx-4 text-sm font-medium text-gray-500 hover:text-gray-700">Premium</a>
+          </div>
+          <div class="flex items-center">
+            <ChevronRightIcon class="h-10 w-6 flex-shrink-0 text-gray-400" aria-hidden="true" />
+            <a href="#" class="ml-4 text-sm font-medium text-gray-500 hover:text-gray-700">Studentview</a>
+          </div>
+        </li>
+      </ol>
+      <div class="mt-4 space-x-4 sm:mt-0 sm:flex-none pl-2">
+        <span class="isolate inline-flex rounded-md shadow bg-white">
+          <button type="button" class="relative inline-flex items-center rounded-md bg-white px-4 py-2 text-sm group/button1 font-medium text-gray-500 hover:bg-gray-50 focus:z-10" @click.native="fullscreen1">
+            <svg class=" h-6 w-4 group-hover/button1:mr-2 text-gray-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Pro 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. --><path fill="currentColor" d="M496 304h-416v-224H32v240c0 17.6 14.4 32 32 32L264 352v47.02l-72 72c-9.354 9.352-9.354 24.52 0 33.88c9.348 9.348 24.51 9.359 33.87 .0195L288 442.9l62.09 62.09c9.391 9.391 24.63 9.348 33.97-.0938c9.301-9.406 9.258-24.55-.0938-33.91L312 399V352L512 352c17.6 0 32-14.4 32-32V80h-48V304zM552 0H23.96C10.72 0 0 10.73 0 23.95S10.72 48 23.96 48h528.1C565.3 48 576 37.27 576 24.05S565.3 0 552 0z"/></svg>
+            <span class="text-md w-0 collapse group-hover/button1:visible group-hover/button1:w-min">Fullscreen</span>
+          </button>
+        </span>
+      </div>
+    </nav>
+  <div class="pr-4 pt-4">
     <div class="flex justify-end">
       <div class="flex flex-col items-end">
         <div class="flex flex-row">
@@ -54,17 +89,6 @@ export default {
         <div class="flex flex-row">
           <div class="text-2xl font-bold text-gray-900">{{ datestamp }}</div>
         </div>
-      </div>
-    </div>
-  
-  <div class="sm:flex sm:items-center pl-4">
-      <div class="mt-4 space-x-4 sm:mt-0 sm:flex-none">
-        <span class="isolate inline-flex rounded-md shadow-sm">
-          <button type="button" class="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm group/button1 font-medium text-gray-700 hover:bg-gray-50 focus:z-10" @click.native="fullscreen1">
-            <svg class=" h-4 w-4 group-hover/button1:mr-2 text-gray-700" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Pro 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. --><path fill="currentColor" d="M496 304h-416v-224H32v240c0 17.6 14.4 32 32 32L264 352v47.02l-72 72c-9.354 9.352-9.354 24.52 0 33.88c9.348 9.348 24.51 9.359 33.87 .0195L288 442.9l62.09 62.09c9.391 9.391 24.63 9.348 33.97-.0938c9.301-9.406 9.258-24.55-.0938-33.91L312 399V352L512 352c17.6 0 32-14.4 32-32V80h-48V304zM552 0H23.96C10.72 0 0 10.73 0 23.95S10.72 48 23.96 48h528.1C565.3 48 576 37.27 576 24.05S565.3 0 552 0z"/></svg>
-            <span class="text-md w-0 collapse group-hover/button1:visible group-hover/button1:w-min ">Fullscreen</span>
-          </button>
-        </span>
       </div>
     </div>
   </div>

@@ -9,7 +9,7 @@ const router = createRouter({
     },
     {
       path: '/free',
-      component: () => import('./views/multiexam/Home.vue'),
+      component: () => import('./views/free/Home.vue'),
     },
     {
       path: '/premium',
@@ -18,6 +18,14 @@ const router = createRouter({
     {
       path: '/premium/studentview',
       component: () => import('./views/premium/Fullscreen.vue'),
+    },
+    {
+      path: '/pricing',
+      component: () => import('./views/Pricing.vue'),
+    },
+    {
+      path: '/docs',
+      component: () => import('./views/Docs.vue'),
     },
 ],
 })
