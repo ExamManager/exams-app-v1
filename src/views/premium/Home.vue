@@ -385,7 +385,7 @@ export default ({
         },
         toggleFullScreen() {
             // new page for fullscreen
-            window.open("/premium/fullscreen", '_blank');
+            window.open("/premium/studentview", '_blank');
 
         },
         updateTime() {
@@ -1005,8 +1005,7 @@ export default ({
     </Dialog>
   </TransitionRoot>
   <div class="px-4 sm:px-6 lg:px-8 lg:pt-8">
-    <div class="text-5xl font-bold flex justify-start">Online Exam Timer</div>
-    <div class="flex justify-end pt-4">
+    <div class="flex justify-end ">
       <div class="flex flex-col items-end">
         <div class="flex flex-row">
           <div class="text-7xl font-bold text-gray-900">{{ timestamp }}</div>
