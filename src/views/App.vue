@@ -252,7 +252,7 @@ export default {
     enter-from-class="translate-y-4 opacity-0 sm:translate-y-0 sm:translate-x-2"
     enter-to-class="translate-y-0 opacity-100 sm:translate-x-0" leave-active-class="transition ease-in duration-100"
     leave-from-class="opacity-100" leave-to-class="opacity-0">
-    <div v-if="this.show" class="fixed inset-x-0 bottom-0 pb-2 sm:pb-5">
+    <div v-if="this.show" class="fixed z-50 inset-x-0 bottom-0 pb-2 sm:pb-5">
       <div class="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
         <div class="rounded-lg p-2 bg-gray-50 shadow-lg sm:p-3">
           <div class="flex flex-wrap items-center justify-between">
