@@ -45,7 +45,7 @@ export default {
 </script>
 
 <template>
-  <div class="pr-4 sm:pr-6 lg:pr-8 lg:pt-8">
+  <div class="pr-4 sm:pr-6 lg:pr-8 pt-8">
     <div class="flex justify-end">
       <div class="flex flex-col items-end">
         <div class="flex flex-row">
@@ -58,12 +58,11 @@ export default {
     </div>
   
   <div class="sm:flex sm:items-center pl-4">
-      
       <div class="mt-4 space-x-4 sm:mt-0 sm:flex-none">
         <span class="isolate inline-flex rounded-md shadow-sm">
-          <button type="button" class="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500" @click.native="fullscreen1">
-            <svg class=" h-4 w-4 mr-2 text-gray-700" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Pro 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. --><path fill="currentColor" d="M496 304h-416v-224H32v240c0 17.6 14.4 32 32 32L264 352v47.02l-72 72c-9.354 9.352-9.354 24.52 0 33.88c9.348 9.348 24.51 9.359 33.87 .0195L288 442.9l62.09 62.09c9.391 9.391 24.63 9.348 33.97-.0938c9.301-9.406 9.258-24.55-.0938-33.91L312 399V352L512 352c17.6 0 32-14.4 32-32V80h-48V304zM552 0H23.96C10.72 0 0 10.73 0 23.95S10.72 48 23.96 48h528.1C565.3 48 576 37.27 576 24.05S565.3 0 552 0z"/></svg>
-            Fullscreen
+          <button type="button" class="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm group/button1 font-medium text-gray-700 hover:bg-gray-50 focus:z-10" @click.native="fullscreen1">
+            <svg class=" h-4 w-4 group-hover/button1:mr-2 text-gray-700" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Pro 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. --><path fill="currentColor" d="M496 304h-416v-224H32v240c0 17.6 14.4 32 32 32L264 352v47.02l-72 72c-9.354 9.352-9.354 24.52 0 33.88c9.348 9.348 24.51 9.359 33.87 .0195L288 442.9l62.09 62.09c9.391 9.391 24.63 9.348 33.97-.0938c9.301-9.406 9.258-24.55-.0938-33.91L312 399V352L512 352c17.6 0 32-14.4 32-32V80h-48V304zM552 0H23.96C10.72 0 0 10.73 0 23.95S10.72 48 23.96 48h528.1C565.3 48 576 37.27 576 24.05S565.3 0 552 0z"/></svg>
+            <span class="text-md w-0 collapse group-hover/button1:visible group-hover/button1:w-min ">Fullscreen</span>
           </button>
         </span>
       </div>
@@ -76,37 +75,37 @@ export default {
             <table class="min-w-full table-fixed divide-y divide-gray-300">
               <thead class="bg-gray-50">
                 <tr>
-                  <th scope="col" class="min-w-[12rem] py-3.5 pl-4 pr-3 text-left text-md font-semibold text-gray-900">Subject Name</th>
-                  <th scope="col" class="px-3 py-3.5 text-left text-md font-semibold text-gray-900">Start Time</th>
-                  <th scope="col" class="px-3 py-3.5 text-left text-md font-semibold text-gray-900">End Time</th>
-                  <th scope="col" class="px-3 py-3.5 text-left text-md font-semibold text-gray-900">Duration</th>
-                  <th scope="col" class="px-3 py-3.5 text-left text-md font-semibold text-gray-900">Time Left</th>
-                  <th scope="col" class="px-3 py-3.5 text-left text-md font-semibold text-gray-900">Status</th>
+                  <th scope="col" class="min-w-[12rem] py-3.5 pl-4 pr-3 text-left text-xl font-semibold text-gray-900">Subject Name</th>
+                  <th scope="col" class="px-3 py-3.5 text-left text-xl font-semibold text-gray-900">Start Time</th>
+                  <th scope="col" class="px-3 py-3.5 text-left text-xl font-semibold text-gray-900">End Time</th>
+                  <th scope="col" class="px-3 py-3.5 text-left text-xl font-semibold text-gray-900">Duration</th>
+                  <th scope="col" class="px-3 py-3.5 text-left text-xl font-semibold text-gray-900">Time Left</th>
+                  <th scope="col" class="px-3 py-3.5 text-left text-xl font-semibold text-gray-900">Status</th>
                 </tr>
               </thead>
               <tbody class="divide-y divide-gray-200 bg-white">
-                <tr v-for="person in people" :key="person.id" class="bg-gray-50">
-                  <td class='whitespace-nowrap py-4 pr-3 pl-4 text-md font-medium'>
+                <tr v-for="person in people" :key="person.id" class="bg-white">
+                  <td class='whitespace-nowrap py-4 pr-3 pl-4 text-lg font-medium'>
                     {{ person.name }}
                   </td>
-                  <td class="whitespace-nowrap px-3 py-4 text-md text-gray-500">
+                  <td class="whitespace-nowrap px-3 py-4 text-lg text-gray-500">
                     {{ person.start }}
                   </td>
-                  <td class="whitespace-nowrap px-3 py-4 text-md text-gray-500">
+                  <td class="whitespace-nowrap px-3 py-4 text-lg text-gray-500">
                     {{ person.end }}
                   </td>
-                  <td class="whitespace-nowrap px-3 py-4 text-md text-gray-500">
+                  <td class="whitespace-nowrap px-3 py-4 text-lg text-gray-500">
                     {{ person.duration }}
                   </td>
-                  <td class="whitespace-nowrap px-3 py-4 text-md text-gray-500">
+                  <td class="whitespace-nowrap px-3 py-4 text-lg text-gray-500">
                     {{ person.timeleft }}
                   </td>
                   <td class="whitespace-nowrap py-4 text-sm text-gray-500">
-                    <span v-if="person.status === 'active'" class="inline-flex rounded-full bg-green-100 px-2 text-xs font-semibold leading-5 text-green-800">Active</span>
-                    <span v-else-if="person.status === 'reading'" class="inline-flex rounded-full bg-orange-100 px-2 text-xs font-semibold leading-5 text-orange-500">Reading Time</span>
-                    <span v-else-if="person.status === 'extra'" class="inline-flex rounded-full bg-blue-100 px-2 text-xs font-semibold leading-5 text-blue-500">Extra Time</span>
-                    <span v-else-if="person.status === 'inactive'" class="inline-flex rounded-full bg-red-100 px-2 text-xs font-semibold leading-5 text-red-800">Not Started</span>
-                    <span v-else-if="person.status === 'finished'" class="inline-flex rounded-full bg-gray-100 px-2 text-xs font-semibold leading-5 text-gray-800">Finished</span>
+                    <span v-if="person.status === 'active'" class="inline-flex rounded-full bg-green-100 px-2 text-sm font-semibold leading-5 text-green-800">Active</span>
+                    <span v-else-if="person.status === 'reading'" class="inline-flex rounded-full bg-orange-100 px-2 text-sm font-semibold leading-5 text-orange-500">Reading Time</span>
+                    <span v-else-if="person.status === 'extra'" class="inline-flex rounded-full bg-blue-100 px-2 text-sm font-semibold leading-5 text-blue-500">Extra Time</span>
+                    <span v-else-if="person.status === 'inactive'" class="inline-flex rounded-full bg-red-100 px-2 text-sm font-semibold leading-5 text-red-800">Not Started</span>
+                    <span v-else-if="person.status === 'finished'" class="inline-flex rounded-full bg-gray-100 px-2 text-sm font-semibold leading-5 text-gray-800">Finished</span>
                   </td>
                 </tr>
               </tbody>

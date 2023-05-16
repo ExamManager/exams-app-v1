@@ -989,8 +989,7 @@ export default ({
     </Dialog>
   </TransitionRoot>
   <div class="px-4 sm:px-6 lg:px-8 lg:pt-8">
-    <div class="text-5xl font-bold flex justify-start">Online Exam Timer</div>
-    <div class="flex justify-end pt-4">
+    <div class="flex justify-end">
       <div class="flex flex-col items-end">
         <div class="flex flex-row">
           <div class="text-7xl font-bold text-gray-900">{{ timestamp }}</div>
@@ -1144,17 +1143,5 @@ export default ({
         </div>
       </transition>
     </div>
-  </div>
-  <div class="fixed bottom-0 left-0 p-4">
-    <a href="https://bitstore.dev" target="_blank" class="text-gray-500 hover:text-gray-600 transition duration-150 ease-in-out">
-      <div class="flex items-center space-x-2 drop-shadow-md group/credits">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" class="text-gray-500 h-4 w-4">
-          <path fill-rule="evenodd" d="M2.25 6a3 3 0 013-3h13.5a3 3 0 013 3v12a3 3 0 01-3 3H5.25a3 3 0 01-3-3V6zm3.97.97a.75.75 0 011.06 0l2.25 2.25a.75.75 0 010 1.06l-2.25 2.25a.75.75 0 01-1.06-1.06l1.72-1.72-1.72-1.72a.75.75 0 010-1.06zm4.28 4.28a.75.75 0 000 1.5h3a.75.75 0 000-1.5h-3z" clip-rule="evenodd"/>
-        </svg>
-        <!-- Say creators normally but when hovered expand to "Created by Daniel and Guglielmo" and make it transition -->
-        <span class="text-xs collapse md:inline group-hover/credits:visible">Programed by Daniel and Guglielmo</span>
-
-      </div>
-    </a>
   </div>
 </template>
