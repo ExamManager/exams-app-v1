@@ -389,14 +389,18 @@ export default ({
 
         },
         updateTime() {
-            var d = new Date();
-            var n = d.toLocaleTimeString("de-EN");
-            this.timestamp = n;
+            // var d = new Date();
+            // var n = d.toLocaleTimeString("de-EN");
+            // this.timestamp = n;
+            // set time to 12:00:00
+            this.timestamp = "9:41:00";
         },
         updateDate() {
-            var d = new Date();
-            var n = d.toLocaleDateString();
-            this.datestamp = n;
+            // var d = new Date();
+            // var n = d.toLocaleDateString();
+            // this.datestamp = n;
+            // set date to 1st Jan 2022
+            this.datestamp = "01/01/2022";
         },
         editButton(personid: string) {
           // find the person in the database
