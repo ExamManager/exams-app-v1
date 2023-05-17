@@ -116,14 +116,15 @@ export default {
     <div class="mx-auto  px-4 sm:px-6">
       <div class="flex items-center justify-between border-b-2 border-gray-100 py-6 md:justify-start md:space-x-10">
         <div class="flex justify-start lg:w-0 lg:flex-1">
-          <a href="/">
-            <div class="text-4xl font-bold flex justify-start">Online Exam Timer</div>
+          <a href="/" class="flex items-center">
+            <img class="h-10 justify-start pl-2  sm:h-8 pr-3" src="src/assets/vue.svg" alt="Workflow">
+            <div class="text-4xl font-bold justify-start">Online Exam Timer</div>
           </a>
         </div>
         <PopoverGroup as="nav" class="hidden space-x-10 md:flex">
           <Popover class="relative">
             <PopoverButton @click.native="openp1"
-              class='text-gray-500 group inline-flex items-center rounded-md bg-white text-base font-medium hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2'>
+              class='text-gray-500 group inline-flex items-center rounded-md bg-white text-base font-medium hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2'>
               <span  >Solutions</span>
               <svg xmlns="http://www.w3.org/2000/svg" class='text-gray-400 ml-2 h-5 w-5 group-hover:text-gray-500' fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"/>
@@ -140,7 +141,7 @@ export default {
                   <div class="relative grid gap-6 bg-white px-5 py-6 sm:gap-8 sm:p-8">
                     <a v-for="item in solutions" :key="item.name" :href="item.href"
                       class="-m-3 flex items-start rounded-lg p-3 hover:bg-gray-50">
-                      <component :is="item.icon" class="h-6 w-6 flex-shrink-0 text-indigo-600" aria-hidden="true" />
+                      <component :is="item.icon" class="h-6 w-6 flex-shrink-0 text-orange-600" aria-hidden="true" />
                       <div class="ml-4">
                         <p class="text-base font-medium text-gray-900">{{ item.name }}</p>
                         <p class="mt-1 text-sm text-gray-500">{{ item.description }}</p>
@@ -163,7 +164,7 @@ export default {
 
           <Popover class="relative">
             <PopoverButton @click.native="openp2"
-              class='text-gray-500 group inline-flex items-center rounded-md bg-white text-base font-medium hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2'>
+              class='text-gray-500 group inline-flex items-center rounded-md bg-white text-base font-medium hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2'>
               <span >Support</span>
               <svg xmlns="http://www.w3.org/2000/svg" class='text-gray-400 ml-2 h-5 w-5 group-hover:text-gray-500' fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"/>
@@ -178,7 +179,7 @@ export default {
                   <div class="relative grid gap-6 bg-white px-5 py-6 sm:gap-8 sm:p-8">
                     <a v-for="item in resources" :key="item.name" :href="item.href"
                       class="-m-3 flex items-start rounded-lg p-3 hover:bg-gray-50">
-                      <component :is="item.icon" class="h-6 w-6 flex-shrink-0 text-indigo-600" aria-hidden="true" />
+                      <component :is="item.icon" class="h-6 w-6 flex-shrink-0 text-orange-600" aria-hidden="true" />
                       <div class="ml-4">
                         <p class="text-base font-medium text-gray-900">{{ item.name }}</p>
                         <p class="mt-1 text-sm text-gray-500">{{ item.description }}</p>
@@ -195,7 +196,7 @@ export default {
         <div class="hidden items-center justify-end md:flex md:flex-1 lg:w-0">
           <a href="#" class="whitespace-nowrap text-base font-medium text-gray-500 hover:text-gray-900">Sign in</a>
           <a href="#"
-            class="ml-8 inline-flex items-center justify-center whitespace-nowrap rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-indigo-700">Sign
+            class="ml-8 inline-flex items-center justify-center whitespace-nowrap rounded-md border border-transparent bg-orange-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-orange-700">Sign
             up</a>
         </div>
       </div>
@@ -209,12 +210,12 @@ export default {
           <div class="px-5 pt-5 pb-6">
             <div class="flex items-center justify-between">
               <div>
-                <img class="h-8 w-auto" src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
+                <img class="h-8 w-auto" src="https://tailwindui.com/img/logos/mark.svg?color=orange&shade=600"
                   alt="Your Company" />
               </div>
               <div class="-mr-2">
                 <PopoverButton
-                  class="inline-flex items-center justify-center rounded-md bg-white p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500">
+                  class="inline-flex items-center justify-center rounded-md bg-white p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-orange-500">
                   <span class="sr-only">Close menu</span>
                   <XMarkIcon class="h-6 w-6" aria-hidden="true" />
                 </PopoverButton>
@@ -224,7 +225,7 @@ export default {
               <nav class="grid gap-y-8">
                 <a v-for="item in solutions" :key="item.name" :href="item.href"
                   class="-m-3 flex items-center rounded-md p-3 hover:bg-gray-50">
-                  <component :is="item.icon" class="h-6 w-6 flex-shrink-0 text-indigo-600" aria-hidden="true" />
+                  <component :is="item.icon" class="h-6 w-6 flex-shrink-0 text-orange-600" aria-hidden="true" />
                   <span class="ml-3 text-base font-medium text-gray-900">{{ item.name }}</span>
                 </a>
               </nav>
@@ -240,12 +241,12 @@ export default {
             </div>
             <div>
               <a href="#"
-                class="flex w-full items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-indigo-700">Sign
+                class="flex w-full items-center justify-center rounded-md border border-transparent bg-orange-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-orange-700">Sign
                 up</a>
               <p class="mt-6 text-center text-base font-medium text-gray-500">
                 Existing customer?
                 {{ ' ' }}
-                <a href="#" class="text-indigo-600 hover:text-indigo-500">Sign in</a>
+                <a href="#" class="text-orange-600 hover:text-orange-500">Sign in</a>
               </p>
             </div>
           </div>
