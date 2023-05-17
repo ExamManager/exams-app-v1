@@ -279,8 +279,8 @@ export default {
                         </defs>
                         <rect width="784" height="404" fill="url(#ca9667ae-9f92-4be7-abcb-9e3d727f2941)" />
                     </svg>
-                    <img class="relative mx-auto" width="490"
-                        src="https://tailwindui.com/img/features/feature-example-1.png" alt="" />
+                    <img class="relative mx-auto shadow-lg rounded-xl" width="490"
+                        src="https://i.vgy.me/t1TpuG.png" alt="" />
                 </div>
             </div>
 
@@ -329,7 +329,7 @@ export default {
                             <rect width="784" height="404" fill="url(#e80155a9-dfde-425a-b5ea-1f6fadd20131)" />
                         </svg>
                         <img class="relative mx-auto" width="490"
-                            src="https://tailwindui.com/img/features/feature-example-2.png" alt="" />
+                            src="https://i.vgy.me/PNwQ2h.png" alt="" />
                     </div>
                 </div>
             </div>
@@ -418,9 +418,8 @@ export default {
                                 </div>
                             </div>
                             <div class="mt-4 text-sm">
-                                <a href="#" class="font-medium text-gray-900">
-                                    Request Trial
-                                    <span class="font-normal text-gray-500">(1 Month)</span>
+                                <a href="/pricing" class="font-medium text-gray-900">
+                                    See other Pricing Plans
                                 </a>
                             </div>
                         </div>
