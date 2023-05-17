@@ -861,14 +861,20 @@ export default ({
 <template>
   <TransitionRoot as="template" :show="open">
     <Dialog as="div" class="relative z-40" @close="open = false">
-      <TransitionChild as="template" enter="ease-out duration-300" enter-from="opacity-0" enter-to="opacity-100" leave="ease-in duration-200" leave-from="opacity-100" leave-to="opacity-0">
+      <TransitionChild as="template" enter="ease-out duration-300" enter-from="opacity-0" enter-to="opacity-100"
+        leave="ease-in duration-200" leave-from="opacity-100" leave-to="opacity-0">
         <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
       </TransitionChild>
 
       <div class="fixed inset-0 z-10 overflow-y-auto">
         <div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
-          <TransitionChild as="template" enter="ease-out duration-300" enter-from="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95" enter-to="opacity-100 translate-y-0 sm:scale-100" leave="ease-in duration-200" leave-from="opacity-100 translate-y-0 sm:scale-100" leave-to="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95">
-            <DialogPanel class="relative transform overflow-hidden rounded-lg bg-white px-4 pt-5 pb-4 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-3xl sm:p-6">
+          <TransitionChild as="template" enter="ease-out duration-300"
+            enter-from="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+            enter-to="opacity-100 translate-y-0 sm:scale-100" leave="ease-in duration-200"
+            leave-from="opacity-100 translate-y-0 sm:scale-100"
+            leave-to="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95">
+            <DialogPanel
+              class="relative transform overflow-hidden rounded-lg bg-white px-4 pt-5 pb-4 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-3xl sm:p-6">
               <div class="space-y-8 divide-y divide-gray-200">
                 <div class="space-y-8 divide-y divide-gray-200">
                   <div>
@@ -879,17 +885,23 @@ export default ({
 
                     <div class="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
                       <div class="sm:col-span-4">
-                        <label for="username" class="block text-sm font-medium text-gray-700">Exam<a class="text-red-600"> *</a></label>
+                        <label for="username" class="block text-sm font-medium text-gray-700">Exam<a class="text-red-600">
+                            *</a></label>
                         <div class="mt-1 flex rounded-md shadow-sm">
-                          <span class="inline-flex items-center rounded-l-md border border-r-0 border-gray-300 bg-gray-50 px-3 text-gray-500 sm:text-sm">Subject</span>
-                          <input v-model="newexamname" placeholder="Physics Paper 1" type="text" name="examname" id="examname" autocomplete="examname" class="block w-full min-w-0 flex-1 rounded-none rounded-r-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" />
+                          <span
+                            class="inline-flex items-center rounded-l-md border border-r-0 border-gray-300 bg-gray-50 px-3 text-gray-500 sm:text-sm">Subject</span>
+                          <input v-model="newexamname" placeholder="Physics Paper 1" type="text" name="examname"
+                            id="examname" autocomplete="examname"
+                            class="block w-full min-w-0 flex-1 rounded-none rounded-r-md border-gray-300 focus:border-orange-500 focus:ring-orange-500 sm:text-sm" />
                         </div>
                       </div>
 
                       <div class="sm:col-span-6">
                         <label for="about" class="block text-sm font-medium text-gray-700">About</label>
                         <div class="mt-1">
-                          <textarea id="about" name="about" v-model="newexamabout" rows="3" placeholder="Each student recieves one Formula Booklet..." class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" />
+                          <textarea id="about" name="about" v-model="newexamabout" rows="3"
+                            placeholder="Each student recieves one Formula Booklet..."
+                            class="block w-full rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 sm:text-sm" />
                         </div>
                         <p class="mt-2 text-sm text-gray-500">Optional</p>
                       </div>
@@ -899,20 +911,25 @@ export default ({
                   <div class="pt-8">
                     <div>
                       <h3 class="text-lg font-medium leading-6 text-gray-900">Exam Information</h3>
-                      <p class="mt-1 text-sm text-gray-500">Please enter all the time and date information for the exam.</p>
+                      <p class="mt-1 text-sm text-gray-500">Please enter all the time and date information for the exam.
+                      </p>
                     </div>
                     <div class="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
                       <div class="sm:col-span-2">
                         <label for="first-name" class="block text-sm font-medium text-gray-700">Planned Start Time</label>
                         <div class="mt-1">
-                          <input type="time" name="starttime" placeholder="9:37" v-model="newexamplannedstart" id="starttime" autocomplete="given-name" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" />
+                          <input type="time" name="starttime" placeholder="9:37" v-model="newexamplannedstart"
+                            id="starttime" autocomplete="given-name"
+                            class="block w-full rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 sm:text-sm" />
                         </div>
                       </div>
 
                       <div class="sm:col-span-2">
                         <label for="last-name" class="block text-sm font-medium text-gray-700">Duration</label>
                         <div class="mt-1">
-                          <input type="text" name="Duration" id="duration" v-mask="'#:##'" v-model="newexamduration" placeholder="2:00" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" />
+                          <input type="text" name="Duration" id="duration" v-mask="'#:##'" v-model="newexamduration"
+                            placeholder="2:00"
+                            class="block w-full rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 sm:text-sm" />
                         </div>
                       </div>
                     </div>
@@ -930,38 +947,54 @@ export default ({
                         <div class="mt-4 space-y-4">
                           <div class="relative flex items-start">
                             <div class="flex h-5 items-center">
-                              <input id="comments" name="comments" type="checkbox" v-model="newexamextratimeenabled" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500" />
+                              <input id="comments" name="comments" type="checkbox" v-model="newexamextratimeenabled"
+                                class="h-4 w-4 rounded border-gray-300 text-orange-600 focus:ring-orange-500" />
                             </div>
                             <div class="ml-3 text-sm">
                               <label for="comments" class="font-semibold text-gray-700">Extra Time</label>
                               <p class="text-gray-500">Check to enable extra time and select the percentage.</p>
                               <div class="mt-2">
-                                <transition enter-active-class="transform ease-out duration-400 transition" enter-from-class="translate-y-4 opacity-0 sm:translate-y-0 sm:translate-x-2" enter-to-class="translate-y-0 opacity-100 sm:translate-x-0" leave-active-class="transition ease-in duration-100" leave-from-class="opacity-100" leave-to-class="opacity-0">
+                                <transition enter-active-class="transform ease-out duration-400 transition"
+                                  enter-from-class="translate-y-4 opacity-0 sm:translate-y-0 sm:translate-x-2"
+                                  enter-to-class="translate-y-0 opacity-100 sm:translate-x-0"
+                                  leave-active-class="transition ease-in duration-100" leave-from-class="opacity-100"
+                                  leave-to-class="opacity-0">
                                   <div v-if="newexamextratimeenabled" class="flex-auto items-center space-x-2">
                                     <div class="mt-1 flex rounded-md shadow-sm">
-                                      <input v-model="newexamextratime" placeholder="15" type="text" v-mask="'##'" name="examname" id="examname" autocomplete="examname" class="block w-full min-w-0 flex-1 rounded-none rounded-l-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" />
-                                      <span class="inline-flex items-center rounded-r-md border border-l-0 border-gray-300 bg-gray-50 px-3 text-gray-500 sm:text-sm">Percent</span>
+                                      <input v-model="newexamextratime" placeholder="15" type="text" v-mask="'##'"
+                                        name="examname" id="examname" autocomplete="examname"
+                                        class="block w-full min-w-0 flex-1 rounded-none rounded-l-md border-gray-300 focus:border-orange-500 focus:ring-orange-500 sm:text-sm" />
+                                      <span
+                                        class="inline-flex items-center rounded-r-md border border-l-0 border-gray-300 bg-gray-50 px-3 text-gray-500 sm:text-sm">Percent</span>
                                     </div>
                                   </div>
-                              </transition>
+                                </transition>
                               </div>
                             </div>
                           </div>
                           <div class="relative flex items-start">
                             <div class="flex h-5 items-center">
-                              <input id="candidates" name="candidates" v-model="newexamreadingtimeenabled" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500" />
+                              <input id="candidates" name="candidates" v-model="newexamreadingtimeenabled" type="checkbox"
+                                class="h-4 w-4 rounded border-gray-300 text-orange-600 focus:ring-orange-500" />
                             </div>
                             <div class="ml-3 text-sm">
                               <label for="candidates" class="font-medium text-gray-700">Reading Time</label>
                               <p class="text-gray-500">Check to enable reading time and enter the time</p>
                               <div class="sm:col-span-2">
                                 <div class="mt-2">
-                                  <transition enter-active-class="transform ease-out duration-400 transition" enter-from-class="translate-y-4 opacity-0 sm:translate-y-0 sm:translate-x-2" enter-to-class="translate-y-0 opacity-100 sm:translate-x-0" leave-active-class="transition ease-in duration-100" leave-from-class="opacity-100" leave-to-class="opacity-0">
+                                  <transition enter-active-class="transform ease-out duration-400 transition"
+                                    enter-from-class="translate-y-4 opacity-0 sm:translate-y-0 sm:translate-x-2"
+                                    enter-to-class="translate-y-0 opacity-100 sm:translate-x-0"
+                                    leave-active-class="transition ease-in duration-100" leave-from-class="opacity-100"
+                                    leave-to-class="opacity-0">
                                     <div v-if="newexamreadingtimeenabled === true" class="mt-1 flex rounded-md shadow-sm">
-                                      <input v-model="newexamreadingtime" placeholder="15" type="text" v-mask="'##'" name="examname" id="examname" autocomplete="examname" class="block w-full min-w-0 flex-1 rounded-none rounded-l-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" />
-                                      <span class="inline-flex items-center rounded-r-md border border-l-0 border-gray-300 bg-gray-50 px-3 text-gray-500 sm:text-sm">Minutes</span>
+                                      <input v-model="newexamreadingtime" placeholder="15" type="text" v-mask="'##'"
+                                        name="examname" id="examname" autocomplete="examname"
+                                        class="block w-full min-w-0 flex-1 rounded-none rounded-l-md border-gray-300 focus:border-orange-500 focus:ring-orange-500 sm:text-sm" />
+                                      <span
+                                        class="inline-flex items-center rounded-r-md border border-l-0 border-gray-300 bg-gray-50 px-3 text-gray-500 sm:text-sm">Minutes</span>
                                     </div>
-                                </transition>
+                                  </transition>
                                 </div>
                               </div>
                             </div>
@@ -969,34 +1002,38 @@ export default ({
                         </div>
                       </fieldset>
                       <fieldset class="mt-6">
-                        <legend class="contents text-base font-medium text-gray-900">Reminder Options <a class="text-gray-300">(Not Implemented)</a></legend>
+                        <legend class="contents text-base font-medium text-gray-900">Reminder Options <a
+                            class="text-gray-300">(Not Implemented)</a></legend>
                         <p class="text-sm text-gray-500">These will show a notification and play a sound.</p>
                         <div class="relative flex items-start mt-4">
-                            <div class="flex h-5 items-center">
-                              <input id="candidates" name="candidates" v-model="newexam5min" disabled type="checkbox" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500" />
-                            </div>
-                            <div class="ml-3 text-sm">
-                              <label for="candidates" class="font-medium text-gray-700">5 Minutes</label>
-                              <p class="text-gray-500">Get a reminder 5 minutes before the exam ends.</p>
-                            </div>
+                          <div class="flex h-5 items-center">
+                            <input id="candidates" name="candidates" v-model="newexam5min" disabled type="checkbox"
+                              class="h-4 w-4 rounded border-gray-300 text-orange-600 focus:ring-orange-500" />
+                          </div>
+                          <div class="ml-3 text-sm">
+                            <label for="candidates" class="font-medium text-gray-700">5 Minutes</label>
+                            <p class="text-gray-500">Get a reminder 5 minutes before the exam ends.</p>
+                          </div>
                         </div>
                         <div class="relative flex items-start mt-4">
-                            <div class="flex h-5 items-center">
-                              <input id="candidates" name="candidates" v-model="newexam15min" disabled type="checkbox" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500" />
-                            </div>
-                            <div class="ml-3 text-sm">
-                              <label for="candidates" class="font-medium text-gray-700">15 Minutes</label>
-                              <p class="text-gray-500">Get a reminder 15 minutes before the exam ends.</p>
-                            </div>
+                          <div class="flex h-5 items-center">
+                            <input id="candidates" name="candidates" v-model="newexam15min" disabled type="checkbox"
+                              class="h-4 w-4 rounded border-gray-300 text-orange-600 focus:ring-orange-500" />
+                          </div>
+                          <div class="ml-3 text-sm">
+                            <label for="candidates" class="font-medium text-gray-700">15 Minutes</label>
+                            <p class="text-gray-500">Get a reminder 15 minutes before the exam ends.</p>
+                          </div>
                         </div>
                         <div class="relative flex items-start mt-4">
-                            <div class="flex h-5 items-center">
-                              <input id="candidates" name="candidates" v-model="newexam30min" disabled type="checkbox" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500" />
-                            </div>
-                            <div class="ml-3 text-sm">
-                              <label for="candidates" class="font-medium text-gray-700">30 Minutes</label>
-                              <p class="text-gray-500">Get a reminder 30 minutes before the exam ends.</p>
-                            </div>
+                          <div class="flex h-5 items-center">
+                            <input id="candidates" name="candidates" v-model="newexam30min" disabled type="checkbox"
+                              class="h-4 w-4 rounded border-gray-300 text-orange-600 focus:ring-orange-500" />
+                          </div>
+                          <div class="ml-3 text-sm">
+                            <label for="candidates" class="font-medium text-gray-700">30 Minutes</label>
+                            <p class="text-gray-500">Get a reminder 30 minutes before the exam ends.</p>
+                          </div>
                         </div>
                       </fieldset>
                     </div>
@@ -1005,8 +1042,11 @@ export default ({
 
                 <div class="pt-5">
                   <div class="flex justify-end">
-                    <button @click="open = false" class="rounded-md border border-gray-300 bg-white py-2 px-4 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">Cancel</button>
-                    <button @click=" popupedit ? updateExam(people) : addExam() " class="ml-3 inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">{{ popupedit ? 'Update Exam' : 'Add Exam' }}</button>
+                    <button @click="open = false"
+                      class="rounded-md border border-gray-300 bg-white py-2 px-4 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2">Cancel</button>
+                    <button @click=" popupedit ? updateExam(people) : addExam()"
+                      class="ml-3 inline-flex justify-center rounded-md border border-transparent bg-orange-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2">{{
+                        popupedit ? 'Update Exam' : 'Add Exam' }}</button>
 
                   </div>
                 </div>
@@ -1028,23 +1068,32 @@ export default ({
         </div>
       </div>
     </div>
-    
+
     <div class="sm:flex sm:items-center">
-      
+
       <div class="mt-4 space-x-4 sm:mt-0 sm:flex-none">
         <span class="isolate inline-flex rounded-md shadow-sm">
-          <button type="button" class="relative inline-flex items-center rounded-l-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500" @click="openModal">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="-ml-1 mr-2 h-5 w-5 text-gray-400">
+          <button type="button"
+            class="relative inline-flex items-center rounded-l-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:z-10 focus:border-orange-500 focus:outline-none focus:ring-1 focus:ring-orange-500"
+            @click="openModal">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+              stroke="currentColor" class="-ml-1 mr-2 h-5 w-5 text-gray-400">
               <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
 
             Add Exam
           </button>
-          <button type="button" class="relative -ml-px inline-flex items-center rounded-r-md border border-gray-300 bg-white px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500" @click="toggleFullScreen">
+          <button type="button"
+            class="relative -ml-px inline-flex items-center rounded-r-md border border-gray-300 bg-white px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:z-10 focus:border-orange-500 focus:outline-none focus:ring-1 focus:ring-orange-500"
+            @click="toggleFullScreen">
             <span class="sr-only">Sort</span>
             <!-- Heroicon name: solid/sort-ascending -->
-            
-            <svg class=" h-4 w-4 text-gray-700" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Pro 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. --><path fill="currentColor" d="M496 304h-416v-224H32v240c0 17.6 14.4 32 32 32L264 352v47.02l-72 72c-9.354 9.352-9.354 24.52 0 33.88c9.348 9.348 24.51 9.359 33.87 .0195L288 442.9l62.09 62.09c9.391 9.391 24.63 9.348 33.97-.0938c9.301-9.406 9.258-24.55-.0938-33.91L312 399V352L512 352c17.6 0 32-14.4 32-32V80h-48V304zM552 0H23.96C10.72 0 0 10.73 0 23.95S10.72 48 23.96 48h528.1C565.3 48 576 37.27 576 24.05S565.3 0 552 0z"/></svg>
+
+            <svg class=" h-4 w-4 text-gray-700" xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 576 512"><!--! Font Awesome Pro 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. -->
+              <path fill="currentColor"
+                d="M496 304h-416v-224H32v240c0 17.6 14.4 32 32 32L264 352v47.02l-72 72c-9.354 9.352-9.354 24.52 0 33.88c9.348 9.348 24.51 9.359 33.87 .0195L288 442.9l62.09 62.09c9.391 9.391 24.63 9.348 33.97-.0938c9.301-9.406 9.258-24.55-.0938-33.91L312 399V352L512 352c17.6 0 32-14.4 32-32V80h-48V304zM552 0H23.96C10.72 0 0 10.73 0 23.95S10.72 48 23.96 48h528.1C565.3 48 576 37.27 576 24.05S565.3 0 552 0z" />
+            </svg>
 
           </button>
         </span>
@@ -1054,17 +1103,25 @@ export default ({
       <div class="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
         <div class="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
           <div class="relative overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
-            <div v-if="selectedPeople.length > 0" class="absolute top-0 left-12 flex h-12 items-center space-x-3 bg-gray-50 sm:left-16">
-              <button type="button" class="inline-flex items-center rounded border border-gray-300 bg-white px-2.5 py-1.5 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-30" @click="startMultipleExams">Start Exams</button>
-              <button type="button" class="inline-flex items-center rounded border border-gray-300 bg-white px-2.5 py-1.5 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-30" @click="deleteSelected" >Delete</button>
+            <div v-if="selectedPeople.length > 0"
+              class="absolute top-0 left-12 flex h-12 items-center space-x-3 bg-gray-50 sm:left-16">
+              <button type="button"
+                class="inline-flex items-center rounded border border-gray-300 bg-white px-2.5 py-1.5 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-30"
+                @click="startMultipleExams">Start Exams</button>
+              <button type="button"
+                class="inline-flex items-center rounded border border-gray-300 bg-white px-2.5 py-1.5 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-30"
+                @click="deleteSelected">Delete</button>
             </div>
             <table class="min-w-full table-fixed divide-y divide-gray-300">
               <thead class="bg-gray-50">
                 <tr>
                   <th scope="col" class="relative w-12 px-6 sm:w-16 sm:px-8">
-                    <input type="checkbox" class="absolute left-4 top-1/2 -mt-2 h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500 sm:left-6" select all: @click="selectAllPeople" :checked="selectedPeople.length === people.length">
+                    <input type="checkbox"
+                      class="absolute left-4 top-1/2 -mt-2 h-4 w-4 rounded border-gray-300 text-orange-600 focus:ring-orange-500 sm:left-6"
+                      select all: @click="selectAllPeople" :checked="selectedPeople.length === people.length">
                   </th>
-                  <th scope="col" class="min-w-[12rem] py-3.5 pr-3 text-left text-md font-semibold text-gray-900">Subject Name</th>
+                  <th scope="col" class="min-w-[12rem] py-3.5 pr-3 text-left text-md font-semibold text-gray-900">Subject
+                    Name</th>
                   <th scope="col" class="px-3 py-3.5 text-left text-md font-semibold text-gray-900">Start Time</th>
                   <th scope="col" class="px-3 py-3.5 text-left text-md font-semibold text-gray-900">End Time</th>
                   <th scope="col" class="px-3 py-3.5 text-left text-md font-semibold text-gray-900">Duration</th>
@@ -1076,12 +1133,17 @@ export default ({
                 </tr>
               </thead>
               <tbody class="divide-y divide-gray-200 bg-white">
-                <tr v-for="person in people" :key="person.id" :class="[selectedPeople.includes(person.id) && 'bg-gray-50']">
+                <tr v-for="person in people" :key="person.id"
+                  :class="[selectedPeople.includes(person.id) && 'bg-gray-50']">
                   <td class="relative w-12 px-6 sm:w-16 sm:px-8">
-                    <div v-if="selectedPeople.includes(person.id)" class="absolute inset-y-0 left-0 w-0.5 bg-indigo-600"></div>
-                    <input type="checkbox" class="absolute left-4 top-1/2 -mt-2 h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500 sm:left-6" :value="person.id" v-model="selectedPeople" />
+                    <div v-if="selectedPeople.includes(person.id)" class="absolute inset-y-0 left-0 w-0.5 bg-orange-600">
+                    </div>
+                    <input type="checkbox"
+                      class="absolute left-4 top-1/2 -mt-2 h-4 w-4 rounded border-gray-300 text-orange-600 focus:ring-orange-500 sm:left-6"
+                      :value="person.id" v-model="selectedPeople" />
                   </td>
-                  <td :class="['whitespace-nowrap py-4 pr-3 text-md font-medium', selectedPeople.includes(person.id) ? 'text-indigo-600' : 'text-gray-900']">
+                  <td
+                    :class="['whitespace-nowrap py-4 pr-3 text-md font-medium', selectedPeople.includes(person.id) ? 'text-orange-600' : 'text-gray-900']">
                     {{ person.name }}
                   </td>
                   <td class="whitespace-nowrap px-3 py-4 text-md text-gray-500">
@@ -1097,80 +1159,129 @@ export default ({
                     {{ person.timeleft }}
                   </td>
                   <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                    <span v-if="person.status === 'active'" class="inline-flex rounded-full bg-green-100 px-2 text-xs font-semibold leading-5 text-green-800">Active</span>
-                    <span v-else-if="person.status === 'reading'" class="inline-flex rounded-full bg-orange-100 px-2 text-xs font-semibold leading-5 text-orange-500">Reading Time</span>
-                    <span v-else-if="person.status === 'extra'" class="inline-flex rounded-full bg-blue-100 px-2 text-xs font-semibold leading-5 text-blue-500">Extra Time</span>
-                    <span v-else-if="person.status === 'inactive'" class="inline-flex rounded-full bg-red-100 px-2 text-xs font-semibold leading-5 text-red-800">Not Started</span>
-                    <span v-else-if="person.status === 'finished'" class="inline-flex rounded-full bg-gray-100 px-2 text-xs font-semibold leading-5 text-gray-800">Finished</span>
+                    <span v-if="person.status === 'active'"
+                      class="inline-flex rounded-full bg-green-100 px-2 text-xs font-semibold leading-5 text-green-800">Active</span>
+                    <span v-else-if="person.status === 'reading'"
+                      class="inline-flex rounded-full bg-orange-100 px-2 text-xs font-semibold leading-5 text-orange-500">Reading
+                      Time</span>
+                    <span v-else-if="person.status === 'extra'"
+                      class="inline-flex rounded-full bg-blue-100 px-2 text-xs font-semibold leading-5 text-blue-500">Extra
+                      Time</span>
+                    <span v-else-if="person.status === 'inactive'"
+                      class="inline-flex rounded-full bg-red-100 px-2 text-xs font-semibold leading-5 text-red-800">Not
+                      Started</span>
+                    <span v-else-if="person.status === 'finished'"
+                      class="inline-flex rounded-full bg-gray-100 px-2 text-xs font-semibold leading-5 text-gray-800">Finished</span>
                   </td>
                   <td class="whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
                     <div class="inline-flex rounded-md shadow-sm">
-                      <button type="button" class="relative inline-flex items-center rounded-l-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500" @click="person.started ? stopExam(person.id) : startExam(person.id) "  >{{ person.started ? 'Stop Exam' : 'Start Exam' }}</button>
-                      <Menu as="div" class="relative -ml-px block">
-                        <MenuButton class="relative inline-flex items-center rounded-r-md border border-gray-300 bg-white px-2 py-2 text-sm font-medium text-gray-500 hover:bg-gray-50 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500" @click="popup(person.id)">
-                          <span class="sr-only">Open options</span>
-                          <svg v-if="!isOpen.includes(person.id)" class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Pro 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. --><path fill="currentColor" d="M360.5 217.5l-152 143.1C203.9 365.8 197.9 368 192 368s-11.88-2.188-16.5-6.562L23.5 217.5C13.87 208.3 13.47 193.1 22.56 183.5C31.69 173.8 46.94 173.5 56.5 182.6L192 310.9l135.5-128.4c9.562-9.094 24.75-8.75 33.94 .9375C370.5 193.1 370.1 208.3 360.5 217.5z"/></svg>
-                          <svg v-else class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Pro 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. --><path fill="currentColor" d="M424 216H24C10.75 216 0 205.3 0 192C0 178.7 10.75 168 24 168H424C437.3 168 448 178.7 448 192C448 205.3 437.3 216 424 216zM424 344H24C10.75 344 0 333.3 0 320C0 306.7 10.75 296 24 296H424C437.3 296 448 306.7 448 320C448 333.3 437.3 344 424 344z"/></svg>
-                        </MenuButton>
-                        <transition v-if="isOpen.includes(person.id)" enter-active-class="transition ease-out duration-100" enter-from-class="transform opacity-0 scale-95" enter-to-class="transform opacity-100 scale-100" leave-active-class="transition ease-in duration-75" leave-from-class="transform opacity-100 scale-100" leave-to-class="transform opacity-0 scale-95">
-                          <MenuItems class="fixed right-14 z-10 mt-10 w-42 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                            <div class="py-1 ">
-                              <MenuItem>
-                                <a @click="duplicateButton(person.id)" class="hover:bg-gray-100 text-gray-900 block px-4 py-2 text-sm">Duplicate</a>
-                                <a @click="deleteButton(person.id)" class="hover:bg-gray-100 text-gray-900 block px-4 py-2 text-sm">Delete</a>
-                                <a @click="editButton(person.id)" v-if="person.status === 'inactive'" class="hover:bg-gray-100 text-gray-900 block px-4 py-2 text-sm">Edit</a>
-                              </MenuItem>
-                            </div>
-                          </MenuItems>
-                        </transition>
-                      </Menu>
-                    </div>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
+                    <button type="button"
+                      class="relative inline-flex items-center rounded-l-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:z-10 focus:border-orange-500 focus:outline-none focus:ring-1 focus:ring-orange-500"
+                      @click="person.started ? stopExam(person.id) : startExam(person.id) ">{{ person.started ? 'Stop Exam' : 'Start Exam' }}</button>
+                    <Menu as="div" class="relative -ml-px block">
+                      <MenuButton
+                        class="relative inline-flex items-center rounded-r-md border border-gray-300 bg-white px-2 py-2 text-sm font-medium text-gray-500 hover:bg-gray-50 focus:z-10 focus:border-orange-500 focus:outline-none focus:ring-1 focus:ring-orange-500"
+                        @click="popup(person.id)">
+                        <span class="sr-only">Open options</span>
+                        <svg v-if="!isOpen.includes(person.id)" class="h-5 w-5" xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 384 512"><!--! Font Awesome Pro 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. -->
+                          <path fill="currentColor"
+                            d="M360.5 217.5l-152 143.1C203.9 365.8 197.9 368 192 368s-11.88-2.188-16.5-6.562L23.5 217.5C13.87 208.3 13.47 193.1 22.56 183.5C31.69 173.8 46.94 173.5 56.5 182.6L192 310.9l135.5-128.4c9.562-9.094 24.75-8.75 33.94 .9375C370.5 193.1 370.1 208.3 360.5 217.5z" />
+                        </svg>
+                        <svg v-else class="h-5 w-5" xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 448 512"><!--! Font Awesome Pro 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. -->
+                          <path fill="currentColor"
+                            d="M424 216H24C10.75 216 0 205.3 0 192C0 178.7 10.75 168 24 168H424C437.3 168 448 178.7 448 192C448 205.3 437.3 216 424 216zM424 344H24C10.75 344 0 333.3 0 320C0 306.7 10.75 296 24 296H424C437.3 296 448 306.7 448 320C448 333.3 437.3 344 424 344z" />
+                        </svg>
+                      </MenuButton>
+                      <transition v-if="isOpen.includes(person.id)"
+                        enter-active-class="transition ease-out duration-100"
+                        enter-from-class="transform opacity-0 scale-95" enter-to-class="transform opacity-100 scale-100"
+                        leave-active-class="transition ease-in duration-75"
+                        leave-from-class="transform opacity-100 scale-100"
+                        leave-to-class="transform opacity-0 scale-95">
+                        <MenuItems
+                          class="fixed right-14 z-10 mt-10 w-42 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                          <div class="py-1 ">
+                            <MenuItem>
+                            <a @click="duplicateButton(person.id)"
+                              class="hover:bg-gray-100 text-gray-900 block px-4 py-2 text-sm">Duplicate</a>
+                            <a @click="deleteButton(person.id)"
+                              class="hover:bg-gray-100 text-gray-900 block px-4 py-2 text-sm">Delete</a>
+                            <a @click="editButton(person.id)" v-if="person.status === 'inactive'"
+                              class="hover:bg-gray-100 text-gray-900 block px-4 py-2 text-sm">Edit</a>
+                            </MenuItem>
+                          </div>
+                        </MenuItems>
+                      </transition>
+                    </Menu>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
     </div>
   </div>
-  <div aria-live="assertive" class="pointer-events-none z-50 fixed inset-0 flex items-end px-4 py-6 sm:items-start sm:p-4">
-    <div class="flex w-full flex-col items-center space-y-4 sm:items-end">
-      <!-- Notification panel, dynamically insert this into the live region when it needs to be displayed -->
-      <transition enter-active-class="transform ease-out duration-800 transition" enter-from-class="translate-y-2 opacity-0 sm:translate-y-0 sm:translate-x-2" enter-to-class="translate-y-0 opacity-100 sm:translate-x-0" leave-active-class="transition ease-in duration-100" leave-from-class="opacity-100" leave-to-class="opacity-0">
-        <div v-if="show" class="pointer-events-auto w-full max-w-sm overflow-hidden rounded-lg bg-white shadow-lg ring-1 ring-black ring-opacity-5">
-          <div class="p-4">
-            <div class="flex items-start">
-              <div class="flex-shrink-0">
-                <svg v-if="this.icon === 'success'" class="h-6 w-6 text-green-400" x-description="Heroicon name: outline/check-circle" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+</div>
+<div aria-live="assertive"
+  class="pointer-events-none z-50 fixed inset-0 flex items-end px-4 py-6 sm:items-start sm:p-4">
+  <div class="flex w-full flex-col items-center space-y-4 sm:items-end">
+    <!-- Notification panel, dynamically insert this into the live region when it needs to be displayed -->
+    <transition enter-active-class="transform ease-out duration-800 transition"
+      enter-from-class="translate-y-2 opacity-0 sm:translate-y-0 sm:translate-x-2"
+      enter-to-class="translate-y-0 opacity-100 sm:translate-x-0" leave-active-class="transition ease-in duration-100"
+      leave-from-class="opacity-100" leave-to-class="opacity-0">
+      <div v-if="show"
+        class="pointer-events-auto w-full max-w-sm overflow-hidden rounded-lg bg-white shadow-lg ring-1 ring-black ring-opacity-5">
+        <div class="p-4">
+          <div class="flex items-start">
+            <div class="flex-shrink-0">
+              <svg v-if="this.icon === 'success'" class="h-6 w-6 text-green-400"
+                x-description="Heroicon name: outline/check-circle" xmlns="http://www.w3.org/2000/svg" fill="none"
+                viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                  d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+              <svg v-if="this.icon === 'reading'" class="h-6 w-6 text-orange-400"
+                x-description="Heroicon name: outline/check-circle" xmlns="http://www.w3.org/2000/svg" fill="none"
+                viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                  d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+              <svg v-if="this.icon === 'extra'" class="h-6 w-6 text-blue-400"
+                x-description="Heroicon name: outline/check-circle" xmlns="http://www.w3.org/2000/svg" fill="none"
+                viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                  d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+              <svg v-if="this.icon === 'error'" class="h-6 w-6 text-red-400"
+                x-description="Heroicon name: outline/x-circle" xmlns="http://www.w3.org/2000/svg" fill="none"
+                viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                  d="M9.75 9.75l4.5 4.5m0-4.5l-4.5 4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <div class="ml-3 w-0 flex-1 pt-0.5">
+              <p class="text-sm font-medium text-gray-900">{{ this.title }}</p>
+              <p class="mt-1 text-sm text-gray-500">{{ this.text }}</p>
+            </div>
+            <div class="ml-4 flex flex-shrink-0">
+              <button type="button" @click="show = false"
+                class="inline-flex rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2">
+                <span class="sr-only">Close</span>
+                <svg class="h-5 w-5" x-description="Heroicon name: mini/x-mark" xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                  <path
+                    d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z">
+                  </path>
                 </svg>
-                <svg v-if="this.icon === 'reading'" class="h-6 w-6 text-orange-400" x-description="Heroicon name: outline/check-circle" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                </svg>
-                <svg v-if="this.icon === 'extra'" class="h-6 w-6 text-blue-400" x-description="Heroicon name: outline/check-circle" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                </svg>
-                <svg v-if="this.icon === 'error'" class="h-6 w-6 text-red-400" x-description="Heroicon name: outline/x-circle" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M9.75 9.75l4.5 4.5m0-4.5l-4.5 4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-              </div>
-              <div class="ml-3 w-0 flex-1 pt-0.5">
-                <p class="text-sm font-medium text-gray-900">{{ this.title }}</p>
-                <p class="mt-1 text-sm text-gray-500">{{ this.text }}</p>
-              </div>
-              <div class="ml-4 flex flex-shrink-0">
-                <button type="button" @click="show = false" class="inline-flex rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
-                  <span class="sr-only">Close</span>
-                  <svg class="h-5 w-5" x-description="Heroicon name: mini/x-mark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-  <path d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z"></path>
-</svg>
-                </button>
-              </div>
+              </button>
             </div>
           </div>
         </div>
-      </transition>
-    </div>
+      </div>
+    </transition>
   </div>
-</template>
+</div></template>

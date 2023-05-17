@@ -10,10 +10,10 @@ import {
     EnvelopeIcon,
     ScaleIcon,
     CheckCircleIcon,
-CalendarDaysIcon,
-AcademicCapIcon,
-ClockIcon,
-BookOpenIcon,
+    CalendarDaysIcon,
+    AcademicCapIcon,
+    ClockIcon,
+    BookOpenIcon,
 } from '@heroicons/vue/24/outline'
 
 import { defineComponent, h } from 'vue'
@@ -34,6 +34,10 @@ export default {
     },
     data() {
         return {
+            show1: true,
+            show2: true,
+            show3: true,
+            show4: true,
             test: "test",
             includedFeatures: [
                 'Private forum access',
@@ -152,6 +156,28 @@ export default {
             ]
         }
     },
+    watch: {
+        show1() {
+            setTimeout(() => {
+                this.show1 = true
+            }, 2345)
+        },
+        show2() {
+            setTimeout(() => {
+                this.show2 = true
+            }, 1283)
+        },
+        show3() {
+            setTimeout(() => {
+                this.show3 = true
+            }, 2373)
+        },
+        show4() {
+            setTimeout(() => {
+                this.show4 = true
+            }, 1233)
+        },
+    },
 }
 </script>
 
@@ -255,8 +281,11 @@ export default {
 
             <div class="relative mt-12 lg:mt-24 lg:grid lg:grid-cols-2 lg:items-center lg:gap-8">
                 <div class="relative">
-                    <h3 class="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">Give students a clearer view</h3>
-                    <p class="mt-3 text-lg text-gray-500">Say goodbye to the complexities of manual exam management. With ExamTimer, you can streamline your exam processes, enhance efficiency, and create a seamless experience for teachers, examiners, and students alike.</p>
+                    <h3 class="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">Give students a clearer view
+                    </h3>
+                    <p class="mt-3 text-lg text-gray-500">Say goodbye to the complexities of manual exam management. With
+                        ExamTimer, you can streamline your exam processes, enhance efficiency, and create a seamless
+                        experience for teachers, examiners, and students alike.</p>
 
                     <dl class="mt-10 space-y-10">
                         <div v-for="item in transferFeatures" :key="item.id" class="relative">
@@ -283,8 +312,8 @@ export default {
                         </defs>
                         <rect width="784" height="404" fill="url(#ca9667ae-9f92-4be7-abcb-9e3d727f2941)" />
                     </svg>
-                    <img class="relative mx-auto shadow-lg rounded-xl" width="490"
-                        src="https://i.vgy.me/t1TpuG.png" alt="" />
+                    <img class="relative mx-auto shadow-lg rounded-xl" width="490" src="https://i.vgy.me/t1TpuG.png"
+                        alt="" />
                 </div>
             </div>
 
@@ -302,8 +331,11 @@ export default {
             <div class="relative mt-12 sm:mt-16 lg:mt-24">
                 <div class="lg:grid lg:grid-flow-row-dense lg:grid-cols-2 lg:items-center lg:gap-8">
                     <div class="lg:col-start-2">
-                        <h3 class="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">Flexible Time Management</h3>
-                        <p class="mt-3 text-lg text-gray-500">Enhance exam conditions and empower students with ExamTimer's flexible time management features. Customize extra time allocation and accurately track reading time for a fair and efficient exam process.</p>
+                        <h3 class="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">Flexible Time Management
+                        </h3>
+                        <p class="mt-3 text-lg text-gray-500">Enhance exam conditions and empower students with ExamTimer's
+                            flexible time management features. Customize extra time allocation and accurately track reading
+                            time for a fair and efficient exam process.</p>
 
                         <dl class="mt-10 space-y-10">
                             <div v-for="item in communicationFeatures" :key="item.id" class="relative">
@@ -319,7 +351,7 @@ export default {
                         </dl>
                     </div>
 
-                    <div class="relative -mx-4 mt-10 lg:col-start-1 lg:mt-0">
+                    <div class="relative -mx-4 mt-10 lg:col-start-1 lg:mt-0 h-full">
                         <svg class="absolute left-1/2 -translate-x-1/2 translate-y-16 transform lg:hidden" width="784"
                             height="404" fill="none" viewBox="0 0 784 404" aria-hidden="true">
                             <defs>
@@ -330,8 +362,171 @@ export default {
                             </defs>
                             <rect width="784" height="404" fill="url(#e80155a9-dfde-425a-b5ea-1f6fadd20131)" />
                         </svg>
-                        <img class="relative mx-auto" width="490"
-                            src="https://i.vgy.me/PNwQ2h.png" alt="" />
+                        <!-- let itmes stick to the top of the div -->
+                        <div class="relative mx-auto h-full align-top space-y-4">
+                            <!-- Notification panel, dynamically insert this into the live region when it needs to be displayed -->
+                            <transition enter-active-class="transform ease-out duration-500 transition"
+                                enter-from-class="translate-y-2 opacity-0 sm:translate-y-0 sm:translate-x-2"
+                                enter-to-class="translate-y-0 opacity-100 sm:translate-x-0"
+                                leave-active-class="transition ease-in duration-300" leave-from-class="opacity-100"
+                                leave-to-class="opacity-0">
+                                <div v-if="show1"
+                                    class="pointer-events-auto w-full max-w-sm overflow-hidden rounded-lg bg-white shadow-lg ring-1 ring-black ring-opacity-5">
+                                    <div class="p-4">
+                                        <div class="flex items-start">
+                                            <div class="flex-shrink-0">
+                                                <svg class="h-6 w-6 text-green-400"
+                                                    x-description="Heroicon name: outline/check-circle"
+                                                    xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                                    stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z">
+                                                    </path>
+                                                </svg>
+                                            </div>
+                                            <div class="ml-3 w-0 flex-1 pt-0.5">
+                                                <p class="text-sm font-medium text-gray-900">Exam started</p>
+                                                <p class="mt-1 text-sm text-gray-500">Maths Paper 1 has been started</p>
+                                            </div>
+                                            <div class="ml-4 flex flex-shrink-0">
+                                                <button type="button" @click="show1 = false"
+                                                    class="inline-flex rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2">
+                                                    <span class="sr-only">Close</span>
+                                                    <svg class="h-5 w-5" x-description="Heroicon name: mini/x-mark"
+                                                        xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
+                                                        fill="currentColor" aria-hidden="true">
+                                                        <path
+                                                            d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z">
+                                                        </path>
+                                                    </svg>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </transition>
+                            <transition enter-active-class="transform ease-out duration-500 transition"
+                                enter-from-class="translate-y-2 opacity-0 sm:translate-y-0 sm:translate-x-2"
+                                enter-to-class="translate-y-0 opacity-100 sm:translate-x-0"
+                                leave-active-class="transition ease-in duration-300" leave-from-class="opacity-100"
+                                leave-to-class="opacity-0">
+                                <div v-if="show3"
+                                    class="pointer-events-auto w-full max-w-sm overflow-hidden rounded-lg bg-white shadow-lg ring-1 ring-black ring-opacity-5">
+                                    <div class="p-4">
+                                        <div class="flex items-start">
+                                            <div class="flex-shrink-0">
+                                                <svg class="h-6 w-6 text-blue-400"
+                                                    x-description="Heroicon name: outline/check-circle"
+                                                    xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                                    stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z">
+                                                    </path>
+                                                </svg>
+                                            </div>
+                                            <div class="ml-3 w-0 flex-1 pt-0.5">
+                                                <p class="text-sm font-medium text-gray-900">Extra time started</p>
+                                                <p class="mt-1 text-sm text-gray-500">English Paper 2 has started reading
+                                                    time</p>
+                                            </div>
+                                            <div class="ml-4 flex flex-shrink-0">
+                                                <button type="button" @click="show3 = false"
+                                                    class="inline-flex rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2">
+                                                    <span class="sr-only">Close</span>
+                                                    <svg class="h-5 w-5" x-description="Heroicon name: mini/x-mark"
+                                                        xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
+                                                        fill="currentColor" aria-hidden="true">
+                                                        <path
+                                                            d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z">
+                                                        </path>
+                                                    </svg>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </transition>
+                            <transition enter-active-class="transform ease-out duration-500 transition"
+                                enter-from-class="translate-y-2 opacity-0 sm:translate-y-0 sm:translate-x-2"
+                                enter-to-class="translate-y-0 opacity-100 sm:translate-x-0"
+                                leave-active-class="transition ease-in duration-300" leave-from-class="opacity-100"
+                                leave-to-class="opacity-0">
+                                <div v-if="show2"
+                                    class="pointer-events-auto w-full max-w-sm overflow-hidden rounded-lg bg-white shadow-lg ring-1 ring-black ring-opacity-5">
+                                    <div class="p-4">
+                                        <div class="flex items-start">
+                                            <div class="flex-shrink-0">
+                                                <svg class="h-6 w-6 text-orange-400"
+                                                    x-description="Heroicon name: outline/check-circle"
+                                                    xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                                    stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z">
+                                                    </path>
+                                                </svg>
+                                            </div>
+                                            <div class="ml-3 w-0 flex-1 pt-0.5">
+                                                <p class="text-sm font-medium text-gray-900">Reading time started</p>
+                                                <p class="mt-1 text-sm text-gray-500">Physics Paper 3 has started reading
+                                                    time</p>
+                                            </div>
+                                            <div class="ml-4 flex flex-shrink-0">
+                                                <button type="button" @click="show2 = false"
+                                                    class="inline-flex rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2">
+                                                    <span class="sr-only">Close</span>
+                                                    <svg class="h-5 w-5" x-description="Heroicon name: mini/x-mark"
+                                                        xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
+                                                        fill="currentColor" aria-hidden="true">
+                                                        <path
+                                                            d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z">
+                                                        </path>
+                                                    </svg>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </transition>
+                            <transition enter-active-class="transform ease-out duration-500 transition"
+                                enter-from-class="translate-y-2 opacity-0 sm:translate-y-0 sm:translate-x-2"
+                                enter-to-class="translate-y-0 opacity-100 sm:translate-x-0"
+                                leave-active-class="transition ease-in duration-300" leave-from-class="opacity-100"
+                                leave-to-class="opacity-0">
+                                <div v-if="show4"
+                                    class="pointer-events-auto w-full max-w-sm overflow-hidden rounded-lg bg-white shadow-lg ring-1 ring-black ring-opacity-5">
+                                    <div class="p-4">
+                                        <div class="flex items-start">
+                                            <div class="flex-shrink-0">
+                                                <svg class="h-6 w-6 text-red-400"
+                                                    x-description="Heroicon name: outline/x-circle"
+                                                    xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                                    stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        d="M9.75 9.75l4.5 4.5m0-4.5l-4.5 4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                </svg>
+                                            </div>
+                                            <div class="ml-3 w-0 flex-1 pt-0.5">
+                                                <p class="text-sm font-medium text-gray-900">Error adding Exam</p>
+                                                <p class="mt-1 text-sm text-gray-500">Biology Paper 1 could not be added</p>
+                                            </div>
+                                            <div class="ml-4 flex flex-shrink-0">
+                                                <button type="button" @click="show4 = false"
+                                                    class="inline-flex rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2">
+                                                    <span class="sr-only">Close</span>
+                                                    <svg class="h-5 w-5" x-description="Heroicon name: mini/x-mark"
+                                                        xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
+                                                        fill="currentColor" aria-hidden="true">
+                                                        <path
+                                                            d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z">
+                                                        </path>
+                                                    </svg>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </transition>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -428,19 +623,19 @@ export default {
                     </div>
                 </div>
             </div>
+        </div>
     </div>
-</div>
 
-<footer class="bg-gray-100">
-    <div class="mx-auto max-w-7xl py-12 px-4 sm:px-6 md:flex md:items-center md:justify-between lg:px-8">
-        <div class="flex justify-center space-x-6 md:order-2">
-            <a v-for="item in navigation" :key="item.name" :href="item.href" class="text-gray-400 hover:text-gray-500">
-                <span class="sr-only">{{ item.name }}</span>
-                <component :is="item.icon" class="h-6 w-6" aria-hidden="true" />
-            </a>
+    <footer class="bg-gray-100">
+        <div class="mx-auto max-w-7xl py-12 px-4 sm:px-6 md:flex md:items-center md:justify-between lg:px-8">
+            <div class="flex justify-center space-x-6 md:order-2">
+                <a v-for="item in navigation" :key="item.name" :href="item.href" class="text-gray-400 hover:text-gray-500">
+                    <span class="sr-only">{{ item.name }}</span>
+                    <component :is="item.icon" class="h-6 w-6" aria-hidden="true" />
+                </a>
+            </div>
+            <div class="mt-8 md:order-1 md:mt-0">
+                <p class="text-center text-base text-gray-400">&copy; 2023 Examtimer, Inc. All rights reserved.</p>
+            </div>
         </div>
-        <div class="mt-8 md:order-1 md:mt-0">
-            <p class="text-center text-base text-gray-400">&copy; 2023 Examtimer, Inc. All rights reserved.</p>
-        </div>
-    </div>
 </footer></template>

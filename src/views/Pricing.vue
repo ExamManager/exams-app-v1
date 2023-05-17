@@ -24,27 +24,27 @@ export default ({
             test: "test",
             tiers: [
                 {
-                    name: 'Standard',
+                    name: 'Personal',
                     href: '#',
-                    priceMonthly: 49,
-                    description: 'Lorem ipsum dolor sit amet consectetur, adipisicing elit.',
+                    priceMonthly: 29,
+                    description: 'For smaller Schools with less than 500 students',
                     features: [
-                        'Pariatur quod similique',
-                        'Sapiente libero doloribus modi nostrum',
-                        'Vel ipsa esse repudiandae excepturi',
-                        'Itaque cupiditate adipisci quibusdam',
+                        'Access to Student View',
+                        'External Display Support with Teacher View',
+                        'Schedule Exams for up to 3 days',
+                        'Faster Email Support Responses',
                     ],
                 },
                 {
-                    name: 'Enterprise',
+                    name: 'Business',
                     href: '#',
-                    priceMonthly: 79,
-                    description: 'Lorem ipsum dolor sit amet consectetur, adipisicing elit.',
+                    priceMonthly: 49,
+                    description: 'For larger Schools with more than 500 students',
                     features: [
-                        'Pariatur quod similique',
-                        'Sapiente libero doloribus modi nostrum',
-                        'Vel ipsa esse repudiandae excepturi',
-                        'Itaque cupiditate adipisci quibusdam',
+                        'All Features incuded in Personal',
+                        'Import Exam Details from Spreadsheet',
+                        'Schedule Exams for up to 30 days',
+                        'Faster Personal Support Responses',
                     ],
                 },
             ],
@@ -146,11 +146,8 @@ export default ({
                     <div class="pt-12 sm:pt-16 lg:pt-24">
                         <div class="mx-auto max-w-7xl px-4 text-center sm:px-6 lg:px-8">
                             <div class="mx-auto max-w-3xl space-y-2 lg:max-w-none">
-                                <h2 class="text-xl font-semibold leading-6 text-gray-700">Pricing</h2>
-                                <p class="text-3xl font-bold tracking-tight text-black sm:text-4xl lg:text-5xl">The right
-                                    price for you, whoever you are</p>
-                                <p class="text-xl text-gray-700">Lorem ipsum dolor, sit amet consectetur adipisicing elit.
-                                    Harum sequi unde repudiandae natus.</p>
+                                <p class="text-3xl font-bold tracking-tight text-black sm:text-4xl lg:text-5xl">Prices that fit every need</p>
+                                <p class="text-xl text-gray-700">Our plans offer everything you need to take your examtiming to the next level.</p>
                             </div>
                         </div>
                     </div>
@@ -187,7 +184,7 @@ export default ({
                                             </ul>
                                             <div class="rounded-md shadow">
                                                 <a :href="tier.href"
-                                                    class="flex items-center justify-center rounded-md border border-transparent bg-gray-600 px-5 py-3 text-base font-medium text-white hover:bg-orange-600"
+                                                    class="flex items-center justify-center rounded-md border border-transparent bg-gray-600 px-5 py-3 text-base font-medium text-white hover:bg-orange-500"
                                                     aria-describedby="tier-standard">Get started</a>
                                             </div>
                                         </div>
@@ -202,16 +199,15 @@ export default ({
                                         <div>
                                             <h3
                                                 class="inline-flex rounded-full bg-white px-4 py-1 text-base font-semibold text-gray-800">
-                                                Discounted</h3>
+                                                Enterprise</h3>
                                         </div>
-                                        <div class="mt-4 text-lg text-gray-600">Get full access to all of standard license
-                                            features for solo projects that make less than $20k gross revenue for <span
-                                                class="font-semibold text-gray-900">$29</span>.</div>
+                                        <div class="mt-4 text-lg text-gray-600">Looking for something bigger? Get in touch to explore our Enterprise plans. We offer tailored solutions for teams of any size starting at
+                                            <span
+                                                class="font-semibold text-gray-900">$79</span>/mo</div>
                                     </div>
                                     <div class="mt-6 rounded-md shadow lg:mt-0 lg:ml-10 lg:flex-shrink-0">
                                         <a href="#"
-                                            class="flex items-center justify-center rounded-md border border-transparent bg-white px-5 py-3 text-base font-medium text-gray-900 hover:bg-gray-50">Buy
-                                            Discounted License</a>
+                                            class="flex items-center justify-center rounded-md border border-transparent bg-gray-600 px-5 py-3 text-base font-medium text-white hover:bg-orange-500">Get in contact</a>
                                     </div>
                                 </div>
                             </div>
@@ -227,13 +223,13 @@ export default ({
 
                 <div class="relative mx-auto max-w-2xl px-4 sm:px-6 lg:max-w-7xl lg:px-8">
                     <div
-                        class="relative overflow-hidden rounded-xl bg-[#6D1333] py-24 px-8 shadow-2xl lg:grid lg:grid-cols-2 lg:gap-x-8 lg:px-16">
-                        <div class="absolute inset-0 opacity-60 mix-blend-multiply saturate-0 filter">
+                        class="relative overflow-hidden rounded-xl bg-[#6D1333] opacity-80 py-24 px-8 shadow-2xl lg:grid lg:grid-cols-2 lg:gap-x-8 lg:px-16">
+                        <div class="absolute inset-0 opacity-80 mix-blend-multiply saturate-0 filter">
                             <img src="https://smapse.com/storage/2016/08/haileybury-college-terrace1.jpg"
                                 alt="" class="h-full w-full object-cover" />
                         </div>
                         <div class="relative lg:col-span-1">
-                            <img class="h-12 w-auto" src="https://tailwindui.com/img/logos/workcation-logo-white.svg"
+                            <img class="h-16 w-auto" src="https://i.vgy.me/a2PZmc.png"
                                 alt="" />
                             <blockquote class="mt-6 text-white">
                                 <p class="text-xl font-medium sm:text-2xl">This app has completely transformed how we
@@ -243,8 +239,8 @@ export default ({
                                 </p>
                                 <footer class="mt-6">
                                     <p class="flex flex-col font-medium">
-                                        <span>Marie Chilvers</span>
-                                        <span>CEO, Workcation</span>
+                                        <span>Mr Example</span>
+                                        <span>CEO, Haileybury</span>
                                     </p>
                                 </footer>
                             </blockquote>
