@@ -8,22 +8,28 @@ import {
     BoltIcon,
     ChatBubbleBottomCenterTextIcon,
     EnvelopeIcon,
-    GlobeAltIcon,
     ScaleIcon,
     CheckCircleIcon,
+CalendarDaysIcon,
+AcademicCapIcon,
+ClockIcon,
+BookOpenIcon,
 } from '@heroicons/vue/24/outline'
 
 import { defineComponent, h } from 'vue'
 
 export default {
     components: {
+        AcademicCapIcon,
         ChevronRightIcon,
         StarIcon,
+        ClockIcon,
+        BookOpenIcon,
         CheckCircleIcon,
         BoltIcon,
         ChatBubbleBottomCenterTextIcon,
         EnvelopeIcon,
-        GlobeAltIcon,
+        CalendarDaysIcon,
         ScaleIcon,
     },
     data() {
@@ -108,40 +114,40 @@ export default {
             transferFeatures: [
                 {
                     id: 1,
-                    name: 'Competitive exchange rates',
+                    name: 'Enhanced Exam Scheduling',
                     description:
-                        'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Maiores impedit perferendis suscipit eaque, iste dolor cupiditate blanditiis ratione.',
-                    icon: GlobeAltIcon,
+                        'Simplify your exam calendar with ExamTimer. Easily add and manage multiple exams, ensuring a well-organized and structured schedule for administrators and students alike.',
+                    icon: CalendarDaysIcon,
                 },
                 {
                     id: 2,
-                    name: 'No hidden fees',
+                    name: 'Seamless Exam Initiation',
                     description:
-                        'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Maiores impedit perferendis suscipit eaque, iste dolor cupiditate blanditiis ratione.',
-                    icon: ScaleIcon,
+                        "Start exams with ease using ExamTimer's user-friendly interface. Say goodbye to manual setup and enjoy a hassle-free process for prompt and seamless exam sessions.",
+                    icon: EnvelopeIcon,
                 },
                 {
                     id: 3,
-                    name: 'Transfers are instant',
+                    name: 'Student-Focused Experience',
                     description:
-                        'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Maiores impedit perferendis suscipit eaque, iste dolor cupiditate blanditiis ratione.',
-                    icon: BoltIcon,
+                        'Prioritizing students, ExamTimer offers a dedicated student view feature. With clear exam duration visibility, students can manage their time effectively, reduce stress, and stay focused on their performance.',
+                    icon: AcademicCapIcon,
                 },
             ],
             communicationFeatures: [
                 {
                     id: 1,
-                    name: 'Mobile notifications',
+                    name: 'Customizable Extra Time',
                     description:
-                        'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Maiores impedit perferendis suscipit eaque, iste dolor cupiditate blanditiis ratione.',
-                    icon: ChatBubbleBottomCenterTextIcon,
+                        'Provide equal opportunities for students with diverse needs by allocating customizable extra time for exams. ExamTimer allows you to easily assign additional time to specific students, accommodating various requirements and ensuring a fair and inclusive exam environment.',
+                    icon: ClockIcon,
                 },
                 {
                     id: 2,
-                    name: 'Reminder emails',
+                    name: 'Pre-Exam Reading Time',
                     description:
-                        'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Maiores impedit perferendis suscipit eaque, iste dolor cupiditate blanditiis ratione.',
-                    icon: EnvelopeIcon,
+                        'Offer students valuable pre-exam reading time to review instructions, analyze questions, and plan their approach. With ExamTimer, you can include a dedicated period, such as 5 minutes, before the exam starts to give students a head start and reduce last-minute stress.',
+                    icon: BookOpenIcon,
                 },
             ]
         }
@@ -227,7 +233,7 @@ export default {
         </div>
     </div>
 
-    <div class="overflow-hidden bg-white py-16 lg:py-24">
+    <div class="overflow-hidden bg-white py-12 lg:py-20">
         <div class="relative mx-auto max-w-xl px-4 sm:px-6 lg:max-w-7xl lg:px-8">
             <svg class="absolute left-full hidden -translate-x-1/2 -translate-y-1/4 transform lg:block" width="404"
                 height="784" fill="none" viewBox="0 0 404 784" aria-hidden="true">
@@ -242,17 +248,15 @@ export default {
 
             <div class="relative">
                 <h2 class="text-center text-3xl font-bold leading-8 tracking-tight text-gray-900 sm:text-4xl">A better way
-                    to send money</h2>
-                <p class="mx-auto mt-4 max-w-3xl text-center text-xl text-gray-500">Lorem ipsum dolor sit amet consectetur
-                    adipisicing elit. Possimus magnam voluptatum cupiditate veritatis in, accusamus quisquam.</p>
+                    to manage exams</h2>
+                <p class="mx-auto mt-4 max-w-3xl text-center text-xl text-gray-500">Give students a non distractive way to
+                    keep track of their time during exams. See how much time you have left in your exam at a glance.</p>
             </div>
 
             <div class="relative mt-12 lg:mt-24 lg:grid lg:grid-cols-2 lg:items-center lg:gap-8">
                 <div class="relative">
-                    <h3 class="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">Transfer funds world-wide</h3>
-                    <p class="mt-3 text-lg text-gray-500">Lorem ipsum dolor sit amet consectetur adipisicing elit. Pariatur
-                        minima sequi recusandae, porro maiores officia assumenda aliquam laborum ab aliquid veritatis
-                        impedit odit adipisci optio iste blanditiis facere. Totam, velit.</p>
+                    <h3 class="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">Give students a clearer view</h3>
+                    <p class="mt-3 text-lg text-gray-500">Say goodbye to the complexities of manual exam management. With ExamTimer, you can streamline your exam processes, enhance efficiency, and create a seamless experience for teachers, examiners, and students alike.</p>
 
                     <dl class="mt-10 space-y-10">
                         <div v-for="item in transferFeatures" :key="item.id" class="relative">
@@ -298,10 +302,8 @@ export default {
             <div class="relative mt-12 sm:mt-16 lg:mt-24">
                 <div class="lg:grid lg:grid-flow-row-dense lg:grid-cols-2 lg:items-center lg:gap-8">
                     <div class="lg:col-start-2">
-                        <h3 class="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">Always in the loop</h3>
-                        <p class="mt-3 text-lg text-gray-500">Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                            Impedit ex obcaecati natus eligendi delectus, cum deleniti sunt in labore nihil quod quibusdam
-                            expedita nemo.</p>
+                        <h3 class="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">Flexible Time Management</h3>
+                        <p class="mt-3 text-lg text-gray-500">Enhance exam conditions and empower students with ExamTimer's flexible time management features. Customize extra time allocation and accurately track reading time for a fair and efficient exam process.</p>
 
                         <dl class="mt-10 space-y-10">
                             <div v-for="item in communicationFeatures" :key="item.id" class="relative">
