@@ -98,7 +98,7 @@ export default {
       console.log(window.location.pathname)
       this.show = false;
       this.show2 = false;
-    } if (window.location.pathname == "/") {
+    } else if (window.location.pathname == "/") {
       console.log(window.location.pathname)
       this.show = false;
       this.show2 = true;
