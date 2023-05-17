@@ -98,6 +98,10 @@ export default {
       console.log(window.location.pathname)
       this.show = false;
       this.show2 = false;
+    } if (window.location.pathname == "/") {
+      console.log(window.location.pathname)
+      this.show = false;
+      this.show2 = true;
     } else {
       this.show2 = true;
       var show = sessionStorage.getItem('show');
@@ -264,7 +268,7 @@ export default {
           <div class="flex flex-wrap items-center justify-between">
             <div class="flex w-0 flex-1 items-center">
               <span class="flex rounded-lg bg-gray-100 p-2">
-              <svg class="h-6 w-6 text-black" x-description="Heroicon name: outline/megaphone"
+              <svg class="h-6 w-6 text-orange-500" x-description="Heroicon name: outline/megaphone"
                 xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                 stroke="currentColor" aria-hidden="true">
                 <path stroke-linecap="round" stroke-linejoin="round"
@@ -278,7 +282,7 @@ export default {
           </div>
           <div class="order-3 mt-2 w-full flex-shrink-0 sm:order-2 sm:mt-0 sm:w-auto">
             <a href="#"
-              class="flex items-center justify-center rounded-md border border-transparent bg-white px-4 py-2 text-sm font-medium text-black shadow-sm hover:bg-gray-200">Learn
+              class="flex items-center text-black justify-center rounded-md border border-transparent bg-white px-4 py-2 text-sm font-medium shadow-sm hover:bg-gray-200">Learn
               more</a>
           </div>
           <div class="order-2 flex-shrink-0 sm:order-3 sm:ml-2">
