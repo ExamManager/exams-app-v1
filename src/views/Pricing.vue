@@ -184,7 +184,7 @@ export default ({
                                             </ul>
                                             <div class="rounded-md shadow">
                                                 <a :href="tier.href"
-                                                    class="flex items-center justify-center rounded-md border border-transparent bg-gray-600 px-5 py-3 text-base font-medium text-white hover:bg-orange-500"
+                                                    class="flex items-center justify-center rounded-md border border-transparent bg-orange-400 px-5 py-3 text-base font-medium text-white hover:bg-orange-500"
                                                     aria-describedby="tier-standard">Get started</a>
                                             </div>
                                         </div>
@@ -207,7 +207,7 @@ export default ({
                                     </div>
                                     <div class="mt-6 rounded-md shadow lg:mt-0 lg:ml-10 lg:flex-shrink-0">
                                         <a href="#"
-                                            class="flex items-center justify-center rounded-md border border-transparent bg-gray-600 px-5 py-3 text-base font-medium text-white hover:bg-orange-500">Get in contact</a>
+                                            class="flex items-center justify-center rounded-md border border-transparent bg-orange-400 px-5 py-3 text-base font-medium text-white hover:bg-orange-500">Get in contact</a>
                                     </div>
                                 </div>
                             </div>
@@ -223,7 +223,7 @@ export default ({
 
                 <div class="relative mx-auto max-w-2xl px-4 sm:px-6 lg:max-w-7xl lg:px-8">
                     <div
-                        class="relative overflow-hidden rounded-xl bg-[#6D1333] opacity-80 py-24 px-8 shadow-2xl lg:grid lg:grid-cols-2 lg:gap-x-8 lg:px-16">
+                        class="relative overflow-hidden rounded-xl bg-orange-500 opacity-80 py-24 px-8 shadow-2xl lg:grid lg:grid-cols-2 lg:gap-x-8 lg:px-16">
                         <div class="absolute inset-0 opacity-80 mix-blend-multiply saturate-0 filter">
                             <img src="https://smapse.com/storage/2016/08/haileybury-college-terrace1.jpg"
                                 alt="" class="h-full w-full object-cover" />
