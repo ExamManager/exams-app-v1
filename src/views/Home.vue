@@ -38,6 +38,8 @@ export default {
             show2: false,
             show3: false,
             show4: false,
+            show5: false,
+            show6: false,
             test: "test",
             includedFeatures: [
                 'Private forum access',
@@ -178,6 +180,9 @@ export default {
                     this.show4 = true;
                 }, 300);
             }
+            if (window.scrollY > 800) {
+                this.show5 = true;
+            }
 
         },
     },
@@ -203,6 +208,10 @@ export default {
             }, 1233)
         },
     },
+    mounted() {
+        this.show6 = true;
+    }
+        
 }
 </script>
 
@@ -276,8 +285,14 @@ export default {
                         </svg>
                     </div>
                     <div class="relative -mr-40 pl-4 sm:mx-auto sm:max-w-3xl sm:px-0 lg:h-full lg:max-w-none lg:pl-12">
-                        <img class="w-full rounded-md shadow-xl ring-1 ring-black ring-opacity-5 lg:h-full lg:w-auto lg:max-w-none"
+                        <transition enter-active-class="transform ease-out duration-1000 transition"
+                                enter-from-class="translate-y-2 opacity-0 sm:translate-y-0 sm:translate-x-20"
+                                enter-to-class="translate-y-0 opacity-100 sm:translate-x-0"
+                                leave-active-class="transition ease-in duration-300" leave-from-class="opacity-100"
+                                leave-to-class="opacity-0">
+                        <img v-if="show6" class="w-full rounded-md shadow-xl ring-1 ring-black ring-opacity-5 lg:h-full lg:w-auto lg:max-w-none"
                             src="https://i.vgy.me/6HTgKc.png" alt="" />
+                        </transition>
                     </div>
                 </div>
             </div>
@@ -337,8 +352,14 @@ export default {
                         </defs>
                         <rect width="784" height="404" fill="url(#ca9667ae-9f92-4be7-abcb-9e3d727f2941)" />
                     </svg>
-                    <img class="relative mx-auto shadow-lg rounded-xl" width="490" src="https://i.vgy.me/t1TpuG.png"
-                        alt="" />
+                    <transition enter-active-class="transform ease-out duration-500 transition"
+                                enter-from-class="translate-y-2 opacity-0 sm:translate-y-0 sm:translate-x-20"
+                                enter-to-class="translate-y-0 opacity-100 sm:translate-x-0"
+                                leave-active-class="transition ease-in duration-300" leave-from-class="opacity-100"
+                                leave-to-class="opacity-0">
+                        <img v-if="show5" class="relative mx-auto shadow-lg rounded-xl" width="490" src="https://i.vgy.me/t1TpuG.png"
+                            alt="" />
+                    </transition>
                 </div>
             </div>
 
