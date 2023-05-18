@@ -34,10 +34,10 @@ export default {
     },
     data() {
         return {
-            show1: true,
-            show2: true,
-            show3: true,
-            show4: true,
+            show1: false,
+            show2: false,
+            show3: false,
+            show4: false,
             test: "test",
             includedFeatures: [
                 'Private forum access',
@@ -155,6 +155,31 @@ export default {
                 },
             ]
         }
+    },
+    created() {
+        window.addEventListener('scroll', this.handleScroll);
+    },
+    unmounted() {
+        window.removeEventListener('scroll', this.handleScroll);
+    },
+    methods: {
+        handleScroll() {
+            console.log('scrolling');
+            console.log(window.scrollY);
+            if (window.scrollY > 1550) {
+                this.show1 = true;
+                setTimeout(() => {
+                    this.show3 = true;
+                }, 100);
+                setTimeout(() => {
+                    this.show2 = true;
+                }, 200);
+                setTimeout(() => {
+                    this.show4 = true;
+                }, 300);
+            }
+
+        },
     },
     watch: {
         show1() {
@@ -366,7 +391,7 @@ export default {
                         <div class="relative mx-auto h-full align-top space-y-4">
                             <!-- Notification panel, dynamically insert this into the live region when it needs to be displayed -->
                             <transition enter-active-class="transform ease-out duration-500 transition"
-                                enter-from-class="translate-y-2 opacity-0 sm:translate-y-0 sm:translate-x-2"
+                                enter-from-class="translate-y-2 opacity-0 sm:translate-y-0 sm:-translate-x-20"
                                 enter-to-class="translate-y-0 opacity-100 sm:translate-x-0"
                                 leave-active-class="transition ease-in duration-300" leave-from-class="opacity-100"
                                 leave-to-class="opacity-0">
@@ -406,7 +431,7 @@ export default {
                                 </div>
                             </transition>
                             <transition enter-active-class="transform ease-out duration-500 transition"
-                                enter-from-class="translate-y-2 opacity-0 sm:translate-y-0 sm:translate-x-2"
+                                enter-from-class="translate-y-2 opacity-0 sm:translate-y-0 sm:-translate-x-20"
                                 enter-to-class="translate-y-0 opacity-100 sm:translate-x-0"
                                 leave-active-class="transition ease-in duration-300" leave-from-class="opacity-100"
                                 leave-to-class="opacity-0">
@@ -447,7 +472,7 @@ export default {
                                 </div>
                             </transition>
                             <transition enter-active-class="transform ease-out duration-500 transition"
-                                enter-from-class="translate-y-2 opacity-0 sm:translate-y-0 sm:translate-x-2"
+                                enter-from-class="translate-y-2 opacity-0 sm:translate-y-0 sm:-translate-x-20"
                                 enter-to-class="translate-y-0 opacity-100 sm:translate-x-0"
                                 leave-active-class="transition ease-in duration-300" leave-from-class="opacity-100"
                                 leave-to-class="opacity-0">
@@ -488,7 +513,7 @@ export default {
                                 </div>
                             </transition>
                             <transition enter-active-class="transform ease-out duration-500 transition"
-                                enter-from-class="translate-y-2 opacity-0 sm:translate-y-0 sm:translate-x-2"
+                                enter-from-class="translate-y-2 opacity-0 sm:translate-y-0 sm:-translate-x-20"
                                 enter-to-class="translate-y-0 opacity-100 sm:translate-x-0"
                                 leave-active-class="transition ease-in duration-300" leave-from-class="opacity-100"
                                 leave-to-class="opacity-0">
@@ -638,4 +663,5 @@ export default {
                 <p class="text-center text-base text-gray-400">&copy; 2023 Examtimer, Inc. All rights reserved.</p>
             </div>
         </div>
-</footer></template>
+    </footer>
+</template>
