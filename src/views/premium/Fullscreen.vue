@@ -50,7 +50,7 @@ export default {
 </script>
 
 <template>
-  <nav class="flex fixed pt-4 pl-4" aria-label="Breadcrumb">
+  <nav class="flex fixed pt-4 pl-4 z-30" aria-label="Breadcrumb">
       <ol role="list" class="flex space-x-4 rounded-md bg-white px-6 shadow">
         <li class="flex">
           <div class="flex items-center">

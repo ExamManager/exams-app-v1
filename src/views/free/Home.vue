@@ -1,6 +1,6 @@
 <script lang="ts">
 import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue'
-import { NewspaperIcon } from '@heroicons/vue/24/solid';
+import { HomeIcon, ChevronRightIcon } from '@heroicons/vue/20/solid';
 export default ({
     name: 'Modal',
     components: {
@@ -8,7 +8,9 @@ export default ({
       DialogPanel,
       DialogTitle,
       TransitionChild,
-      TransitionRoot
+      TransitionRoot,
+      HomeIcon,
+      ChevronRightIcon,
     },
     data() {
         return {
@@ -1028,6 +1030,24 @@ export default ({
       </div>
     </Dialog>
   </TransitionRoot>
+  <nav class="flex fixed pt-4 pl-4 z-30" aria-label="Breadcrumb">
+      <ol role="list" class="flex space-x-4 rounded-md bg-white px-6 shadow">
+        <li class="flex">
+          <div class="flex items-center">
+            <a href="/" class="text-gray-400 flex items-center hover:text-gray-500">
+                <HomeIcon class="h-10 w-4 flex-shrink-0 text-gray-400" aria-hidden="true" />
+                <a class="ml-2 text-sm font-medium text-gray-500 hover:text-gray-700">Home</a>
+            </a>
+          </div>
+        </li>
+        <li class="flex">
+          <div class="flex items-center">
+            <ChevronRightIcon class="h-10 w-6 flex-shrink-0 text-gray-400" aria-hidden="true" />
+            <a href="/free" class="mx-4 text-sm font-medium text-gray-500 hover:text-gray-700">Free</a>
+          </div>
+        </li>
+      </ol>
+    </nav>
   <div class="px-4 sm:px-6 lg:px-8 lg:pt-8">
     <div class="flex justify-end">
       <div class="flex flex-col items-end">
