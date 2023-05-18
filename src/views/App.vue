@@ -1,18 +1,13 @@
 <script lang="ts">
 import { Popover, PopoverButton, PopoverGroup, PopoverPanel } from '@headlessui/vue'
 import {
-  ArrowPathIcon,
   BookmarkSquareIcon,
-  CalendarIcon,
-  ChartBarIcon,
   CursorArrowRaysIcon,
   LifebuoyIcon,
   PhoneIcon,
   PlayIcon,
   ShieldCheckIcon,
-  Squares2X2Icon,
   XMarkIcon,
-  BanknotesIcon,
   BuildingOffice2Icon,
   BookOpenIcon,
   HomeModernIcon,
@@ -20,12 +15,30 @@ import {
 import { ChevronDownIcon } from '@heroicons/vue/20/solid'
 
 export default {
+  components: {
+    BookmarkSquareIcon,
+    CursorArrowRaysIcon,
+    LifebuoyIcon,
+    PhoneIcon,
+    PlayIcon,
+    ShieldCheckIcon,
+    XMarkIcon,
+    BuildingOffice2Icon,
+    BookOpenIcon,
+    HomeModernIcon,
+    ChevronDownIcon,
+    Popover,
+    PopoverButton,
+    PopoverGroup,
+    PopoverPanel,
+  },
   data() {
     return {
       show: false,
       show2: false,
       open1: false,
       open2: false,
+      loggedin: true,
       solutions: [
         {
           name: 'Home',
@@ -81,16 +94,6 @@ export default {
       this.show = !this.show;
       sessionStorage.setItem('show', String(this.show));
     },
-    openp1() {
-      this.open1 = !this.open1;
-      // also close the other popup
-      this.open2 = false;
-    },
-    openp2() {
-      this.open2 = !this.open2;
-      // also close the other popup
-      this.open1 = false;
-    },
   },
   mounted() {
     // check which page is shows, and if it is on "/fullscreen" then hide the navbar always
@@ -102,6 +105,17 @@ export default {
       console.log(window.location.pathname)
       this.show = false;
       this.show2 = true;
+    } else if (window.location.pathname == "/free") {
+      console.log(window.location.pathname)
+      this.show = false;
+      this.show2 = false;
+    } else if (window.location.pathname == "/premium") {
+      console.log(window.location.pathname)
+      this.show = false;
+      this.show2 = false;
+    } else if (window.location.pathname == "/login") {
+      this.show = true;
+      this.show2 = false;
     } else {
       this.show2 = true;
       var show = sessionStorage.getItem('show');
@@ -127,8 +141,8 @@ export default {
         </div>
         <PopoverGroup as="nav" class="hidden space-x-10 md:flex">
           <Popover class="relative">
-            <PopoverButton @click.native="openp1"
-              class='text-gray-500 group inline-flex items-center rounded-md bg-white text-base font-medium hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2'>
+            <PopoverButton 
+              class='text-gray-500 group inline-flex items-center rounded-md bg-white text-base font-medium hover:text-gray-900 focus:outline-none '>
               <span  >Solutions</span>
               <svg xmlns="http://www.w3.org/2000/svg" class='text-gray-400 ml-2 h-5 w-5 group-hover:text-gray-500' fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"/>
@@ -139,7 +153,7 @@ export default {
             <transition enter-active-class="transition ease-out duration-200" enter-from-class="opacity-0 translate-y-1"
               enter-to-class="opacity-100 translate-y-0" leave-active-class="transition ease-in duration-150"
               leave-from-class="opacity-100 translate-y-0" leave-to-class="opacity-0 translate-y-1">
-              <PopoverPanel v-if="this.open1"
+              <PopoverPanel 
                 class="absolute z-10 -ml-4 mt-8 w-screen max-w-md transform px-2 sm:px-0 lg:left-1/2 lg:ml-0 lg:-translate-x-1/2">
                 <div class="overflow-hidden rounded-lg shadow-lg ring-1 ring-black ring-opacity-5">
                   <div class="relative grid gap-6 bg-white px-5 py-6 sm:gap-8 sm:p-8">
@@ -167,8 +181,8 @@ export default {
           </Popover>
 
           <Popover class="relative">
-            <PopoverButton @click.native="openp2"
-              class='text-gray-500 group inline-flex items-center rounded-md bg-white text-base font-medium hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2'>
+            <PopoverButton
+              class='text-gray-500 group inline-flex items-center rounded-md bg-white text-base font-medium hover:text-gray-900 focus:outline-none'>
               <span >Support</span>
               <svg xmlns="http://www.w3.org/2000/svg" class='text-gray-400 ml-2 h-5 w-5 group-hover:text-gray-500' fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"/>
@@ -178,7 +192,7 @@ export default {
             <transition enter-active-class="transition ease-out duration-200" enter-from-class="opacity-0 translate-y-1"
               enter-to-class="opacity-100 translate-y-0" leave-active-class="transition ease-in duration-150"
               leave-from-class="opacity-100 translate-y-0" leave-to-class="opacity-0 translate-y-1">
-              <PopoverPanel v-if="this.open2" class="absolute left-1/2 z-10 mt-8 w-screen max-w-md -translate-x-1/2 transform px-2 sm:px-0">
+              <PopoverPanel  class="absolute left-1/2 z-10 mt-8 w-screen max-w-md -translate-x-1/2 transform px-2 sm:px-0">
                 <div class="overflow-hidden rounded-lg shadow-lg ring-1 ring-black ring-opacity-5">
                   <div class="relative grid gap-6 bg-white px-5 py-6 sm:gap-8 sm:p-8">
                     <a v-for="item in resources" :key="item.name" :href="item.href"
@@ -197,66 +211,27 @@ export default {
           <a href="/pricing" class="text-base font-medium text-gray-500 hover:text-gray-900">Pricing</a>
         </PopoverGroup>
         <!-- Only show when not signed in -->
-        <div class="hidden items-center justify-end md:flex md:flex-1 lg:w-0">
+        <div v-if="loggedin === false" class=" items-center justify-end md:flex md:flex-1 lg:w-0">
           <a href="#" class="whitespace-nowrap text-base font-medium text-gray-500 hover:text-gray-900">Sign in</a>
           <a href="#"
             class="ml-8 inline-flex items-center justify-center whitespace-nowrap rounded-md border border-transparent bg-orange-500 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-orange-600">Sign
             up</a>
         </div>
+        <div v-else class=" items-center justify-end md:flex md:flex-1 lg:w-0">
+          <a href="#" class="group block flex-shrink-0">
+            <div class="flex items-center">
+              <div>
+                <img class="inline-block h-9 w-9 rounded-full" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="" />
+              </div>
+              <div class="ml-3">
+                <p class="text-sm font-medium text-gray-700 group-hover:text-gray-900">Tom Cook</p>
+                <p class="text-xs font-medium text-gray-500 group-hover:text-gray-700">View profile</p>
+              </div>
+            </div>
+          </a>
+        </div>
       </div>
     </div>
-
-    <transition enter-active-class="duration-200 ease-out" enter-from-class="opacity-0 scale-95"
-      enter-to-class="opacity-100 scale-100" leave-active-class="duration-100 ease-in"
-      leave-from-class="opacity-100 scale-100" leave-to-class="opacity-0 scale-95">
-      <PopoverPanel focus class="absolute inset-x-0 top-0 origin-top-right transform p-2 transition md:hidden">
-        <div class="divide-y-2 divide-gray-50 rounded-lg bg-white shadow-lg ring-1 ring-black ring-opacity-5">
-          <div class="px-5 pt-5 pb-6">
-            <div class="flex items-center justify-between">
-              <div>
-                <img class="h-8 w-auto" src="https://tailwindui.com/img/logos/mark.svg?color=orange&shade=600"
-                  alt="Your Company" />
-              </div>
-              <div class="-mr-2">
-                <PopoverButton
-                  class="inline-flex items-center justify-center rounded-md bg-white p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-orange-500">
-                  <span class="sr-only">Close menu</span>
-                  <XMarkIcon class="h-6 w-6" aria-hidden="true" />
-                </PopoverButton>
-              </div>
-            </div>
-            <div class="mt-6">
-              <nav class="grid gap-y-8">
-                <a v-for="item in solutions" :key="item.name" :href="item.href"
-                  class="-m-3 flex items-center rounded-md p-3 hover:bg-gray-50">
-                  <component :is="item.icon" class="h-6 w-6 flex-shrink-0 text-orange-600" aria-hidden="true" />
-                  <span class="ml-3 text-base font-medium text-gray-900">{{ item.name }}</span>
-                </a>
-              </nav>
-            </div>
-          </div>
-          <div class="space-y-6 py-6 px-5">
-            <div class="grid grid-cols-2 gap-y-4 gap-x-8">
-              <a href="#" class="text-base font-medium text-gray-900 hover:text-gray-700">Pricing</a>
-
-              <a href="#" class="text-base font-medium text-gray-900 hover:text-gray-700">Docs</a>
-              <a v-for="item in resources" :key="item.name" :href="item.href"
-                class="text-base font-medium text-gray-900 hover:text-gray-700">{{ item.name }}</a>
-            </div>
-            <div>
-              <a href="#"
-                class="flex w-full items-center justify-center rounded-md border border-transparent bg-orange-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-orange-700">Sign
-                up</a>
-              <p class="mt-6 text-center text-base font-medium text-gray-500">
-                Existing customer?
-                {{ ' ' }}
-                <a href="#" class="text-orange-600 hover:text-orange-500">Sign in</a>
-              </p>
-            </div>
-          </div>
-        </div>
-      </PopoverPanel>
-    </transition>
   </Popover>
   <transition enter-active-class="transform ease-out duration-400 transition"
     enter-from-class="translate-y-4 opacity-0 sm:translate-y-0 sm:translate-x-2"
