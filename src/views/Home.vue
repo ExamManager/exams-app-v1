@@ -371,7 +371,7 @@ export default {
                                 leave-active-class="transition ease-in duration-300" leave-from-class="opacity-100"
                                 leave-to-class="opacity-0">
                                 <div v-if="show1"
-                                    class="pointer-events-auto w-full max-w-sm overflow-hidden rounded-lg bg-white shadow-lg ring-1 ring-black ring-opacity-5">
+                                    class="pointer-events-auto w-full max-w-sm overflow-hidden rounded-lg hover:bg-gray-100 bg-white shadow-lg ring-1 ring-black ring-opacity-5">
                                     <div class="p-4">
                                         <div class="flex items-start">
                                             <div class="flex-shrink-0">
@@ -390,7 +390,7 @@ export default {
                                             </div>
                                             <div class="ml-4 flex flex-shrink-0">
                                                 <button type="button" @click="show1 = false"
-                                                    class="inline-flex rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                                                    class="inline-flex rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2">
                                                     <span class="sr-only">Close</span>
                                                     <svg class="h-5 w-5" x-description="Heroicon name: mini/x-mark"
                                                         xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
@@ -411,7 +411,7 @@ export default {
                                 leave-active-class="transition ease-in duration-300" leave-from-class="opacity-100"
                                 leave-to-class="opacity-0">
                                 <div v-if="show3"
-                                    class="pointer-events-auto w-full max-w-sm overflow-hidden rounded-lg bg-white shadow-lg ring-1 ring-black ring-opacity-5">
+                                    class="pointer-events-auto w-full max-w-sm overflow-hidden hover:bg-gray-100 rounded-lg bg-white shadow-lg ring-1 ring-black ring-opacity-5">
                                     <div class="p-4">
                                         <div class="flex items-start">
                                             <div class="flex-shrink-0">
@@ -426,11 +426,12 @@ export default {
                                             </div>
                                             <div class="ml-3 w-0 flex-1 pt-0.5">
                                                 <p class="text-sm font-medium text-gray-900">Extra time started</p>
-                                                <p class="mt-1 text-sm text-gray-500">English Paper 2 has started reading time</p>
+                                                <p class="mt-1 text-sm text-gray-500">English Paper 2 has started reading
+                                                    time</p>
                                             </div>
                                             <div class="ml-4 flex flex-shrink-0">
                                                 <button type="button" @click="show3 = false"
-                                                    class="inline-flex rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                                                    class="inline-flex rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2">
                                                     <span class="sr-only">Close</span>
                                                     <svg class="h-5 w-5" x-description="Heroicon name: mini/x-mark"
                                                         xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
@@ -451,7 +452,7 @@ export default {
                                 leave-active-class="transition ease-in duration-300" leave-from-class="opacity-100"
                                 leave-to-class="opacity-0">
                                 <div v-if="show2"
-                                    class="pointer-events-auto w-full max-w-sm overflow-hidden rounded-lg bg-white shadow-lg ring-1 ring-black ring-opacity-5">
+                                    class="pointer-events-auto w-full max-w-sm overflow-hidden hover:bg-gray-100 rounded-lg bg-white shadow-lg ring-1 ring-black ring-opacity-5">
                                     <div class="p-4">
                                         <div class="flex items-start">
                                             <div class="flex-shrink-0">
@@ -466,11 +467,12 @@ export default {
                                             </div>
                                             <div class="ml-3 w-0 flex-1 pt-0.5">
                                                 <p class="text-sm font-medium text-gray-900">Reading time started</p>
-                                                <p class="mt-1 text-sm text-gray-500">Physics Paper 3 has started reading time</p>
+                                                <p class="mt-1 text-sm text-gray-500">Physics Paper 3 has started reading
+                                                    time</p>
                                             </div>
                                             <div class="ml-4 flex flex-shrink-0">
                                                 <button type="button" @click="show2 = false"
-                                                    class="inline-flex rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                                                    class="inline-flex rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2">
                                                     <span class="sr-only">Close</span>
                                                     <svg class="h-5 w-5" x-description="Heroicon name: mini/x-mark"
                                                         xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
@@ -491,7 +493,7 @@ export default {
                                 leave-active-class="transition ease-in duration-300" leave-from-class="opacity-100"
                                 leave-to-class="opacity-0">
                                 <div v-if="show4"
-                                    class="pointer-events-auto w-full max-w-sm overflow-hidden rounded-lg bg-white shadow-lg ring-1 ring-black ring-opacity-5">
+                                    class="pointer-events-auto w-full max-w-sm overflow-hidden hover:bg-gray-100 rounded-lg bg-white shadow-lg ring-1 ring-black ring-opacity-5">
                                     <div class="p-4">
                                         <div class="flex items-start">
                                             <div class="flex-shrink-0">
@@ -509,7 +511,7 @@ export default {
                                             </div>
                                             <div class="ml-4 flex flex-shrink-0">
                                                 <button type="button" @click="show4 = false"
-                                                    class="inline-flex rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                                                    class="inline-flex rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2">
                                                     <span class="sr-only">Close</span>
                                                     <svg class="h-5 w-5" x-description="Heroicon name: mini/x-mark"
                                                         xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
@@ -624,16 +626,16 @@ export default {
         </div>
     </div>
 
-<footer class="bg-gray-100">
-    <div class="mx-auto max-w-7xl py-12 px-4 sm:px-6 md:flex md:items-center md:justify-between lg:px-8">
-        <div class="flex justify-center space-x-6 md:order-2">
-            <a v-for="item in navigation" :key="item.name" :href="item.href" class="text-gray-400 hover:text-gray-500">
-                <span class="sr-only">{{ item.name }}</span>
-                <component :is="item.icon" class="h-6 w-6" aria-hidden="true" />
-            </a>
+    <footer class="bg-gray-100">
+        <div class="mx-auto max-w-7xl py-12 px-4 sm:px-6 md:flex md:items-center md:justify-between lg:px-8">
+            <div class="flex justify-center space-x-6 md:order-2">
+                <a v-for="item in navigation" :key="item.name" :href="item.href" class="text-gray-400 hover:text-gray-500">
+                    <span class="sr-only">{{ item.name }}</span>
+                    <component :is="item.icon" class="h-6 w-6" aria-hidden="true" />
+                </a>
+            </div>
+            <div class="mt-8 md:order-1 md:mt-0">
+                <p class="text-center text-base text-gray-400">&copy; 2023 Examtimer, Inc. All rights reserved.</p>
+            </div>
         </div>
-        <div class="mt-8 md:order-1 md:mt-0">
-            <p class="text-center text-base text-gray-400">&copy; 2023 Examtimer, Inc. All rights reserved.</p>
-        </div>
-    </div>
 </footer></template>
