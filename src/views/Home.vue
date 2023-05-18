@@ -246,7 +246,7 @@ export default {
                             </div>
                             <div class="mt-4 sm:mt-0 sm:ml-3">
                                 <button type="submit"
-                                    class="block w-full rounded-md border border-transparent bg-orange-600 px-5 py-3 text-base font-medium text-white shadow hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 sm:px-10">Sign
+                                    class="block w-full rounded-md border border-transparent bg-orange-500 px-5 py-3 text-base font-medium text-white shadow hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 sm:px-10">Sign
                                     Up</button>
                             </div>
                         </form>
@@ -657,7 +657,7 @@ export default {
                             <div class="mt-6">
                                 <div class="rounded-md shadow">
                                     <a href="#"
-                                        class="flex items-center justify-center rounded-md border border-transparent bg-orange-600 px-5 py-3 text-base font-medium text-white hover:bg-gray-900">Subscribe</a>
+                                        class="flex items-center justify-center rounded-md border border-transparent bg-orange-500 px-5 py-3 text-base font-medium text-white hover:bg-gray-900">Subscribe</a>
                                 </div>
                             </div>
                             <div class="mt-4 text-sm">
