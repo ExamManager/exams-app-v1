@@ -23,7 +23,14 @@ const router = createRouter({
       path: '/pricing',
       component: () => import('./views/Pricing.vue'),
     },
-    
+    {
+      path: '/login',
+      component: () => import('./views/auth/Login.vue'),
+    },
+    {
+      path: '/:pathMatch(.*)*',
+      component: () => import('./views/404.vue'),
+    }
 ],
 })
 
