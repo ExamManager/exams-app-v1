@@ -2,7 +2,7 @@
 import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue'
 import { HomeIcon, ChevronRightIcon } from '@heroicons/vue/20/solid';
 export default ({
-    name: 'Modal',
+    name: 'Free',
     components: {
       Dialog,
       DialogPanel,

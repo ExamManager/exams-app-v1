@@ -19,6 +19,7 @@ import {
 import { defineComponent, h } from 'vue'
 
 export default {
+    name: "Home",
     components: {
         AcademicCapIcon,
         ChevronRightIcon,
@@ -31,6 +32,9 @@ export default {
         EnvelopeIcon,
         CalendarDaysIcon,
         ScaleIcon,
+    },
+    created() {
+        window.addEventListener('scroll', this.handleScroll);
     },
     data() {
         return {
@@ -157,9 +161,6 @@ export default {
                 },
             ]
         }
-    },
-    created() {
-        window.addEventListener('scroll', this.handleScroll);
     },
     unmounted() {
         window.removeEventListener('scroll', this.handleScroll);

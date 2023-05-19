@@ -19,6 +19,27 @@ import {
 import { ChevronDownIcon } from '@heroicons/vue/20/solid'
 
 export default ({
+    name: 'Pricing',
+    components: {
+        Popover,
+        PopoverButton,
+        PopoverGroup,
+        PopoverPanel,
+        ArrowPathIcon,
+        Bars3Icon,
+        BookmarkSquareIcon,
+        CalendarIcon,
+        ChartBarIcon,
+        CheckIcon,
+        CursorArrowRaysIcon,
+        LifebuoyIcon,
+        PhoneIcon,
+        PlayIcon,
+        ShieldCheckIcon,
+        Squares2X2Icon,
+        XMarkIcon,
+        ChevronDownIcon,
+    },
     data() {
         return {
             test: "test",
@@ -198,7 +219,7 @@ export default ({
                                     <div class="flex-1">
                                         <div>
                                             <h3
-                                                class="inline-flex rounded-full bg-white px-4 py-1 text-base font-semibold text-gray-800">
+                                                class="inline-flex rounded-full bg-gray-200 px-4 py-1 text-base font-semibold text-gray-800">
                                                 Enterprise</h3>
                                         </div>
                                         <div class="mt-4 text-lg text-gray-600">Looking for something bigger? Get in touch to explore our Enterprise plans. We offer tailored solutions for teams of any size starting at

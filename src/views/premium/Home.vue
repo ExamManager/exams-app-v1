@@ -5,7 +5,7 @@ import {
   ChevronRightIcon,
 } from '@heroicons/vue/20/solid';
 export default ({
-    name: 'Modal',
+    name: 'Premium',
     components: {
       Dialog,
       DialogPanel,
