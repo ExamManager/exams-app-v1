@@ -56,7 +56,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup> // fix this export
 import { defineComponent, h } from 'vue'
 import { ChevronRightIcon } from '@heroicons/vue/20/solid'
 import { 
