@@ -2,6 +2,7 @@
 import { HomeIcon, ChevronRightIcon } from '@heroicons/vue/20/solid'
 
 export default {
+  name: "Login",
   components: {
     HomeIcon,
     ChevronRightIcon
@@ -12,10 +13,6 @@ export default {
     };
   },
 };
-
-
-
-
 
 </script>
 

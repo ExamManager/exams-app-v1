@@ -1,62 +1,5 @@
 <!-- This example requires Tailwind CSS v2.0+ -->
-<template>
-  <div class="bg-white">
-    <main class="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
-      <div class="mx-auto max-w-xl py-16 sm:py-24">
-        <div class="text-center">
-          <p class="text-base font-semibold text-orange-600">404</p>
-          <h1 class="mt-2 text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">This page does not exist.</h1>
-          <p class="mt-2 text-lg text-gray-500">The page you are looking for could not be found.</p>
-        </div>
-        <div class="mt-12">
-          <h2 class="text-base font-semibold text-gray-500">Popular pages</h2>
-          <ul role="list" class="mt-4 divide-y divide-gray-200 border-t border-b border-gray-200">
-            <li v-for="(link, linkIdx) in links" :key="linkIdx" class="relative flex items-start space-x-4 py-6">
-              <div class="flex-shrink-0">
-                <span class="flex h-12 w-12 items-center justify-center rounded-lg bg-orange-50">
-                  <component :is="link.icon" class="h-6 w-6 text-orange-700" aria-hidden="true" />
-                </span>
-              </div>
-              <div class="min-w-0 flex-1">
-                <h3 class="text-base font-medium text-gray-900">
-                  <span class="rounded-sm focus-within:ring-2 focus-within:ring-orange-500 focus-within:ring-offset-2">
-                    <a :href="link.href" class="focus:outline-none">
-                      <span class="absolute inset-0" aria-hidden="true" />
-                      {{ link.title }}
-                    </a>
-                  </span>
-                </h3>
-                <p class="text-base text-gray-500">{{ link.description }}</p>
-              </div>
-              <div class="flex-shrink-0 self-center">
-                <ChevronRightIcon class="h-5 w-5 text-gray-400" aria-hidden="true" />
-              </div>
-            </li>
-          </ul>
-          <div class="mt-8">
-            <a href="/" class="text-base font-medium text-orange-600 hover:text-orange-500">
-              Or go back home
-              <span aria-hidden="true"> &rarr;</span>
-            </a>
-          </div>
-        </div>
-      </div>
-    </main>
-    <footer class="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
-      <div class="border-t border-gray-200 py-12 text-center md:flex md:justify-between">
-        <p class="text-base text-gray-400">&copy; ExamTimer, Inc. All rights reserved.</p>
-        <div class="mt-6 flex justify-center space-x-8 md:mt-0">
-          <a v-for="(item, itemIdx) in social" :key="itemIdx" :href="item.href" class="inline-flex text-gray-400 hover:text-gray-500">
-            <span class="sr-only">{{ item.name }}</span>
-            <component :is="item.icon" class="h-6 w-6" aria-hidden="true" />
-          </a>
-        </div>
-      </div>
-    </footer>
-  </div>
-</template>
-
-<script setup> // fix this export
+<script lang="ts"> // fix this export
 import { defineComponent, h } from 'vue'
 import { ChevronRightIcon } from '@heroicons/vue/20/solid'
 import { 
@@ -66,6 +9,24 @@ import {
   BuildingOffice2Icon,
   CogIcon,
 } from '@heroicons/vue/24/outline'
+
+export default({
+  name: '404',
+  components: {
+    ChevronRightIcon,
+    HomeModernIcon,
+    LifebuoyIcon,
+    BookOpenIcon,
+    BuildingOffice2Icon,
+    CogIcon,
+  },
+  data() {
+    return {
+      links,
+      social,
+    }
+  },
+})
 
 const links = [
         { 
@@ -164,3 +125,59 @@ const social = [
   },
 ]
 </script>
+<template>
+  <div class="bg-white">
+    <main class="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div class="mx-auto max-w-xl py-16 sm:py-24">
+        <div class="text-center">
+          <p class="text-base font-semibold text-orange-600">404</p>
+          <h1 class="mt-2 text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">This page does not exist.</h1>
+          <p class="mt-2 text-lg text-gray-500">The page you are looking for could not be found.</p>
+        </div>
+        <div class="mt-12">
+          <h2 class="text-base font-semibold text-gray-500">Popular pages</h2>
+          <ul role="list" class="mt-4 divide-y divide-gray-200 border-t border-b border-gray-200">
+            <li v-for="(link, linkIdx) in links" :key="linkIdx" class="relative flex items-start space-x-4 py-6">
+              <div class="flex-shrink-0">
+                <span class="flex h-12 w-12 items-center justify-center rounded-lg bg-orange-50">
+                  <component :is="link.icon" class="h-6 w-6 text-orange-700" aria-hidden="true" />
+                </span>
+              </div>
+              <div class="min-w-0 flex-1">
+                <h3 class="text-base font-medium text-gray-900">
+                  <span class="rounded-sm focus-within:ring-2 focus-within:ring-orange-500 focus-within:ring-offset-2">
+                    <a :href="link.href" class="focus:outline-none">
+                      <span class="absolute inset-0" aria-hidden="true" />
+                      {{ link.title }}
+                    </a>
+                  </span>
+                </h3>
+                <p class="text-base text-gray-500">{{ link.description }}</p>
+              </div>
+              <div class="flex-shrink-0 self-center">
+                <ChevronRightIcon class="h-5 w-5 text-gray-400" aria-hidden="true" />
+              </div>
+            </li>
+          </ul>
+          <div class="mt-8">
+            <a href="/" class="text-base font-medium text-orange-600 hover:text-orange-500">
+              Or go back home
+              <span aria-hidden="true"> &rarr;</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </main>
+    <footer class="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div class="border-t border-gray-200 py-12 text-center md:flex md:justify-between">
+        <p class="text-base text-gray-400">&copy; ExamTimer, Inc. All rights reserved.</p>
+        <div class="mt-6 flex justify-center space-x-8 md:mt-0">
+          <a v-for="(item, itemIdx) in social" :key="itemIdx" :href="item.href" class="inline-flex text-gray-400 hover:text-gray-500">
+            <span class="sr-only">{{ item.name }}</span>
+            <component :is="item.icon" class="h-6 w-6" aria-hidden="true" />
+          </a>
+        </div>
+      </div>
+    </footer>
+  </div>
+</template>

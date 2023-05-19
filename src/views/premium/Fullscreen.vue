@@ -2,6 +2,7 @@
 import { HomeIcon, ChevronRightIcon } from '@heroicons/vue/20/solid'
 
 export default {
+  name: "Premium Fullscreen",
   components: {
     HomeIcon,
     ChevronRightIcon

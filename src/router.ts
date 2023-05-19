@@ -30,7 +30,7 @@ const router = createRouter({
     {
       path: '/:pathMatch(.*)*',
       component: () => import('./views/404.vue'),
-    }
+    },
     {
       path: '/account',
       component: () => import('./views/auth/Account.vue'),

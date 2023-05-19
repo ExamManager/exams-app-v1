@@ -1,6 +1,7 @@
 <script lang="ts">
 import { HomeIcon, ChevronRightIcon } from '@heroicons/vue/20/solid'
 export default {
+  name: 'Docs',
   components: {
     HomeIcon,
     ChevronRightIcon
