@@ -233,8 +233,10 @@ export default {
                             </a>
                         </div>
                         <div class="mt-6 sm:max-w-xl">
-                            <h1 class="text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">Exam management for
+                            <transition enter-active-class=" ease-in-out duration-700 transition" enter-from-class="opacity-0 " enter-to-class=" opacity-100">
+                                <h1 class="text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">Exam management for
                                 Schools</h1>
+                            </transition>
                             <p class="mt-6 text-xl text-gray-500">Anim aute id magna aliqua ad ad non deserunt sunt. Qui
                                 irure qui lorem cupidatat commodo.</p>
                         </div>
@@ -648,8 +650,11 @@ export default {
                             <p class="text-lg font-medium leading-6 text-gray-900">Pay each month</p>
                             <div
                                 class="mt-4 flex items-center justify-center text-5xl font-bold tracking-tight text-gray-900">
-                                <span>$19.99</span>
-                                <span class="ml-3 text-xl font-medium tracking-normal text-gray-500">USD</span>
+                                <div class="mt-4 flex items-baseline font-bold tracking-tight">
+                                                $29
+                                                <span
+                                                    class="ml-1 text-2xl font-medium tracking-normal text-gray-500">/mo</span>
+                                            </div>
                             </div>
                             <p class="mt-4 text-sm">
                                 <a href="#" class="font-medium text-gray-500 underline">Learn about our Subscribtion
