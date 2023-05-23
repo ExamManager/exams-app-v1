@@ -96,34 +96,39 @@ export default {
       this.show = !this.show;
       sessionStorage.setItem('show', String(this.show));
     },
-    check() {
+    checkvisibility() {
       if (window.location.pathname == "/") {
       console.log(window.location.pathname)
-      this.show = false;
-      this.show2 = true;
-      } else if (window.location.pathname == "/pricing") {
-      this.show = true;
-      this.show2 = true;
-    } else {
-      this.show2 = false;
-      var show = sessionStorage.getItem('show');
-      if (show === "false") {
         this.show = false;
-      } else {
+        this.show2 = true;
+      } else if (window.location.pathname == "/pricing") {
         this.show = true;
+        this.show2 = true;
+      } else {
+        this.show2 = false;
+        var show = sessionStorage.getItem('show');
+        if (show === "false") {
+          this.show = false;
+        } else {
+          this.show = true;
+        }
       }
-    }
+    },
+    checkuser() {
+      
     }
   },
   watch: {
     // if page routes to this page, then update the navbar
     $route(to, from) {
-      this.check()
+      this.checkvisibility()
+      this.checkuser()
     },
   },
   mounted() {
     // check which page is shows, and if it is on "/fullscreen" then hide the navbar always
-    this.check()
+    this.checkvisibility()
+    this.checkuser()
   },
 };
 
