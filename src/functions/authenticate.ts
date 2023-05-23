@@ -45,7 +45,7 @@ export default {
       const { data, error } = await supabase.auth.refreshSession()
       const { session, user } = data
       localStorage.setItem('user', JSON.stringify(user));
-      return session;
+      // returns a true or false value, but also saves the session and whether the user is signed in to local storage
     }
   }
 }
