@@ -116,15 +116,16 @@ export default {
       }
     },
     checkuser() {
+      // uses the localstorage value, while it is checking with the server
       const user = localStorage.getItem('user');
       if (user === "null") {
         this.loggedin = false;
       }
-      const logggedin = this.checksession()
-      if (Boolean(logggedin) === true) {
-        this.loggedin = true;
-      } else {
+      const logggedin = this.checksession();
+      if (Boolean(logggedin) === false) {
         this.loggedin = false;
+      } else {
+        this.loggedin = true;
       }
 
 
