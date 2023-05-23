@@ -116,8 +116,21 @@ export default {
       }
     },
     async checkuser() {
+      // makes sure to have the previous value while waiting for the new one
+      const loggedin = localStorage.getItem('user');
+      if (loggedin === "null") {
+        this.loggedin = false;
+      } else {
+        this.loggedin = true;
+      }
+      // fetches the new value from the server and updates the value
       const response = await this.checksession();
       console.log(response)
+      if (response === true) {
+        this.loggedin = true;
+      } else {
+        this.loggedin = false;
+      }
       
     }
   },
