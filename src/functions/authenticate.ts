@@ -2,17 +2,8 @@ import { supabase } from '../supabase'
 
 export default {
   methods: {
-    async signin(email: string, password: string) {
-      var reqemail = email;
-      var reqpassword = password;
-      // Your method logic here
-      const response = await supabase.auth.signInWithPassword({
-        email: reqemail,
-        password: reqpassword,
-      })
-
-      return response;
-    },
+    // Authentication Functions
+    // only run when called by a method
     async signup(email: string, password: string) {
       var reqemail = email;
       var reqpassword = password;
@@ -22,6 +13,17 @@ export default {
         password: reqpassword,
       })
       console.log('Success');
+      return response;
+    },
+    async signin(email: string, password: string) {
+      var reqemail = email;
+      var reqpassword = password;
+      // Your method logic here
+      const response = await supabase.auth.signInWithPassword({
+        email: reqemail,
+        password: reqpassword,
+      })
+
       return response;
     },
     async signingoogle() {
@@ -36,6 +38,8 @@ export default {
       const response = await supabase.auth.signOut()
       return response;
     },
+    // Other Fuctions
+    // runs every time the page reloads to check that the user is signed in
     async checksession() {
       // Your method logic here
       const { data, error } = await supabase.auth.refreshSession()
@@ -46,5 +50,3 @@ export default {
     }
   }
 }
-// call this method, by importing it where needed and then calling it by using
-// const response = this.myMethod(email, password)
