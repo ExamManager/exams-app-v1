@@ -1,6 +1,5 @@
 <script lang="ts">
 import { Popover, PopoverButton, PopoverGroup, PopoverPanel } from '@headlessui/vue'
-import HelloWorld from '../components/HelloWorld.vue';
 import {
   BookmarkSquareIcon,
   CursorArrowRaysIcon,
@@ -32,7 +31,6 @@ export default {
     PopoverButton,
     PopoverGroup,
     PopoverPanel,
-    HelloWorld
 },
   data() {
     return {
@@ -100,7 +98,6 @@ export default {
     },
     checkvisibility() {
       if (window.location.pathname == "/") {
-      console.log(window.location.pathname)
         this.show = false;
         this.show2 = true;
       } else if (window.location.pathname == "/pricing") {
@@ -294,7 +291,6 @@ export default {
       </div>
     </div>
   </transition>
-  <HelloWorld />
   <main>
     <router-view />
   </main>
