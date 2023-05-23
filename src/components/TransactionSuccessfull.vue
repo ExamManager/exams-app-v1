@@ -1,6 +1,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue'
+import { CheckIcon } from '@heroicons/vue/20/solid'
 export default defineComponent({
   name: 'HelloWorld',
   components: {
@@ -8,7 +9,8 @@ export default defineComponent({
     DialogPanel,
     DialogTitle,
     TransitionChild,
-    TransitionRoot
+    TransitionRoot,
+    CheckIcon,
   },
   data() {
     return {
