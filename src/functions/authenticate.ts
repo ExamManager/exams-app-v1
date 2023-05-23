@@ -36,6 +36,8 @@ export default {
     async signout() {
       // Your method logic here
       const response = await supabase.auth.signOut()
+      localStorage.clear();
+      localStorage.setItem('user', 'null');
       return response;
     },
     // Other Fuctions
@@ -44,15 +46,32 @@ export default {
       // Your method logic here
 
       const response = await supabase.auth.refreshSession()
+      console.log(response.data);
       // find the user variable in the response
       const user = String(response.data.user);
       if (user === "null") {
         // if the user is not signed in, redirect to the login page
+        localStorage.clear();
         localStorage.setItem('user', 'null');
         return false;
       } else {
         const userid = String(response.data.user?.id);
         localStorage.setItem('user', userid);
+        // check if the user is signed in using google, and if so, grab the name and profile picture link
+        if (response.data.user?.app_metadata?.provider === "google") {
+          console.log("google")
+          const username = String(response.data.user?.user_metadata?.full_name);
+          const userpicture = String(response.data.user?.user_metadata?.avatar_url);
+          localStorage.setItem('fullname', username);
+          localStorage.setItem('profilepic', userpicture);
+        } else {
+          // grab the users email and make the name the part before the @ symbol
+          console.log("not google")
+          var username = String(response.data.user?.email);
+          var username = username.split("@")[0];
+          localStorage.setItem('fullname', username);
+          localStorage.setItem('profilepic', 'null');
+        }
         return true;
       }
     }

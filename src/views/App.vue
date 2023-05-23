@@ -41,6 +41,8 @@ export default {
       open1: false,
       open2: false,
       loggedin: false,
+      fullname: "",
+      profilepic: "",
       solutions: [
         {
           name: 'Home',
@@ -139,6 +141,11 @@ export default {
     $route(to, from) {
       this.checkvisibility()
       this.checkuser()
+      if (this.loggedin === true) {
+        this.fullname = localStorage.getItem('fullname') || 'Example User';
+        this.profilepic = localStorage.getItem('profilepic') || 'https://www.google.com/url?sa=i&url=https%3A%2F%2Fen.wikipedia.org%2Fwiki%2FFile%3ASample_User_Icon.png&psig=AOvVaw2Q09Wg4KuUB0xtcN6FeV04&ust=1684953269035000&source=images&cd=vfe&ved=0CBEQjRxqFwoTCLjPgpyKjP8CFQAAAAAdAAAAABAD';
+        console.log(this.profilepic)
+      } 
     },
   },
   mounted() {
@@ -250,11 +257,12 @@ export default {
               <div class="flex items-center">
                 <div>
                   <img class="inline-block h-9 w-9 rounded-full"
-                    src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+                    :src="this.profilepic"
+                    referrerpolicy="no-referrer"
                     alt="" />
                 </div>
                 <div class="ml-3">
-                  <p class="text-sm font-medium text-gray-700 group-hover:text-gray-900">Tom Cook</p>
+                  <p class="text-sm font-medium text-gray-700 group-hover:text-gray-900">{{ this.fullname }}</p>
                   <p class="text-xs font-medium text-gray-500 group-hover:text-gray-700">View profile</p>
                 </div>
               </div>
