@@ -14,6 +14,10 @@ import {
   HomeModernIcon,
 } from '@heroicons/vue/24/outline'
 import { ChevronDownIcon } from '@heroicons/vue/20/solid'
+import {
+  HomeIcon,
+  ChevronRightIcon,
+} from '@heroicons/vue/20/solid';
 
 export default {
   mixins: [authenticate],
@@ -33,14 +37,18 @@ export default {
     PopoverButton,
     PopoverGroup,
     PopoverPanel,
+    HomeIcon,
+    ChevronRightIcon,
   },
   data() {
     return {
-      show: false,
-      show2: false,
+      show: false, // changes wheter the banner is shown or not
+      show2: false, // changes navbar: false = minimal, true = full
       open1: false,
-      open2: false,
+      open2: false, 
+      show3: false, // if on page studentview
       loggedin: false,
+      loading: true,
       fullname: "",
       profilepic: "",
       solutions: [
@@ -93,9 +101,20 @@ export default {
           icon: ShieldCheckIcon,
         },
       ],
+      pages: [
+        { name: 'Example', href: '#', current: false },
+        { name: 'Example Subpage', href: '#', current: true },
+      ]
     };
   },
   methods: {
+    fullscreen1() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen();
+      } else {
+        document.exitFullscreen();
+      }
+    },
     hide() {
       this.show = !this.show;
       sessionStorage.setItem('show', String(this.show));
@@ -119,15 +138,34 @@ export default {
           this.show = true;
         }
       }
+      if (window.location.pathname == "/premium/studentview") {
+        this.show3 = true;
+        this.show = false;
+      } else {
+        this.show3 = false;
+      }
+      if (this.show2 === false) {
+        // get path name and split it into pages and subpages for a breadcrumb
+        var path = window.location.pathname;
+        var pages = path.split("/");
+        var breadcrumb = [];
+        // for example for the path "/premium/extra" it will create the breadcrumb pages: [{ name: 'Premium', href: '/premium', current: false },{ name: 'Extra', href: '#', current: true },]
+        // dont create a home, but make sure to create links for each of them and capitalize the first letter
+        for (var i = 0; i < pages.length; i++) {
+          if (pages[i] != "") {
+            if (i == pages.length - 1) {
+              breadcrumb.push({ name: pages[i].charAt(0).toUpperCase() + pages[i].slice(1), href: "#", current: true });
+            } else {
+              breadcrumb.push({ name: pages[i].charAt(0).toUpperCase() + pages[i].slice(1), href: "/" + pages[i], current: false });
+            }
+          }
+        }
+        this.pages = breadcrumb;
+      }
     },
     async checkuser() {
       // makes sure to have the previous value while waiting for the new one
-      const loggedin = localStorage.getItem('user');
-      if (loggedin === "null") {
-        this.loggedin = false;
-      } else {
-        this.loggedin = true;
-      }
+      this.loading = true;
       // fetches the new value from the server and updates the value
       const response = await this.checksession();
       console.log(response)
@@ -136,6 +174,10 @@ export default {
       } else {
         this.loggedin = false;
       }
+      this.fullname = localStorage.getItem('fullname') || 'Example User';
+        this.profilepic = localStorage.getItem('profilepic') || 'https://www.google.com/url?sa=i&url=https%3A%2F%2Fen.wikipedia.org%2Fwiki%2FFile%3ASample_User_Icon.png&psig=AOvVaw2Q09Wg4KuUB0xtcN6FeV04&ust=1684953269035000&source=images&cd=vfe&ved=0CBEQjRxqFwoTCLjPgpyKjP8CFQAAAAAdAAAAABAD';
+        console.log(this.profilepic)
+      this.loading = false;
 
     }
   },
@@ -248,16 +290,29 @@ export default {
             </Popover>
             <a href="/pricing" class="text-base font-medium text-gray-500 hover:text-gray-900">Pricing</a>
           </PopoverGroup>
-          <!-- Only show when not signed in -->
-          <div v-if="loggedin === false" class=" items-center justify-end md:flex md:flex-1 lg:w-0">
+          <!-- skeleton loader if loading is true -->
+          <div v-if="loading" class="items-center justify-end md:flex md:flex-1 lg:w-0">
+            <a class="group block flex-shrink-0">
+              <div class="flex items-center">
+                <div>
+                  <div class=" animate-pulse bg-gray-200 h-9 w-9 rounded-full" />
+                </div>
+                <div class="ml-3 space-y-2 w-40">
+                  <div class="h-4 bg-gray-200 rounded"></div>
+                  <div class="h-4 bg-gray-200 rounded"></div>
+                </div>
+              </div>
+            </a>
+          </div>
+          <div v-if="!loggedin && !loading" class=" items-center justify-end md:flex md:flex-1 lg:w-0">
             <a @click="this.$router.push('/login')"
               class="whitespace-nowrap text-base font-medium text-gray-500 hover:text-gray-900">Sign in</a>
             <a @click="this.$router.push('/signup')"
               class="ml-8 inline-flex items-center justify-center whitespace-nowrap rounded-md border border-transparent bg-orange-500 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-orange-600">Sign
               up</a>
           </div>
-          <div v-else class=" items-center justify-end md:flex md:flex-1 lg:w-0">
-            <a href="#" class="group block flex-shrink-0">
+          <div v-if="loggedin && !loading" class=" items-center justify-end md:flex md:flex-1 lg:w-0">
+            <a href="/account" class="group block flex-shrink-0">
               <div class="flex items-center">
                 <div>
                   <img class="inline-block h-9 w-9 rounded-full" :src="this.profilepic" referrerpolicy="no-referrer"
@@ -273,6 +328,58 @@ export default {
         </div>
       </div>
     </Popover>
+  </transition>
+  <transition enter-active-class="transform ease-in-out duration-700 transition" enter-from-class="opacity-0 "
+    enter-to-class=" opacity-100">
+    <nav v-if="this.show2 === false" class="flex fixed pt-4 pl-4 z-30" aria-label="Breadcrumb">
+      <ol role="list" class="flex space-x-4 rounded-md bg-white px-6 shadow">
+        <li class="flex">
+          <div class="flex items-center">
+            <a href="/" class="text-gray-400 flex items-center hover:text-gray-500">
+              <HomeIcon class="h-10 w-4 flex-shrink-0 text-gray-400" aria-hidden="true" />
+              <a class="ml-2 text-sm font-medium text-gray-500 hover:text-gray-700">Home</a>
+            </a>
+          </div>
+        </li>
+        <li v-for="page in pages" :key="page.name" class="flex">
+          <div class="flex items-center">
+            <ChevronRightIcon class="h-5 w-5 flex-shrink-0 text-gray-400" aria-hidden="true" />
+            <a :href="page.href" class="ml-4 text-sm font-medium text-gray-500 hover:text-gray-700"
+              :aria-current="page.current ? 'page' : undefined">{{ page.name }}</a>
+          </div>
+        </li>
+      </ol>
+      <!-- <ol role="list" class="flex space-x-4 rounded-md bg-white px-6 shadow">
+        <li class="flex">
+          <div class="flex items-center">
+            <a href="/" class="text-gray-400 flex items-center hover:text-gray-500">
+                <HomeIcon class="h-10 w-4 flex-shrink-0 text-gray-400" aria-hidden="true" />
+                <a class="ml-2 text-sm font-medium text-gray-500 hover:text-gray-700">Home</a>
+            </a>
+          </div>
+        </li>
+        <li class="flex">
+          <div class="flex items-center">
+            <ChevronRightIcon class="h-10 w-6 flex-shrink-0 text-gray-400" aria-hidden="true" />
+            <a href="/premium" class="mx-4 text-sm font-medium text-gray-500 hover:text-gray-700">Premium</a>
+          </div>
+        </li>
+      </ol> -->
+      <div v-if="show3" class="mt-4 space-x-4 sm:mt-0 sm:flex-none pl-2">
+        <span class="isolate inline-flex rounded-md shadow bg-white">
+          <button type="button"
+            class="relative inline-flex items-center rounded-md bg-white px-4 py-2 text-sm group/button1 font-medium text-gray-500 hover:bg-gray-50 focus:z-10"
+            @click.native="fullscreen1">
+            <svg class=" h-6 w-4 group-hover/button1:mr-2 text-gray-500" xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 576 512"><!--! Font Awesome Pro 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. -->
+              <path fill="currentColor"
+                d="M496 304h-416v-224H32v240c0 17.6 14.4 32 32 32L264 352v47.02l-72 72c-9.354 9.352-9.354 24.52 0 33.88c9.348 9.348 24.51 9.359 33.87 .0195L288 442.9l62.09 62.09c9.391 9.391 24.63 9.348 33.97-.0938c9.301-9.406 9.258-24.55-.0938-33.91L312 399V352L512 352c17.6 0 32-14.4 32-32V80h-48V304zM552 0H23.96C10.72 0 0 10.73 0 23.95S10.72 48 23.96 48h528.1C565.3 48 576 37.27 576 24.05S565.3 0 552 0z" />
+            </svg>
+            <span class="text-md w-0 collapse group-hover/button1:visible group-hover/button1:w-min">Fullscreen</span>
+          </button>
+        </span>
+      </div>
+    </nav>
   </transition>
   <transition enter-active-class="transform ease-out duration-400 transition"
     enter-from-class="translate-y-4 opacity-0 sm:translate-y-0 sm:translate-x-2"
@@ -317,8 +424,7 @@ export default {
         </div>
       </div>
     </div>
-  </transition>
-  <main>
-    <router-view />
-  </main>
-</template>
+</transition>
+<main>
+  <router-view />
+</main></template>

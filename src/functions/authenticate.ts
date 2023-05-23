@@ -36,7 +36,6 @@ export default {
     async signout() {
       // Your method logic here
       const response = await supabase.auth.signOut()
-      localStorage.clear();
       localStorage.setItem('user', 'null');
       return response;
     },
@@ -51,7 +50,6 @@ export default {
       const user = String(response.data.user);
       if (user === "null") {
         // if the user is not signed in, redirect to the login page
-        localStorage.clear();
         localStorage.setItem('user', 'null');
         return false;
       } else {
