@@ -32,9 +32,9 @@ const router = createRouter({
       component: () => import('./views/404.vue'),
     },
     {
-      path: '/account',
-      component: () => import('./views/auth/Account.vue'),
-    }
+      path: '/payment',
+      component: () => import('./views/auth/Payment.vue'),
+    },
 ],
 })
 
