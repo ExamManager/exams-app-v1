@@ -115,20 +115,9 @@ export default {
         }
       }
     },
-    checkuser() {
-      // uses the localstorage value, while it is checking with the server
-      const user = localStorage.getItem('user');
-      if (user === "null") {
-        this.loggedin = false;
-      }
-      const logggedin = this.checksession();
-      if (Boolean(logggedin) === false) {
-        this.loggedin = false;
-      } else {
-        this.loggedin = true;
-      }
-
-
+    async checkuser() {
+      const response = await this.checksession();
+      console.log(response)
       
     }
   },
@@ -141,8 +130,8 @@ export default {
   },
   mounted() {
     // check which page is shows, and if it is on "/fullscreen" then hide the navbar always
-    this.checkvisibility()
-    this.checkuser()
+    // this.checkvisibility()
+    // this.checkuser()
   },
 };
 

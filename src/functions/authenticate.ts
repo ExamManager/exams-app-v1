@@ -42,10 +42,21 @@ export default {
     // runs every time the page reloads to check that the user is signed in
     async checksession() {
       // Your method logic here
-      const { data, error } = await supabase.auth.refreshSession()
-      const { session, user } = data
-      localStorage.setItem('user', JSON.stringify(user));
-      // returns a true or false value, but also saves the session and whether the user is signed in to local storage
+      const response = await supabase.auth.refreshSession()
+      // find the user variable in the response
+      const user = String(response.data.user);
+      if (user === "null") {
+        // if the user is not signed in, redirect to the login page
+        localStorage.setItem('user', 'null');
+        localStorage.setItem('session', 'null');
+        return false;
+      } else {
+        const userid = String(response.data.user?.id);
+        localStorage.setItem('user', userid);
+        const sessionid = String(response.data.session);
+        localStorage.setItem('session', sessionid);
+        return true;
+      }
     }
   }
 }
