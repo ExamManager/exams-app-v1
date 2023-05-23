@@ -104,6 +104,9 @@ export default {
       if (window.location.pathname == "/") {
         this.show = false;
         this.show2 = true;
+      } else if (window.location.pathname == "/payment") {
+        this.show = false;
+        this.show2 = true;
       } else if (window.location.pathname == "/pricing") {
         this.show = true;
         this.show2 = true;
