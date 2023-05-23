@@ -186,11 +186,6 @@ export default {
     $route(to, from) {
       this.checkvisibility()
       this.checkuser()
-      if (this.loggedin === true) {
-        this.fullname = localStorage.getItem('fullname') || 'Example User';
-        this.profilepic = localStorage.getItem('profilepic') || 'https://www.google.com/url?sa=i&url=https%3A%2F%2Fen.wikipedia.org%2Fwiki%2FFile%3ASample_User_Icon.png&psig=AOvVaw2Q09Wg4KuUB0xtcN6FeV04&ust=1684953269035000&source=images&cd=vfe&ved=0CBEQjRxqFwoTCLjPgpyKjP8CFQAAAAAdAAAAABAD';
-        console.log(this.profilepic)
-      }
     },
   },
   mounted() {
@@ -297,7 +292,7 @@ export default {
                 <div>
                   <div class=" animate-pulse bg-gray-200 h-9 w-9 rounded-full" />
                 </div>
-                <div class="ml-3 space-y-2 w-40">
+                <div class="ml-3 space-y-2 w-28">
                   <div class="h-4 bg-gray-200 rounded"></div>
                   <div class="h-4 bg-gray-200 rounded"></div>
                 </div>
