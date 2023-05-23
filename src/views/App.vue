@@ -1,5 +1,6 @@
 <script lang="ts">
 import { Popover, PopoverButton, PopoverGroup, PopoverPanel } from '@headlessui/vue'
+import authenticate from '../functions/authenticate';
 import {
   BookmarkSquareIcon,
   CursorArrowRaysIcon,
@@ -15,6 +16,7 @@ import {
 import { ChevronDownIcon } from '@heroicons/vue/20/solid'
 
 export default {
+  mixins: [authenticate],
   components: {
     BookmarkSquareIcon,
     CursorArrowRaysIcon,
@@ -38,7 +40,7 @@ export default {
       show2: false,
       open1: false,
       open2: false,
-      loggedin: true,
+      loggedin: false,
       solutions: [
         {
           name: 'Home',
@@ -114,6 +116,18 @@ export default {
       }
     },
     checkuser() {
+      const user = localStorage.getItem('user');
+      if (user === "null") {
+        this.loggedin = false;
+      }
+      const logggedin = this.checksession()
+      if (Boolean(logggedin) === true) {
+        this.loggedin = true;
+      } else {
+        this.loggedin = false;
+      }
+
+
       
     }
   },
@@ -223,8 +237,8 @@ export default {
           </PopoverGroup>
           <!-- Only show when not signed in -->
           <div v-if="loggedin === false" class=" items-center justify-end md:flex md:flex-1 lg:w-0">
-            <a href="#" class="whitespace-nowrap text-base font-medium text-gray-500 hover:text-gray-900">Sign in</a>
-            <a href="#"
+            <a @click="this.$router.push('/login')" class="whitespace-nowrap text-base font-medium text-gray-500 hover:text-gray-900">Sign in</a>
+            <a @click="this.$router.push('/signup')"
               class="ml-8 inline-flex items-center justify-center whitespace-nowrap rounded-md border border-transparent bg-orange-500 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-orange-600">Sign
               up</a>
           </div>
