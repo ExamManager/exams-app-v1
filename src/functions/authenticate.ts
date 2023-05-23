@@ -46,7 +46,6 @@ export default {
       const { session, user } = data
       localStorage.setItem('user', JSON.stringify(user));
       return session;
-
     }
   }
 }
