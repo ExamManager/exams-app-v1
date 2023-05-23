@@ -74,6 +74,11 @@ export default {
         }
         return true;
       }
+    },
+    async getUserData() {
+      // Your method logic here
+      const response = await supabase.auth.getUser();
+      return response;
     }
   }
 }
