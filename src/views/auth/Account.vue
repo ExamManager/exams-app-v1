@@ -1,81 +1,72 @@
 <script lang="ts">
-import authenticate from '../../functions/authenticate';
-import {
-  Disclosure,
-  DisclosureButton,
-  DisclosurePanel,
-  Menu,
-  MenuButton,
-  MenuItem,
-  MenuItems,
-  RadioGroup,
-  RadioGroupDescription,
-  RadioGroupLabel,
-  RadioGroupOption,
-  Switch,
-  SwitchGroup,
-  SwitchLabel,
-} from '@headlessui/vue'
-import { MagnifyingGlassIcon, QuestionMarkCircleIcon } from '@heroicons/vue/20/solid'
-import {
-  Bars3Icon,
-  BellIcon,
-  CogIcon,
-  CreditCardIcon,
-  KeyIcon,
-  SquaresPlusIcon,
-  UserCircleIcon,
-  XMarkIcon,
-} from '@heroicons/vue/24/outline'
+import authenticate from "../../functions/authenticate";
+import {Disclosure,DisclosureButton,DisclosurePanel,Menu,MenuButton,MenuItem,MenuItems,RadioGroup,RadioGroupDescription,RadioGroupLabel,RadioGroupOption,Switch,SwitchGroup, SwitchLabel} from "@headlessui/vue";
+import {MagnifyingGlassIcon,QuestionMarkCircleIcon } from "@heroicons/vue/20/solid";
+import {Bars3Icon,BellIcon,CogIcon,CreditCardIcon,KeyIcon,SquaresPlusIcon,UserCircleIcon,XMarkIcon} from "@heroicons/vue/24/outline";
 
 const user = {
-  name: 'Lisa Marie',
-  email: 'lisamarie@example.com',
+  name: "Lisa Marie",
+  email: "lisamarie@example.com",
   imageUrl:
-    'https://images.unsplash.com/photo-1517365830460-955ce3ccd263?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=4&w=256&h=256&q=80',
-}
+    "https://images.unsplash.com/photo-1517365830460-955ce3ccd263?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=4&w=256&h=256&q=80"
+};
 const navigation = [
-  { name: 'Dashboard', href: '#' },
-  { name: 'Jobs', href: '#' },
-  { name: 'Applicants', href: '#' },
-  { name: 'Company', href: '#' },
-]
+  { name: "Dashboard", href: "#" },
+  { name: "Jobs", href: "#" },
+  { name: "Applicants", href: "#" },
+  { name: "Company", href: "#" }
+];
 const userNavigation = [
-  { name: 'Your Profile', href: '#' },
-  { name: 'Settings', href: '#' },
-  { name: 'Sign out', href: '#' },
-]
+  { name: "Your Profile", href: "#" },
+  { name: "Settings", href: "#" },
+  { name: "Sign out", href: "#" }
+];
 const subNavigation = [
-  { name: 'Profile', href: '#', icon: UserCircleIcon, current: true },
-  { name: 'Account', href: '#', icon: CogIcon, current: false },
-  { name: 'Password', href: '#', icon: KeyIcon, current: false },
-  { name: 'Notifications', href: '#', icon: BellIcon, current: false },
-  { name: 'Plan & Billing', href: '#', icon: CreditCardIcon, current: false },
-  { name: 'Integrations', href: '#', icon: SquaresPlusIcon, current: false },
-]
+  { name: "Profile", href: "#", icon: UserCircleIcon, current: true },
+  { name: "Account", href: "#", icon: CogIcon, current: false },
+  { name: "Password", href: "#", icon: KeyIcon, current: false },
+  { name: "Notifications", href: "#", icon: BellIcon, current: false },
+  { name: "Plan & Billing", href: "#", icon: CreditCardIcon, current: false },
+  { name: "Integrations", href: "#", icon: SquaresPlusIcon, current: false }
+];
 
 const plans = [
-  { name: 'Startup', priceMonthly: 29, priceYearly: 290, limit: 'Up to 5 active job postings' },
-  { name: 'Business', priceMonthly: 99, priceYearly: 990, limit: 'Up to 25 active job postings' },
-  { name: 'Enterprise', priceMonthly: 249, priceYearly: 2490, limit: 'Unlimited active job postings' },
-]
+  {
+    name: "Startup",
+    priceMonthly: 29,
+    priceYearly: 290,
+    limit: "Up to 5 active job postings"
+  },
+  {
+    name: "Business",
+    priceMonthly: 99,
+    priceYearly: 990,
+    limit: "Up to 25 active job postings"
+  },
+  {
+    name: "Enterprise",
+    priceMonthly: 249,
+    priceYearly: 2490,
+    limit: "Unlimited active job postings"
+  }
+];
 const payments = [
   {
     id: 1,
-    date: '1/1/2020',
-    datetime: '2020-01-01',
-    description: 'Business Plan - Annual Billing',
-    amount: 'CA$109.00',
-    href: '#',
-  },
+    date: "1/1/2020",
+    datetime: "2020-01-01",
+    description: "Business Plan - Annual Billing",
+    amount: "CA$109.00",
+    href: "#"
+  }
   // More payments...
-]
+];
 
-const selectedPlan = plans[1]
-const annualBillingEnabled = true
+const selectedPlan = plans[1];
+const annualBillingEnabled = true;
 
 export default {
-  name: 'Payment',
+  name: "Payment",
   components: {
     Disclosure,
     DisclosureButton,
@@ -100,7 +91,7 @@ export default {
     KeyIcon,
     SquaresPlusIcon,
     UserCircleIcon,
-    XMarkIcon,
+    XMarkIcon
   },
   mixins: [authenticate],
   data() {
@@ -114,16 +105,14 @@ export default {
       selectedPlan,
       annualBillingEnabled,
       loaded: false,
-      //loggedin: false, // changes view from login to account page
+      loggedin: false, // changes view from login to account page
       currentUser: {
         details: {
           fName: "",
           lName: "",
-          email: "",
+          email: ""
         },
-        payment: {
-
-        }
+        payment: {}
       }
       /*
       currentUser: {
@@ -147,7 +136,7 @@ export default {
         ]
       }
       */
-    }
+    };
   },
   mounted() {
     // grab user data from supabase
@@ -158,19 +147,22 @@ export default {
   methods: {
     getUserInfo() {
       // grab user data from supabase
-      const response = this.getUserData()
-      console.log('usrdata')
-      console.log(response)
+      const response = this.getUserData();
+      console.log("userdata");
+      console.log(response);
       // we need to store the user first name, last name and email in the user object
     },
     getLoggedIn() {
-      const loggedin = localStorage.getItem('user')
-      console.log(loggedin)
-      if (loggedin === "null") { return false } else { return true }
+      const loggedin = localStorage.getItem("user");
+      console.log(loggedin);
+      if (loggedin === "null") {
+        this.loggedin = false;
+      } else {
+        this.loggedin = false;
+      }
     }
-  },
-}
-
+  }
+};
 </script>
 <template>
   <!-- Account Page -->
@@ -180,13 +172,21 @@ export default {
       <aside class="py-6 px-2 sm:px-6 lg:col-span-3 lg:py-0 lg:px-0">
         <nav class="space-y-1">
           <!-- on click change old one to false and the one that was clicked to true -->
-          <a v-for="item in subNavigation" :key="item.name"
-            @click="subNavigation.forEach(item => item.current = false); item.current = true"
-            :class="[item.current ? 'bg-gray-50 text-orange-600 hover:bg-white' : 'text-gray-900 hover:text-gray-900 hover:bg-gray-50', 'group rounded-md px-3 py-2 flex items-center text-sm font-medium']"
-            :aria-current="item.current ? 'page' : undefined">
-            <component :is="item.icon"
-              :class="[item.current ? 'text-orange-500' : 'text-gray-400 group-hover:text-gray-500', 'flex-shrink-0 -ml-1 mr-3 h-6 w-6']"
-              aria-hidden="true" />
+          <a v-for="item in subNavigation" :key="item.name" @click="
+            subNavigation.forEach((item) => (item.current = false));
+          item.current = true;
+          " :class="[
+  item.current
+    ? 'bg-gray-50 text-orange-600 hover:bg-white'
+    : 'text-gray-900 hover:text-gray-900 hover:bg-gray-50',
+  'group rounded-md px-3 py-2 flex items-center text-sm font-medium'
+]" :aria-current="item.current ? 'page' : undefined">
+            <component :is="item.icon" :class="[
+              item.current
+                ? 'text-orange-500'
+                : 'text-gray-400 group-hover:text-gray-500',
+              'flex-shrink-0 -ml-1 mr-3 h-6 w-6'
+            ]" aria-hidden="true" />
             <span class="truncate">{{ item.name }}</span>
           </a>
         </nav>
@@ -200,10 +200,13 @@ export default {
             <div class="shadow sm:overflow-hidden sm:rounded-md">
               <div class="bg-white py-6 px-4 sm:p-6">
                 <div>
-                  <h2 id="payment-details-heading" class="text-lg font-medium leading-6 text-gray-900">Profile Information
+                  <h2 id="payment-details-heading" class="text-lg font-medium leading-6 text-gray-900">
+                    Profile Information
                   </h2>
-                  <p class="mt-1 text-sm text-gray-500">This is the current information for your school. If anything here
-                    is wrong, please contact us to change it.</p>
+                  <p class="mt-1 text-sm text-gray-500">
+                    This is the current information for your school. If anything
+                    here is wrong, please contact us to change it.
+                  </p>
                 </div>
 
                 <div class="mt-6 grid grid-cols-4 gap-6">
@@ -263,7 +266,9 @@ export default {
                       <option value="BM">Bermuda</option>
                       <option value="BT">Bhutan</option>
                       <option value="BO">Bolivia</option>
-                      <option value="BQ">Bonaire, Sint Eustatius and Saba</option>
+                      <option value="BQ">
+                        Bonaire, Sint Eustatius and Saba
+                      </option>
                       <option value="BA">Bosnia and Herzegovina</option>
                       <option value="BW">Botswana</option>
                       <option value="BV">Bouvet Island</option>
@@ -287,7 +292,9 @@ export default {
                       <option value="CO">Colombia</option>
                       <option value="KM">Comoros</option>
                       <option value="CG">Congo</option>
-                      <option value="CD">Congo, Democratic Republic of the Congo</option>
+                      <option value="CD">
+                        Congo, Democratic Republic of the Congo
+                      </option>
                       <option value="CK">Cook Islands</option>
                       <option value="CR">Costa Rica</option>
                       <option value="CI">Cote D'Ivoire</option>
@@ -332,7 +339,9 @@ export default {
                       <option value="GW">Guinea-Bissau</option>
                       <option value="GY">Guyana</option>
                       <option value="HT">Haiti</option>
-                      <option value="HM">Heard Island and Mcdonald Islands</option>
+                      <option value="HM">
+                        Heard Island and Mcdonald Islands
+                      </option>
                       <option value="VA">Holy See (Vatican City State)</option>
                       <option value="HN">Honduras</option>
                       <option value="HK">Hong Kong</option>
@@ -353,12 +362,16 @@ export default {
                       <option value="KZ">Kazakhstan</option>
                       <option value="KE">Kenya</option>
                       <option value="KI">Kiribati</option>
-                      <option value="KP">Korea, Democratic People's Republic of</option>
+                      <option value="KP">
+                        Korea, Democratic People's Republic of
+                      </option>
                       <option value="KR">Korea, Republic of</option>
                       <option value="XK">Kosovo</option>
                       <option value="KW">Kuwait</option>
                       <option value="KG">Kyrgyzstan</option>
-                      <option value="LA">Lao People's Democratic Republic</option>
+                      <option value="LA">
+                        Lao People's Democratic Republic
+                      </option>
                       <option value="LV">Latvia</option>
                       <option value="LB">Lebanon</option>
                       <option value="LS">Lesotho</option>
@@ -368,7 +381,9 @@ export default {
                       <option value="LT">Lithuania</option>
                       <option value="LU">Luxembourg</option>
                       <option value="MO">Macao</option>
-                      <option value="MK">Macedonia, the Former Yugoslav Republic of</option>
+                      <option value="MK">
+                        Macedonia, the Former Yugoslav Republic of
+                      </option>
                       <option value="MG">Madagascar</option>
                       <option value="MW">Malawi</option>
                       <option value="MY">Malaysia</option>
@@ -381,7 +396,9 @@ export default {
                       <option value="MU">Mauritius</option>
                       <option value="YT">Mayotte</option>
                       <option value="MX">Mexico</option>
-                      <option value="FM">Micronesia, Federated States of</option>
+                      <option value="FM">
+                        Micronesia, Federated States of
+                      </option>
                       <option value="MD">Moldova, Republic of</option>
                       <option value="MC">Monaco</option>
                       <option value="MN">Mongolia</option>
@@ -407,7 +424,9 @@ export default {
                       <option value="OM">Oman</option>
                       <option value="PK">Pakistan</option>
                       <option value="PW">Palau</option>
-                      <option value="PS">Palestinian Territory, Occupied</option>
+                      <option value="PS">
+                        Palestinian Territory, Occupied
+                      </option>
                       <option value="PA">Panama</option>
                       <option value="PG">Papua New Guinea</option>
                       <option value="PY">Paraguay</option>
@@ -428,7 +447,9 @@ export default {
                       <option value="LC">Saint Lucia</option>
                       <option value="MF">Saint Martin</option>
                       <option value="PM">Saint Pierre and Miquelon</option>
-                      <option value="VC">Saint Vincent and the Grenadines</option>
+                      <option value="VC">
+                        Saint Vincent and the Grenadines
+                      </option>
                       <option value="WS">Samoa</option>
                       <option value="SM">San Marino</option>
                       <option value="ST">Sao Tome and Principe</option>
@@ -445,7 +466,9 @@ export default {
                       <option value="SB">Solomon Islands</option>
                       <option value="SO">Somalia</option>
                       <option value="ZA">South Africa</option>
-                      <option value="GS">South Georgia and the South Sandwich Islands</option>
+                      <option value="GS">
+                        South Georgia and the South Sandwich Islands
+                      </option>
                       <option value="SS">South Sudan</option>
                       <option value="ES">Spain</option>
                       <option value="LK">Sri Lanka</option>
@@ -475,7 +498,9 @@ export default {
                       <option value="AE">United Arab Emirates</option>
                       <option value="GB">United Kingdom</option>
                       <option value="US">United States</option>
-                      <option value="UM">United States Minor Outlying Islands</option>
+                      <option value="UM">
+                        United States Minor Outlying Islands
+                      </option>
                       <option value="UY">Uruguay</option>
                       <option value="UZ">Uzbekistan</option>
                       <option value="VU">Vanuatu</option>
@@ -512,11 +537,13 @@ export default {
             <div class="shadow sm:overflow-hidden sm:rounded-md">
               <div class="bg-white py-6 px-4 sm:p-6">
                 <div>
-                  <h2 id="payment-details-heading" class="text-lg font-medium leading-6 text-gray-900">Account
-                    Information
+                  <h2 id="payment-details-heading" class="text-lg font-medium leading-6 text-gray-900">
+                    Account Information
                   </h2>
-                  <p class="mt-1 text-sm text-gray-500">This is the current information for your school. If anything here
-                    is wrong, please contact us to change it.</p>
+                  <p class="mt-1 text-sm text-gray-500">
+                    This is the current information for your school. If anything
+                    here is wrong, please contact us to change it.
+                  </p>
                 </div>
 
                 <div class="mt-6 grid grid-cols-4 gap-6">
@@ -576,7 +603,9 @@ export default {
                       <option value="BM">Bermuda</option>
                       <option value="BT">Bhutan</option>
                       <option value="BO">Bolivia</option>
-                      <option value="BQ">Bonaire, Sint Eustatius and Saba</option>
+                      <option value="BQ">
+                        Bonaire, Sint Eustatius and Saba
+                      </option>
                       <option value="BA">Bosnia and Herzegovina</option>
                       <option value="BW">Botswana</option>
                       <option value="BV">Bouvet Island</option>
@@ -600,7 +629,9 @@ export default {
                       <option value="CO">Colombia</option>
                       <option value="KM">Comoros</option>
                       <option value="CG">Congo</option>
-                      <option value="CD">Congo, Democratic Republic of the Congo</option>
+                      <option value="CD">
+                        Congo, Democratic Republic of the Congo
+                      </option>
                       <option value="CK">Cook Islands</option>
                       <option value="CR">Costa Rica</option>
                       <option value="CI">Cote D'Ivoire</option>
@@ -645,7 +676,9 @@ export default {
                       <option value="GW">Guinea-Bissau</option>
                       <option value="GY">Guyana</option>
                       <option value="HT">Haiti</option>
-                      <option value="HM">Heard Island and Mcdonald Islands</option>
+                      <option value="HM">
+                        Heard Island and Mcdonald Islands
+                      </option>
                       <option value="VA">Holy See (Vatican City State)</option>
                       <option value="HN">Honduras</option>
                       <option value="HK">Hong Kong</option>
@@ -666,12 +699,16 @@ export default {
                       <option value="KZ">Kazakhstan</option>
                       <option value="KE">Kenya</option>
                       <option value="KI">Kiribati</option>
-                      <option value="KP">Korea, Democratic People's Republic of</option>
+                      <option value="KP">
+                        Korea, Democratic People's Republic of
+                      </option>
                       <option value="KR">Korea, Republic of</option>
                       <option value="XK">Kosovo</option>
                       <option value="KW">Kuwait</option>
                       <option value="KG">Kyrgyzstan</option>
-                      <option value="LA">Lao People's Democratic Republic</option>
+                      <option value="LA">
+                        Lao People's Democratic Republic
+                      </option>
                       <option value="LV">Latvia</option>
                       <option value="LB">Lebanon</option>
                       <option value="LS">Lesotho</option>
@@ -681,7 +718,9 @@ export default {
                       <option value="LT">Lithuania</option>
                       <option value="LU">Luxembourg</option>
                       <option value="MO">Macao</option>
-                      <option value="MK">Macedonia, the Former Yugoslav Republic of</option>
+                      <option value="MK">
+                        Macedonia, the Former Yugoslav Republic of
+                      </option>
                       <option value="MG">Madagascar</option>
                       <option value="MW">Malawi</option>
                       <option value="MY">Malaysia</option>
@@ -694,7 +733,9 @@ export default {
                       <option value="MU">Mauritius</option>
                       <option value="YT">Mayotte</option>
                       <option value="MX">Mexico</option>
-                      <option value="FM">Micronesia, Federated States of</option>
+                      <option value="FM">
+                        Micronesia, Federated States of
+                      </option>
                       <option value="MD">Moldova, Republic of</option>
                       <option value="MC">Monaco</option>
                       <option value="MN">Mongolia</option>
@@ -720,7 +761,9 @@ export default {
                       <option value="OM">Oman</option>
                       <option value="PK">Pakistan</option>
                       <option value="PW">Palau</option>
-                      <option value="PS">Palestinian Territory, Occupied</option>
+                      <option value="PS">
+                        Palestinian Territory, Occupied
+                      </option>
                       <option value="PA">Panama</option>
                       <option value="PG">Papua New Guinea</option>
                       <option value="PY">Paraguay</option>
@@ -741,7 +784,9 @@ export default {
                       <option value="LC">Saint Lucia</option>
                       <option value="MF">Saint Martin</option>
                       <option value="PM">Saint Pierre and Miquelon</option>
-                      <option value="VC">Saint Vincent and the Grenadines</option>
+                      <option value="VC">
+                        Saint Vincent and the Grenadines
+                      </option>
                       <option value="WS">Samoa</option>
                       <option value="SM">San Marino</option>
                       <option value="ST">Sao Tome and Principe</option>
@@ -758,7 +803,9 @@ export default {
                       <option value="SB">Solomon Islands</option>
                       <option value="SO">Somalia</option>
                       <option value="ZA">South Africa</option>
-                      <option value="GS">South Georgia and the South Sandwich Islands</option>
+                      <option value="GS">
+                        South Georgia and the South Sandwich Islands
+                      </option>
                       <option value="SS">South Sudan</option>
                       <option value="ES">Spain</option>
                       <option value="LK">Sri Lanka</option>
@@ -788,7 +835,9 @@ export default {
                       <option value="AE">United Arab Emirates</option>
                       <option value="GB">United Kingdom</option>
                       <option value="US">United States</option>
-                      <option value="UM">United States Minor Outlying Islands</option>
+                      <option value="UM">
+                        United States Minor Outlying Islands
+                      </option>
                       <option value="UY">Uruguay</option>
                       <option value="UZ">Uzbekistan</option>
                       <option value="VU">Vanuatu</option>
@@ -825,11 +874,13 @@ export default {
             <div class="shadow sm:overflow-hidden sm:rounded-md">
               <div class="bg-white py-6 px-4 sm:p-6">
                 <div>
-                  <h2 id="payment-details-heading" class="text-lg font-medium leading-6 text-gray-900">Password
-                    Information
+                  <h2 id="payment-details-heading" class="text-lg font-medium leading-6 text-gray-900">
+                    Password Information
                   </h2>
-                  <p class="mt-1 text-sm text-gray-500">This is the current information for your school. If anything here
-                    is wrong, please contact us to change it.</p>
+                  <p class="mt-1 text-sm text-gray-500">
+                    This is the current information for your school. If anything
+                    here is wrong, please contact us to change it.
+                  </p>
                 </div>
 
                 <div class="mt-6 grid grid-cols-4 gap-6">
@@ -889,7 +940,9 @@ export default {
                       <option value="BM">Bermuda</option>
                       <option value="BT">Bhutan</option>
                       <option value="BO">Bolivia</option>
-                      <option value="BQ">Bonaire, Sint Eustatius and Saba</option>
+                      <option value="BQ">
+                        Bonaire, Sint Eustatius and Saba
+                      </option>
                       <option value="BA">Bosnia and Herzegovina</option>
                       <option value="BW">Botswana</option>
                       <option value="BV">Bouvet Island</option>
@@ -913,7 +966,9 @@ export default {
                       <option value="CO">Colombia</option>
                       <option value="KM">Comoros</option>
                       <option value="CG">Congo</option>
-                      <option value="CD">Congo, Democratic Republic of the Congo</option>
+                      <option value="CD">
+                        Congo, Democratic Republic of the Congo
+                      </option>
                       <option value="CK">Cook Islands</option>
                       <option value="CR">Costa Rica</option>
                       <option value="CI">Cote D'Ivoire</option>
@@ -958,7 +1013,9 @@ export default {
                       <option value="GW">Guinea-Bissau</option>
                       <option value="GY">Guyana</option>
                       <option value="HT">Haiti</option>
-                      <option value="HM">Heard Island and Mcdonald Islands</option>
+                      <option value="HM">
+                        Heard Island and Mcdonald Islands
+                      </option>
                       <option value="VA">Holy See (Vatican City State)</option>
                       <option value="HN">Honduras</option>
                       <option value="HK">Hong Kong</option>
@@ -979,12 +1036,16 @@ export default {
                       <option value="KZ">Kazakhstan</option>
                       <option value="KE">Kenya</option>
                       <option value="KI">Kiribati</option>
-                      <option value="KP">Korea, Democratic People's Republic of</option>
+                      <option value="KP">
+                        Korea, Democratic People's Republic of
+                      </option>
                       <option value="KR">Korea, Republic of</option>
                       <option value="XK">Kosovo</option>
                       <option value="KW">Kuwait</option>
                       <option value="KG">Kyrgyzstan</option>
-                      <option value="LA">Lao People's Democratic Republic</option>
+                      <option value="LA">
+                        Lao People's Democratic Republic
+                      </option>
                       <option value="LV">Latvia</option>
                       <option value="LB">Lebanon</option>
                       <option value="LS">Lesotho</option>
@@ -994,7 +1055,9 @@ export default {
                       <option value="LT">Lithuania</option>
                       <option value="LU">Luxembourg</option>
                       <option value="MO">Macao</option>
-                      <option value="MK">Macedonia, the Former Yugoslav Republic of</option>
+                      <option value="MK">
+                        Macedonia, the Former Yugoslav Republic of
+                      </option>
                       <option value="MG">Madagascar</option>
                       <option value="MW">Malawi</option>
                       <option value="MY">Malaysia</option>
@@ -1007,7 +1070,9 @@ export default {
                       <option value="MU">Mauritius</option>
                       <option value="YT">Mayotte</option>
                       <option value="MX">Mexico</option>
-                      <option value="FM">Micronesia, Federated States of</option>
+                      <option value="FM">
+                        Micronesia, Federated States of
+                      </option>
                       <option value="MD">Moldova, Republic of</option>
                       <option value="MC">Monaco</option>
                       <option value="MN">Mongolia</option>
@@ -1033,7 +1098,9 @@ export default {
                       <option value="OM">Oman</option>
                       <option value="PK">Pakistan</option>
                       <option value="PW">Palau</option>
-                      <option value="PS">Palestinian Territory, Occupied</option>
+                      <option value="PS">
+                        Palestinian Territory, Occupied
+                      </option>
                       <option value="PA">Panama</option>
                       <option value="PG">Papua New Guinea</option>
                       <option value="PY">Paraguay</option>
@@ -1054,7 +1121,9 @@ export default {
                       <option value="LC">Saint Lucia</option>
                       <option value="MF">Saint Martin</option>
                       <option value="PM">Saint Pierre and Miquelon</option>
-                      <option value="VC">Saint Vincent and the Grenadines</option>
+                      <option value="VC">
+                        Saint Vincent and the Grenadines
+                      </option>
                       <option value="WS">Samoa</option>
                       <option value="SM">San Marino</option>
                       <option value="ST">Sao Tome and Principe</option>
@@ -1071,7 +1140,9 @@ export default {
                       <option value="SB">Solomon Islands</option>
                       <option value="SO">Somalia</option>
                       <option value="ZA">South Africa</option>
-                      <option value="GS">South Georgia and the South Sandwich Islands</option>
+                      <option value="GS">
+                        South Georgia and the South Sandwich Islands
+                      </option>
                       <option value="SS">South Sudan</option>
                       <option value="ES">Spain</option>
                       <option value="LK">Sri Lanka</option>
@@ -1101,7 +1172,9 @@ export default {
                       <option value="AE">United Arab Emirates</option>
                       <option value="GB">United Kingdom</option>
                       <option value="US">United States</option>
-                      <option value="UM">United States Minor Outlying Islands</option>
+                      <option value="UM">
+                        United States Minor Outlying Islands
+                      </option>
                       <option value="UY">Uruguay</option>
                       <option value="UZ">Uzbekistan</option>
                       <option value="VU">Vanuatu</option>
