@@ -12,7 +12,7 @@ export default {
         email: reqemail,
         password: reqpassword,
       })
-      await supabase.from('plans').insert({plan: 0 })
+      // await supabase.from('plans').insert({plan: 0 })
       console.log('Success');
       return response;
     },
@@ -33,7 +33,7 @@ export default {
         provider: 'google',
       })
       return response;
-    },
+    },  
     async signout() {
       // Your method logic here
       const response = await supabase.auth.signOut()

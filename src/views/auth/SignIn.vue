@@ -24,10 +24,6 @@ export default {
         this.$router.push("/");
       }, 500);
     },
-    async signuplocal() {
-      const response = this.signup(this.email, this.password);
-      console.log(response)
-    },
     async googlelocal() {
       const response = this.signingoogle();
       console.log(response)
@@ -40,11 +36,11 @@ export default {
     <div class="flex min-h-full flex-col justify-center py-20 sm:px-6 lg:px-8">
       <div class="sm:mx-auto sm:w-full sm:max-w-md">
         <img class="mx-auto h-12 w-auto" src="src/assets/vue.svg" alt="Your Company" />
-        <h2 class="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">Sign in to your account</h2>
+        <h2 class="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">Login to your account</h2>
         <p class="mt-2 text-center text-sm text-gray-600">
           Or
           {{ ' ' }}
-          <a href="/" class="font-medium text-orange-600 hover:text-orange-500">Create an Account</a>
+          <a @click="this.$router.push('/register')" class="font-medium text-orange-600 hover:text-orange-500">Create an Account</a>
         </p>
       </div>
   
