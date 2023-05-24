@@ -104,63 +104,45 @@ export default {
       payments,
       selectedPlan,
       annualBillingEnabled,
-      loaded: false,
+      loading: true,
       loggedin: false, // changes view from login to account page
-      currentUser: {
-        details: {
-          fName: "",
-          lName: "",
-          email: ""
-        },
-        payment: {}
-      }
-      /*
-      currentUser: {
-        fName: "",
-        lName: "",
-        email: "",
-        exp: "",
-        cvv: "",
-        zip: "",
-        country: "",
-        plan: "",
-        annualBilling: "",
-        billingHistory: [
-          {
-            id: 1,
-            date: '1/1/2020',
-            datetime: '2020-01-01',
-            description: 'Business Plan - Annual Billing',
-            amount: 'CA$109.00',
-            receiptLink: '#',}
-        ]
-      }
-      */
+      userdata: {},
     };
   },
   mounted() {
-    // grab user data from supabase
-    this.getUserInfo();
     this.getLoggedIn();
   },
-
+  watch: {
+    $route(to, from) {
+      this.getLoggedIn();
+    }
+  },
   methods: {
-    getUserInfo() {
-      // grab user data from supabase
-      const response = this.getUserData();
-      console.log("userdata");
-      console.log(response);
-      // we need to store the user first name, last name and email in the user object
-    },
     getLoggedIn() {
+      this.loading = true;
       const loggedin = localStorage.getItem("user");
-      console.log(loggedin);
+      console.log("Loggedin: ",loggedin);
       if (loggedin === "null") {
         this.loggedin = false;
+        this.$router.push("/login");
       } else {
-        this.loggedin = false;
+        this.loggedin = true;
+        this.getUserInfo();
       }
-    }
+    },
+    getUserInfo() {
+      const user = this.getUserData()
+      // save the promise result returned in userdata const
+      user.then((result) => {
+        // set the current user to the result
+        const userdata = result.data.user;
+        this.userdata = userdata || {};
+        console.log("Userdata: ", userdata);
+        this.loading = false;
+      })
+
+
+    },
   }
 };
 </script>
@@ -205,7 +187,7 @@ export default {
                   </h2>
                   <p class="mt-1 text-sm text-gray-500">
                     This is the current information for your school. If anything
-                    here is wrong, please contact us to change it.
+                    here is wrong, please contact us to change it. {{ this.userdata }}
                   </p>
                 </div>
 

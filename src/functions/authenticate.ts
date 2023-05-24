@@ -45,7 +45,6 @@ export default {
       // Your method logic here
 
       const response = await supabase.auth.refreshSession()
-      console.log(response.data);
       // find the user variable in the response
       const user = String(response.data.user);
       if (user === "null") {
@@ -77,6 +76,7 @@ export default {
       // Your method logic here
       const response = await supabase.auth.getUser();
       return response;
+
     }
   }
 }
