@@ -34,8 +34,8 @@ const router = createRouter({
     {
       path: '/account',
       component: () => import('./views/auth/Account.vue'),
-    },
-],
+    }
+  ],
 })
 
 export default router
