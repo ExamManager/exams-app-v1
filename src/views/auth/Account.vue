@@ -149,12 +149,7 @@ export default {
   },
   mounted() {
     // grab user data from supabase
-    const loggedin = localStorage.getItem('user')
-    if (loggedin == "null") {
-      this.$router.push("/login")
-    } else {
-      this.loaded = true
-    }
+    
   },
   methods: {
     getUserInfo() {

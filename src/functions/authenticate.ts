@@ -37,7 +37,7 @@ export default {
       // Your method logic here
       const response = await supabase.auth.signOut()
       localStorage.setItem('user', 'null');
-      return response;
+      return response; 
     },
     // Other Fuctions
     // runs every time the page reloads to check that the user is signed in

@@ -80,7 +80,7 @@ export default {
           name: 'Help Center',
           description: 'Get all of your questions answered in our forums or contact support.',
           href: '#',
-          icon: LifebuoyIcon,
+          icon: LifebuoyIcon, 
         },
         {
           name: "Documentation",
