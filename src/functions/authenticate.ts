@@ -12,6 +12,7 @@ export default {
         email: reqemail,
         password: reqpassword,
       })
+      await supabase.from('plans').insert({plan: 0 })
       console.log('Success');
       return response;
     },
@@ -23,7 +24,7 @@ export default {
         email: reqemail,
         password: reqpassword,
       })
-
+      this.checksession()
       return response;
     },
     async signingoogle() {

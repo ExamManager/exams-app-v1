@@ -20,6 +20,9 @@ export default {
     async signinlocal() {
       const response = this.signin(this.email, this.password);
       console.log(response)
+      setTimeout(() => {
+        this.$router.push("/");
+      }, 500);
     },
     async signuplocal() {
       const response = this.signup(this.email, this.password);
@@ -29,7 +32,6 @@ export default {
       const response = this.signingoogle();
       console.log(response)
     },
-
   },
 };
 </script>

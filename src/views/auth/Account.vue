@@ -106,6 +106,7 @@ export default {
       annualBillingEnabled,
       loading: true,
       loggedin: false, // changes view from login to account page
+      accountType: "email",
       userdata: {},
     };
   },
@@ -138,6 +139,8 @@ export default {
         const userdata = result.data.user;
         this.userdata = userdata || {};
         console.log("Userdata: ", userdata);
+        this.accountType = userdata?.app_metadata.provider || "email";
+        console.log("Account Type: ", this.accountType);
         this.loading = false;
       })
 
