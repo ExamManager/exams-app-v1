@@ -175,15 +175,13 @@ export default {
       // fetches the new value from the server and updates the value
       const response = await this.checksession();
       console.log(response);
-      if (response === true) {
-        this.loggedin = true;
-      } else {
+      if (response === false) {
         this.loggedin = false;
+      } else {
+        this.loggedin = true;
       }
-      this.fullname = localStorage.getItem("fullname") || "Example User";
-      this.profilepic =
-        localStorage.getItem("profilepic") ||
-        "https://www.google.com/url?sa=i&url=https%3A%2F%2Fen.wikipedia.org%2Fwiki%2FFile%3ASample_User_Icon.png&psig=AOvVaw2Q09Wg4KuUB0xtcN6FeV04&ust=1684953269035000&source=images&cd=vfe&ved=0CBEQjRxqFwoTCLjPgpyKjP8CFQAAAAAdAAAAABAD";
+      this.fullname = response.full_name || "User";
+      this.profilepic = response.avatar_url || 'https://images.unsplash.com/photo-1517365830460-955ce3ccd263?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=4&w=256&h=256&q=80';
       this.loading = false;
     },
   },
