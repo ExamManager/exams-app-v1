@@ -1,6 +1,11 @@
 import { supabase } from '../supabase'
 
 export default {
+  data() {
+    return {
+      userid: "null",
+    }
+  },
   methods: {
     // Authentication Functions
     // only run when called by a method
@@ -32,31 +37,17 @@ export default {
       const response = await supabase.auth.signInWithOAuth({
         provider: 'google',
       })
-      const {data, fetchError} = await supabase
-        .from('plans')
-        .select('uuid')
-        .eq('provider', 'google')
-        .eq('uuid', response.user?.id)
-      
-      if (data?.length === 0) {
-        const {insertError} = await supabase
-          .from('plans')
-          .insert({provider:'google'})}
-          
       return response;
-    },  
+    },
     async signout() {
       // Your method logic here
       const response = await supabase.auth.signOut()
       localStorage.clear();
       localStorage.setItem('user', 'null');
-      return response; 
+      return response;
     },
-    // Other Fuctions
-    // runs every time the page reloads to check that the user is signed in
-    async checksession() {
+    async checksession() { // returns true if the user is signed in, false if not
       // Your method logic here
-
       const response = await supabase.auth.refreshSession()
       // find the user variable in the response
       const user = String(response.data.user);
@@ -66,30 +57,24 @@ export default {
         return false;
       } else {
         const userid = String(response.data.user?.id);
+        this.userid = response.data.user?.id || "null";
         localStorage.setItem('user', userid);
         // check if the user is signed in using google, and if so, grab the name and profile picture link
-        if (response.data.user?.app_metadata?.provider === "google") {
-          console.log("google")
-          const username = String(response.data.user?.user_metadata?.full_name);
-          const userpicture = String(response.data.user?.user_metadata?.avatar_url);
-          localStorage.setItem('fullname', username);
-          localStorage.setItem('profilepic', userpicture);
-        } else {
-          // grab the users email and make the name the part before the @ symbol
-          console.log("not google")
-          var username = String(response.data.user?.email);
-          var username = username.split("@")[0];
-          localStorage.setItem('fullname', username);
-          localStorage.setItem('profilepic', 'null');
-        }
-        return true;
+        return this.getUserData();
       }
     },
     async getUserData() {
       // Your method logic here
-      const response = await supabase.auth.getUser();
-      return response;
+      const response = await supabase
+        .from('profiles')
+        .select()
+        .eq('id', localStorage.getItem('user'))
+      localStorage.setItem('fullname', response.data[0].full_name);
+      localStorage.setItem('profilepic', response.data[0].avatar_url);
+      localStorage.setItem('email', response.data[0].email);
+      localStorage.setItem('provider', response.data[0].provider);
+      return response.data[0];
 
-    }
+    },
   }
 }

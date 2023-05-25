@@ -1,6 +1,6 @@
 <script lang="ts">
-import { Popover, PopoverButton, PopoverGroup, PopoverPanel } from '@headlessui/vue'
-import authenticate from '../functions/authenticate';
+import { Popover, PopoverButton, PopoverGroup, PopoverPanel } from "@headlessui/vue";
+import authenticate from "../functions/authenticate";
 import {
   BookmarkSquareIcon,
   CursorArrowRaysIcon,
@@ -12,12 +12,9 @@ import {
   BuildingOffice2Icon,
   BookOpenIcon,
   HomeModernIcon,
-} from '@heroicons/vue/24/outline'
-import { ChevronDownIcon } from '@heroicons/vue/20/solid'
-import {
-  HomeIcon,
-  ChevronRightIcon,
-} from '@heroicons/vue/20/solid';
+} from "@heroicons/vue/24/outline";
+import { ChevronDownIcon } from "@heroicons/vue/20/solid";
+import { HomeIcon, ChevronRightIcon } from "@heroicons/vue/20/solid";
 
 export default {
   mixins: [authenticate],
@@ -45,7 +42,7 @@ export default {
       show: false, // changes wheter the banner is shown or not
       show2: false, // changes navbar: false = minimal, true = full
       open1: false,
-      open2: false, 
+      open2: false,
       show3: false, // if on page studentview
       loggedin: false,
       loading: true,
@@ -53,34 +50,35 @@ export default {
       profilepic: "",
       solutions: [
         {
-          name: 'Home',
-          description: 'Speak directly to your customers in a more meaningful way.',
-          href: '/',
+          name: "Home",
+          description: "Speak directly to your customers in a more meaningful way.",
+          href: "/",
           icon: CursorArrowRaysIcon,
         },
         {
-          name: 'Free Tier',
+          name: "Free Tier",
           description: "Your customers' data will be safe and secure.",
-          href: '/free',
-          icon: HomeModernIcon
+          href: "/free",
+          icon: HomeModernIcon,
         },
         {
-          name: 'Paid Tier',
+          name: "Paid Tier",
           description: "Connect with third-party tools that you're already using.",
-          href: '/premium',
+          href: "/premium",
           icon: BuildingOffice2Icon,
         },
       ],
       callsToAction: [
-        { name: 'Watch Demo', href: '#', icon: PlayIcon },
-        { name: 'Contact Sales', href: '#', icon: PhoneIcon },
+        { name: "Watch Demo", href: "#", icon: PlayIcon },
+        { name: "Contact Sales", href: "#", icon: PhoneIcon },
       ],
       resources: [
         {
-          name: 'Help Center',
-          description: 'Get all of your questions answered in our forums or contact support.',
-          href: '#',
-          icon: LifebuoyIcon, 
+          name: "Help Center",
+          description:
+            "Get all of your questions answered in our forums or contact support.",
+          href: "#",
+          icon: LifebuoyIcon,
         },
         {
           name: "Documentation",
@@ -89,22 +87,22 @@ export default {
           icon: BookOpenIcon,
         },
         {
-          name: 'Guides',
-          description: 'Learn how to maximize our platform to get the most out of it.',
-          href: '#',
+          name: "Guides",
+          description: "Learn how to maximize our platform to get the most out of it.",
+          href: "#",
           icon: BookmarkSquareIcon,
         },
         {
-          name: 'Policy',
-          description: 'Read how we deal with your privacy and data security.',
-          href: '#',
+          name: "Policy",
+          description: "Read how we deal with your privacy and data security.",
+          href: "#",
           icon: ShieldCheckIcon,
         },
       ],
       pages: [
-        { name: 'Example', href: '#', current: false },
-        { name: 'Example Subpage', href: '#', current: true },
-      ]
+        { name: "Example", href: "#", current: false },
+        { name: "Example Subpage", href: "#", current: true },
+      ],
     };
   },
   methods: {
@@ -117,7 +115,7 @@ export default {
     },
     hide() {
       this.show = !this.show;
-      sessionStorage.setItem('show', String(this.show));
+      sessionStorage.setItem("show", String(this.show));
     },
     checkvisibility() {
       if (window.location.pathname == "/") {
@@ -131,7 +129,7 @@ export default {
         this.show2 = true;
       } else {
         this.show2 = false;
-        var show = sessionStorage.getItem('show');
+        var show = sessionStorage.getItem("show");
         if (show === "false") {
           this.show = false;
         } else {
@@ -154,9 +152,17 @@ export default {
         for (var i = 0; i < pages.length; i++) {
           if (pages[i] != "") {
             if (i == pages.length - 1) {
-              breadcrumb.push({ name: pages[i].charAt(0).toUpperCase() + pages[i].slice(1), href: "#", current: true });
+              breadcrumb.push({
+                name: pages[i].charAt(0).toUpperCase() + pages[i].slice(1),
+                href: "#",
+                current: true,
+              });
             } else {
-              breadcrumb.push({ name: pages[i].charAt(0).toUpperCase() + pages[i].slice(1), href: "/" + pages[i], current: false });
+              breadcrumb.push({
+                name: pages[i].charAt(0).toUpperCase() + pages[i].slice(1),
+                href: "/" + pages[i],
+                current: false,
+              });
             }
           }
         }
@@ -168,24 +174,24 @@ export default {
       this.loading = true;
       // fetches the new value from the server and updates the value
       const response = await this.checksession();
-      console.log(response)
+      console.log(response);
       if (response === true) {
         this.loggedin = true;
       } else {
         this.loggedin = false;
       }
-      this.fullname = localStorage.getItem('fullname') || 'Example User';
-      this.profilepic = localStorage.getItem('profilepic') || 'https://www.google.com/url?sa=i&url=https%3A%2F%2Fen.wikipedia.org%2Fwiki%2FFile%3ASample_User_Icon.png&psig=AOvVaw2Q09Wg4KuUB0xtcN6FeV04&ust=1684953269035000&source=images&cd=vfe&ved=0CBEQjRxqFwoTCLjPgpyKjP8CFQAAAAAdAAAAABAD';
-        console.log(this.profilepic)
+      this.fullname = localStorage.getItem("fullname") || "Example User";
+      this.profilepic =
+        localStorage.getItem("profilepic") ||
+        "https://www.google.com/url?sa=i&url=https%3A%2F%2Fen.wikipedia.org%2Fwiki%2FFile%3ASample_User_Icon.png&psig=AOvVaw2Q09Wg4KuUB0xtcN6FeV04&ust=1684953269035000&source=images&cd=vfe&ved=0CBEQjRxqFwoTCLjPgpyKjP8CFQAAAAAdAAAAABAD";
       this.loading = false;
-
-    }
+    },
   },
   watch: {
     // if page routes to this page, then update the navbar
     $route(to, from) {
-      this.checkvisibility()
-      this.checkuser()
+      this.checkvisibility();
+      this.checkuser();
     },
   },
   mounted() {
@@ -194,33 +200,29 @@ export default {
     // this.checkuser()
   },
 };
-
 </script>
-
-
 
 <template>
   <transition enter-active-class="transform ease-in-out duration-700 transition" enter-from-class="opacity-0 "
     enter-to-class=" opacity-100">
     <Popover v-if="this.show2" class="relative bg-white z-30">
-      <div class="mx-auto  px-4 sm:px-6">
+      <div class="mx-auto px-4 sm:px-6">
         <div class="flex items-center justify-between border-b-2 border-gray-100 py-6 md:justify-start md:space-x-10">
           <div class="flex justify-start lg:w-0 lg:flex-1">
             <a href="/" class="flex items-center">
-              <img class="h-10 justify-start pl-2  sm:h-8 pr-3" src="src/assets/vue.svg" alt="Workflow">
-              <div class="text-4xl font-bold justify-start">Online Exam Timer</div>
+              <img class="h-10 justify-start pl-2 sm:h-8 pr-3" src="src/assets/vue.svg" alt="Workflow" />
+              <div class="text-4xl font-bold justify-start">Online Timer</div>
             </a>
           </div>
           <PopoverGroup as="nav" class="hidden space-x-10 md:flex">
             <Popover class="relative">
               <PopoverButton
-                class='text-gray-500 group inline-flex items-center rounded-md bg-white text-base font-medium hover:text-gray-900 focus:outline-none '>
+                class="text-gray-500 group inline-flex items-center rounded-md bg-white text-base font-medium hover:text-gray-900 focus:outline-none">
                 <span>Solutions</span>
-                <svg xmlns="http://www.w3.org/2000/svg" class='text-gray-400 ml-2 h-5 w-5 group-hover:text-gray-500'
+                <svg xmlns="http://www.w3.org/2000/svg" class="text-gray-400 ml-2 h-5 w-5 group-hover:text-gray-500"
                   fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
                 </svg>
-
               </PopoverButton>
 
               <transition enter-active-class="transition ease-out duration-200" enter-from-class="opacity-0 translate-y-1"
@@ -234,7 +236,9 @@ export default {
                         class="-m-3 flex items-start rounded-lg p-3 hover:bg-gray-50">
                         <component :is="item.icon" class="h-6 w-6 flex-shrink-0 text-orange-600" aria-hidden="true" />
                         <div class="ml-4">
-                          <p class="text-base font-medium text-gray-900">{{ item.name }}</p>
+                          <p class="text-base font-medium text-gray-900">
+                            {{ item.name }}
+                          </p>
                           <p class="mt-1 text-sm text-gray-500">{{ item.description }}</p>
                         </div>
                       </a>
@@ -255,9 +259,9 @@ export default {
 
             <Popover class="relative">
               <PopoverButton
-                class='text-gray-500 group inline-flex items-center rounded-md bg-white text-base font-medium hover:text-gray-900 focus:outline-none'>
+                class="text-gray-500 group inline-flex items-center rounded-md bg-white text-base font-medium hover:text-gray-900 focus:outline-none">
                 <span>Support</span>
-                <svg xmlns="http://www.w3.org/2000/svg" class='text-gray-400 ml-2 h-5 w-5 group-hover:text-gray-500'
+                <svg xmlns="http://www.w3.org/2000/svg" class="text-gray-400 ml-2 h-5 w-5 group-hover:text-gray-500"
                   fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
                 </svg>
@@ -274,7 +278,9 @@ export default {
                         class="-m-3 flex items-start rounded-lg p-3 hover:bg-gray-50">
                         <component :is="item.icon" class="h-6 w-6 flex-shrink-0 text-orange-600" aria-hidden="true" />
                         <div class="ml-4">
-                          <p class="text-base font-medium text-gray-900">{{ item.name }}</p>
+                          <p class="text-base font-medium text-gray-900">
+                            {{ item.name }}
+                          </p>
                           <p class="mt-1 text-sm text-gray-500">{{ item.description }}</p>
                         </div>
                       </a>
@@ -290,41 +296,45 @@ export default {
             <a class="group block flex-shrink-0">
               <div class="flex items-center">
                 <div>
-                  <div class=" animate-pulse  h-9 w-9 rounded-full" />
+                  <div class="animate-pulse h-9 w-9 rounded-full" />
                 </div>
                 <div class="ml-3 space-y-2 w-28">
-                  <div class="h-4  rounded"></div>
-                  <div class="h-4  rounded"></div>
+                  <div class="h-4 rounded"></div>
+                  <div class="h-4 rounded"></div>
                 </div>
               </div>
             </a>
           </div>
           <transition enter-active-class="transform ease-in-out duration-500 transition" enter-from-class="opacity-0 "
-    enter-to-class=" opacity-100">
-          <div v-if="!loggedin && !loading" class=" items-center justify-end md:flex md:flex-1 lg:w-0">
-            <a @click="this.$router.push('/login')"
-              class="whitespace-nowrap text-base font-medium text-gray-500 hover:text-gray-900">Sign in</a>
-            <a @click="this.$router.push('/register')"
-              class="ml-8 inline-flex items-center justify-center whitespace-nowrap rounded-md border border-transparent bg-orange-500 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-orange-600">Sign
-              up</a>
-          </div>
+            enter-to-class=" opacity-100">
+            <div v-if="!loggedin && !loading" class="items-center justify-end md:flex md:flex-1 lg:w-0">
+              <a @click="this.$router.push('/login')"
+                class="whitespace-nowrap text-base font-medium text-gray-500 hover:text-gray-900">Sign in</a>
+              <a @click="this.$router.push('/register')"
+                class="ml-8 inline-flex items-center justify-center whitespace-nowrap rounded-md border border-transparent bg-orange-500 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-orange-600">Sign
+                up</a>
+            </div>
           </transition>
           <transition enter-active-class="transform ease-in-out duration-500 transition" enter-from-class="opacity-0 "
-    enter-to-class=" opacity-100">
-          <div v-if="loggedin && !loading" class=" items-center justify-end md:flex md:flex-1 lg:w-0">
-            <a href="/account" class="group block flex-shrink-0">
-              <div class="flex items-center">
-                <div>
-                  <img class="inline-block h-9 w-9 rounded-full" :src="this.profilepic" referrerpolicy="no-referrer"
-                    alt="" />
+            enter-to-class=" opacity-100">
+            <div v-if="loggedin && !loading" class="items-center justify-end md:flex md:flex-1 lg:w-0">
+              <a href="/account" class="group block flex-shrink-0">
+                <div class="flex items-center">
+                  <div>
+                    <img class="inline-block h-9 w-9 rounded-full" :src="this.profilepic" referrerpolicy="no-referrer"
+                      alt="" />
+                  </div>
+                  <div class="ml-3">
+                    <p class="text-sm font-medium text-gray-700 group-hover:text-gray-900">
+                      {{ this.fullname }}
+                    </p>
+                    <p class="text-xs font-medium text-gray-500 group-hover:text-gray-700">
+                      View profile
+                    </p>
+                  </div>
                 </div>
-                <div class="ml-3">
-                  <p class="text-sm font-medium text-gray-700 group-hover:text-gray-900">{{ this.fullname }}</p>
-                  <p class="text-xs font-medium text-gray-500 group-hover:text-gray-700">View profile</p>
-                </div>
-              </div>
-            </a>
-          </div>
+              </a>
+            </div>
           </transition>
         </div>
       </div>
@@ -371,8 +381,9 @@ export default {
           <button type="button"
             class="relative inline-flex items-center rounded-md bg-white px-4 py-2 text-sm group/button1 font-medium text-gray-500 hover:bg-gray-50 focus:z-10"
             @click.native="fullscreen1">
-            <svg class=" h-6 w-4 group-hover/button1:mr-2 text-gray-500" xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 576 512"><!--! Font Awesome Pro 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. -->
+            <svg class="h-6 w-4 group-hover/button1:mr-2 text-gray-500" xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 576 512">
+              <!--! Font Awesome Pro 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. -->
               <path fill="currentColor"
                 d="M496 304h-416v-224H32v240c0 17.6 14.4 32 32 32L264 352v47.02l-72 72c-9.354 9.352-9.354 24.52 0 33.88c9.348 9.348 24.51 9.359 33.87 .0195L288 442.9l62.09 62.09c9.391 9.391 24.63 9.348 33.97-.0938c9.301-9.406 9.258-24.55-.0938-33.91L312 399V352L512 352c17.6 0 32-14.4 32-32V80h-48V304zM552 0H23.96C10.72 0 0 10.73 0 23.95S10.72 48 23.96 48h528.1C565.3 48 576 37.27 576 24.05S565.3 0 552 0z" />
             </svg>
@@ -425,7 +436,8 @@ export default {
         </div>
       </div>
     </div>
-</transition>
-<main>
-  <router-view />
-</main></template>
+  </transition>
+  <main>
+    <router-view />
+  </main>
+</template>
