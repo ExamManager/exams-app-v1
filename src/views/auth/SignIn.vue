@@ -26,8 +26,6 @@ export default {
     },
     async googlelocal() {
       const response = this.signingoogle();
-      console.log("response: ", response)
-      localStorage.setItem("response", JSON.stringify(response));
       return response
     },
   },

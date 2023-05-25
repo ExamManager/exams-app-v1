@@ -174,7 +174,6 @@ export default {
       this.loading = true;
       // fetches the new value from the server and updates the value
       const response = await this.checksession();
-      console.log(response);
       if (response === false) {
         this.loggedin = false;
       } else {

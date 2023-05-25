@@ -57,18 +57,18 @@ export default {
         return false;
       } else {
         const userid = String(response.data.user?.id);
-        this.userid = response.data.user?.id || "null";
         localStorage.setItem('user', userid);
         // check if the user is signed in using google, and if so, grab the name and profile picture link
-        return this.getUserData();
+        return this.getUserData(userid);
       }
     },
-    async getUserData() {
+    async getUserData(userid?: string) {
       // Your method logic here
+      // if userid is not provided, use the userid from the local storage
       const response = await supabase
         .from('profiles')
         .select()
-        .eq('id', localStorage.getItem('user'))
+        .eq('id', userid || localStorage.getItem('user'))
       localStorage.setItem('fullname', response.data[0].full_name);
       localStorage.setItem('profilepic', response.data[0].avatar_url);
       localStorage.setItem('email', response.data[0].email);
