@@ -48,6 +48,7 @@ export default {
     async signout() {
       // Your method logic here
       const response = await supabase.auth.signOut()
+      localStorage.clear();
       localStorage.setItem('user', 'null');
       return response; 
     },

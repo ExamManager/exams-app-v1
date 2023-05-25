@@ -17,9 +17,8 @@ const navigation = [
   { name: "Company", href: "#" }
 ];
 const userNavigation = [
-  { name: "Your Profile", href: "#" },
-  { name: "Settings", href: "#" },
-  { name: "Sign out", href: "#" }
+  { name: "Home", href: "this.$router.push('/')" },
+  { name: "Sign out", href: "signout()" }
 ];
 const subNavigation = [
   { name: "Profile", href: "#", icon: UserCircleIcon, current: true },
@@ -67,6 +66,7 @@ const annualBillingEnabled = true;
 
 export default {
   name: "Payment",
+  mixins: [authenticate],
   components: {
     Disclosure,
     DisclosureButton,
@@ -107,7 +107,7 @@ export default {
       loading: true,
       loggedin: false, // changes view from login to account page
       accountType: "email",
-      userdata: {},
+      userdata: { "id": "161dd851-dd99-48ag-b4d0-0f7136234fbd", "aud": "authenticated", "role": "authenticated", "email": "test@gmail.com", "email_confirmed_at": "2023-05-24T12:41:21.187774Z", "phone": "", "confirmed_at": "2023-05-24T12:41:21.187774Z", "last_sign_in_at": "2023-05-25T09:11:49.092133Z", "app_metadata": { "provider": "google", "providers": [ "google" ] }, "user_metadata": { "avatar_url": "https://www.google.com/url?sa=i&url=https%3A%2F%2Fen.wikipedia.org%2Fwiki%2FFile%3ASample_User_Icon.png&psig=AOvVaw2Q09Wg4KuUB0xtcN6FeV04&ust=1684953269035000&source=images&cd=vfe&ved=0CBEQjRxqFwoTCLjPgpyKjP8CFQAAAAAdAAAAABAD", "email": "test@gmail.com", "email_verified": true, "full_name": "Test Test", "iss": "https://www.googleapis.com/userinfo/v2/me", "name": "Test Test", "picture": "https://www.google.com/url?sa=i&url=https%3A%2F%2Fen.wikipedia.org%2Fwiki%2FFile%3ASample_User_Icon.png&psig=AOvVaw2Q09Wg4KuUB0xtcN6FeV04&ust=1684953269035000&source=images&cd=vfe&ved=0CBEQjRxqFwoTCLjPgpyKjP8CFQAAAAAdAAAAABAD", "provider_id": "107223709073059378549", "sub": "1072232390710521378549" }, "identities": [ { "id": "1072235091231059238549", "user_id": "161a12351-d399-423a7-b4d0-0f7136234fbd", "identity_data": { "avatar_url": "https://www.google.com/url?sa=i&url=https%3A%2F%2Fen.wikipedia.org%2Fwiki%2FFile%3ASample_User_Icon.png&psig=AOvVaw2Q09Wg4KuUB0xtcN6FeV04&ust=1684953269035000&source=images&cd=vfe&ved=0CBEQjRxqFwoTCLjPgpyKjP8CFQAAAAAdAAAAABAD", "email": "test@gmail.com", "email_verified": true, "full_name": "Test Test", "iss": "https://www.googleapis.com/userinfo/v2/me", "name": "Test Test", "picture": "https://www.google.com/url?sa=i&url=https%3A%2F%2Fen.wikipedia.org%2Fwiki%2FFile%3ASample_User_Icon.png&psig=AOvVaw2Q09Wg4KuUB0xtcN6FeV04&ust=1684953269035000&source=images&cd=vfe&ved=0CBEQjRxqFwoTCLjPgpyKjP8CFQAAAAAdAAAAABAD", "provider_id": "2134123412351252235", "sub": "10722353471059878549" }, "provider": "google", "last_sign_in_at": "2023-05-24T12:41:21.185684Z", "created_at": "2023-05-24T12:41:21.185718Z", "updated_at": "2023-05-25T09:11:49.090138Z" } ], "created_at": "2023-05-24T12:41:21.183486Z", "updated_at": "2023-05-25T09:11:56.47089Z" },
       fullname: "",
       profilepic: ""
     };
@@ -139,7 +139,7 @@ export default {
       user.then((result) => {
         // set the current user to the result
         const userdata = result.data.user;
-        this.userdata = userdata || {};
+        this.userdata = userdata;
         console.log("Userdata: ", userdata);
         this.accountType = userdata?.app_metadata.provider || "email";
         console.log("Account Type: ", this.accountType);
@@ -178,7 +178,8 @@ export default {
       <MenuItems
         class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
         <MenuItem v-for="item in userNavigation" :key="item.name" v-slot="{ active }">
-        <a :href="item.href" :class="[active ? 'bg-gray-100' : '', 'block py-2 px-4 text-sm text-gray-700']">{{ item.name
+        <a @click="item.name === 'Home' ? this.$router.push('/') : signout(); this.$router.push('/')"
+          :class="[active ? 'bg-gray-100' : '', 'block py-2 px-4 text-sm text-gray-700']">{{ item.name
         }}</a>
         </MenuItem>
       </MenuItems>
