@@ -175,7 +175,7 @@ export default {
         this.loggedin = false;
       }
       this.fullname = localStorage.getItem('fullname') || 'Example User';
-        this.profilepic = localStorage.getItem('profilepic') || 'https://www.google.com/url?sa=i&url=https%3A%2F%2Fen.wikipedia.org%2Fwiki%2FFile%3ASample_User_Icon.png&psig=AOvVaw2Q09Wg4KuUB0xtcN6FeV04&ust=1684953269035000&source=images&cd=vfe&ved=0CBEQjRxqFwoTCLjPgpyKjP8CFQAAAAAdAAAAABAD';
+      this.profilepic = localStorage.getItem('profilepic') || 'https://www.google.com/url?sa=i&url=https%3A%2F%2Fen.wikipedia.org%2Fwiki%2FFile%3ASample_User_Icon.png&psig=AOvVaw2Q09Wg4KuUB0xtcN6FeV04&ust=1684953269035000&source=images&cd=vfe&ved=0CBEQjRxqFwoTCLjPgpyKjP8CFQAAAAAdAAAAABAD';
         console.log(this.profilepic)
       this.loading = false;
 

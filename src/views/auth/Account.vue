@@ -1,8 +1,8 @@
 <script lang="ts">
 import authenticate from "../../functions/authenticate";
-import {Disclosure,DisclosureButton,DisclosurePanel,Menu,MenuButton,MenuItem,MenuItems,RadioGroup,RadioGroupDescription,RadioGroupLabel,RadioGroupOption,Switch,SwitchGroup, SwitchLabel} from "@headlessui/vue";
-import {MagnifyingGlassIcon,QuestionMarkCircleIcon } from "@heroicons/vue/20/solid";
-import {Bars3Icon,BellIcon,CogIcon,CreditCardIcon,KeyIcon,SquaresPlusIcon,UserCircleIcon,XMarkIcon} from "@heroicons/vue/24/outline";
+import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems, RadioGroup, RadioGroupDescription, RadioGroupLabel, RadioGroupOption, Switch, SwitchGroup, SwitchLabel } from "@headlessui/vue";
+import { MagnifyingGlassIcon, QuestionMarkCircleIcon } from "@heroicons/vue/20/solid";
+import { Bars3Icon, BellIcon, CogIcon, CreditCardIcon, KeyIcon, SquaresPlusIcon, UserCircleIcon, XMarkIcon } from "@heroicons/vue/24/outline";
 
 const user = {
   name: "Lisa Marie",
@@ -108,6 +108,8 @@ export default {
       loggedin: false, // changes view from login to account page
       accountType: "email",
       userdata: {},
+      fullname: "",
+      profilepic: ""
     };
   },
   mounted() {
@@ -122,7 +124,7 @@ export default {
     getLoggedIn() {
       this.loading = true;
       const loggedin = localStorage.getItem("user");
-      console.log("Loggedin: ",loggedin);
+      console.log("Loggedin: ", loggedin);
       if (loggedin === "null") {
         this.loggedin = false;
         this.$router.push("/login");
@@ -141,6 +143,8 @@ export default {
         console.log("Userdata: ", userdata);
         this.accountType = userdata?.app_metadata.provider || "email";
         console.log("Account Type: ", this.accountType);
+        this.fullname = localStorage.getItem('fullname') || 'Example User';
+        this.profilepic = localStorage.getItem('profilepic') || 'https://www.google.com/url?sa=i&url=https%3A%2F%2Fen.wikipedia.org%2Fwiki%2FFile%3ASample_User_Icon.png&psig=AOvVaw2Q09Wg4KuUB0xtcN6FeV04&ust=1684953269035000&source=images&cd=vfe&ved=0CBEQjRxqFwoTCLjPgpyKjP8CFQAAAAAdAAAAABAD';
         this.loading = false;
       })
 
@@ -151,6 +155,36 @@ export default {
 </script>
 <template>
   <!-- Account Page -->
+  <transition enter-active-class="transform ease-in-out duration-500 transition" enter-from-class="opacity-0 "
+    enter-to-class=" opacity-100">
+  <Menu v-if="loading === false" as="div" class="fixed right-4 top-4 ml-4 flex-shrink-0">
+    <div>
+      <MenuButton
+        class="flex p-2.5 rounded-lg shadow bg-white">
+        <div class="flex items-center">
+                <div>
+                  <img class="flex  h-5 w-5 rounded-full" :src="this.profilepic" loading="lazy" 
+                    referrerpolicy="no-referrer" alt="" />
+                </div>
+                <div class="ml-3">
+                  <p class="text-sm font-medium text-gray-700 group-hover:text-gray-900">{{ this.fullname }}</p>
+                </div>
+              </div>
+      </MenuButton>
+    </div>
+    <transition enter-active-class="transition ease-out duration-100" enter-from-class="transform opacity-0 scale-95"
+      enter-to-class="transform opacity-100 scale-100" leave-active-class="transition ease-in duration-75"
+      leave-from-class="transform opacity-100 scale-100" leave-to-class="transform opacity-0 scale-95">
+      <MenuItems
+        class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+        <MenuItem v-for="item in userNavigation" :key="item.name" v-slot="{ active }">
+        <a :href="item.href" :class="[active ? 'bg-gray-100' : '', 'block py-2 px-4 text-sm text-gray-700']">{{ item.name
+        }}</a>
+        </MenuItem>
+      </MenuItems>
+    </transition>
+  </Menu>
+  </transition>
   <div class="h-full pt-20"></div>
   <main class="mx-auto max-w-7xl pb-10 lg:py-12 lg:px-8">
     <div class="lg:grid lg:grid-cols-12 lg:gap-x-5">
@@ -1190,6 +1224,5 @@ export default {
           </form>
         </section>
       </div>
-    </div>
-  </main>
-</template>
+  </div>
+</main></template>

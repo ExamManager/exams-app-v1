@@ -32,6 +32,17 @@ export default {
       const response = await supabase.auth.signInWithOAuth({
         provider: 'google',
       })
+      const {data, fetchError} = await supabase
+        .from('plans')
+        .select('uuid')
+        .eq('provider', 'google')
+        .eq('uuid', response.user?.id)
+      
+      if (data?.length === 0) {
+        const {insertError} = await supabase
+          .from('plans')
+          .insert({provider:'google'})}
+          
       return response;
     },  
     async signout() {
