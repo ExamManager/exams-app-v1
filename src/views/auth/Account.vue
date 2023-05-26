@@ -135,6 +135,7 @@ export default {
     async getUserInfo() {
       const user = await this.getUserData()
       // save user to this.user, but dont save it as a promise so it can be used in the template
+      this.userMetadata = user.metadata
       this.plan = user.plan || 0;
       console.log("plan: ", user.plan)
       this.provider = user.provider;
@@ -143,7 +144,7 @@ export default {
       this.loading = false;
       console.log("user: ", this.user)
 
-
+      return user;
     },
   }
 };
@@ -294,7 +295,7 @@ export default {
                   <p class="mt-1 text-sm text-gray-500">
                     This is the current information for your school. If anything
                     here is wrong, please contact us to change it. *Currently only showing data for if provider is google
-                    and would be personal account...{{ this.userdata }}
+                    and would be personal account...{{ this.getUserInfo() }}
                   </p>
                 </div>
 
@@ -303,8 +304,7 @@ export default {
                 <div v-if="this.plan === 0" class="mt-6 grid grid-cols-4 gap-6">
                   <div class="col-span-4 sm:col-span-2">
                     <label for="first-name" class="block text-sm font-medium text-gray-700">School Name</label>
-                    <input readonly type="text" name="school-name" id="school-name"
-                      :value=this.full_name
+                    <input readonly type="text" name="school-name" id="school-name" :value=this.full_name
                       class="mt-1 block w-full rounded-md border border-gray-300 py-2 px-3 shadow-sm focus:border-gray-900 focus:outline-none focus:ring-gray-900 sm:text-sm" />
                   </div>
 

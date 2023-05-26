@@ -46,7 +46,7 @@ export default {
       localStorage.setItem('user', 'null');
       return response;
     },
-    async checksession() { // returns true if the user is signed in, false if not
+    async checksession() { // returns userdata if the user is signed in, and false if the user is not signed in
       // Your method logic here
       const response = await supabase.auth.refreshSession()
       // find the user variable in the response
@@ -57,12 +57,14 @@ export default {
         return false;
       } else {
         const userid = String(response.data.user?.id);
+        localStorage.setItem('fullname', response.data.user?.user_metadata.full_name);
+        localStorage.setItem('profilepic', response.data.user?.user_metadata.avatar_url);
         localStorage.setItem('user', userid);
         // check if the user is signed in using google, and if so, grab the name and profile picture link
         return this.getUserData(userid);
       }
     },
-    async getUserData(userid?: string) {
+    async getUserData(userid?: string) { 
       // Your method logic here
       // if userid is not provided, use the userid from the local storage
       const response = await supabase
