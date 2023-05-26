@@ -64,7 +64,7 @@ export default {
         return this.getUserData(userid);
       }
     },
-    async getUserData(userid?: string) { 
+    async getUserData(userid?: string) {
       // Your method logic here
       // if userid is not provided, use the userid from the local storage
       const response = await supabase
@@ -75,8 +75,23 @@ export default {
       localStorage.setItem('profilepic', response.data[0].avatar_url);
       localStorage.setItem('email', response.data[0].email);
       localStorage.setItem('provider', response.data[0].provider);
+      if (response.data[0].username === null) {
+        this.setUserName(response.data[0].id);
+      }
       return response.data[0];
 
     },
+    async setUserName(userid: string) {
+      // Your method logic here
+      // create a random username with the layout of user-xxxxxx and make it update the value in the database, if it returns an error, make a loop that keeps trying until it works
+      var username = "user-" + Math.floor(Math.random() * 1000000);
+      const response = await supabase
+        .from('profiles')
+        .update({ username: username })
+        .eq('id', userid)
+      if (response.error) {
+        this.setUserName(userid);
+      }
+    }
   }
 }

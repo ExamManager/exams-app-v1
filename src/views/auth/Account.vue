@@ -104,11 +104,13 @@ export default {
       selectedPlan,
       annualBillingEnabled,
       loading: true,
-      loggedin: false, // changes view from login to account page
+      loggedin: false,
+      // stuff for account page
       fullname: "",
       profilepic: "",
       provider: "",
       plan: 0,
+      username: "",
     };
   },
   mounted() {
@@ -141,6 +143,7 @@ export default {
       this.provider = user.provider;
       this.fullname = user.full_name;
       this.profilepic = user.avatar_url || 'https://images.unsplash.com/photo-1517365830460-955ce3ccd263?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=4&w=256&h=256&q=80';
+      this.username = user.username;
       this.loading = false;
       console.log("user: ", this.user)
 
@@ -207,7 +210,6 @@ export default {
 
       <!-- Profile -->
       <div class="space-y-6 sm:px-6 lg:col-span-9 lg:px-0" v-if="subNavigation[0].current">
-        <form action="#" method="POST">
           <div class="shadow sm:overflow-hidden sm:rounded-md">
             <div class="space-y-6 bg-white py-6 px-4 sm:p-6">
               <div>
@@ -222,7 +224,7 @@ export default {
                   <div class="mt-1 flex rounded-md shadow-sm">
                     <span
                       class="inline-flex items-center rounded-l-md border border-r-0 border-gray-300 bg-gray-50 px-3 text-gray-500 sm:text-sm">examtimer.tech/</span>
-                    <input type="text" name="username" id="username" autocomplete="username"
+                    <input v-model="this.username" type="text" name="username" autocomplete="username"
                       class="block w-full min-w-0 flex-grow rounded-none rounded-r-md border-gray-300 focus:border-orange-500 focus:ring-orange-500 sm:text-sm" />
                   </div>
                 </div>
@@ -280,7 +282,6 @@ export default {
                 class="inline-flex justify-center rounded-md border border-transparent bg-orange-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2">Save</button>
             </div>
           </div>
-        </form>
       </div>
       <!-- Account -->
       <div class="space-y-6 sm:px-6 lg:col-span-9 lg:px-0" v-if="subNavigation[1].current">
