@@ -218,7 +218,7 @@ export default {
 </script>
 
 <template>
-    <div class="bg-white pb-8 sm:pb-12 lg:pb-12 -mt-8 z-0">
+    <div class="bg-white pb-8 sm:pb-12 lg:pb-12 -mt-8 z-0 ">
         <div class="overflow-hidden pt-8 sm:pt-12 lg:relative lg:py-48">
             <div class="mx-auto max-w-md px-4 sm:max-w-3xl sm:px-6 lg:grid lg:max-w-7xl lg:grid-cols-2 lg:gap-24 lg:px-8">
                 <div>
@@ -238,7 +238,6 @@ export default {
                                 <h1 class="text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">Exam management for
                                 Schools</h1>
                             </transition>
-                            <button @click="funny()" >funny</button>
                             <p class="mt-6 text-xl text-gray-500">Anim aute id magna aliqua ad ad non deserunt sunt. Qui
                                 irure qui lorem cupidatat commodo.</p>
                         </div>
