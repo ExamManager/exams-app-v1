@@ -208,7 +208,7 @@ export default {
           <div class="flex justify-start lg:w-0 lg:flex-1">
             <a href="/" class="flex items-center">
               <img class="h-10 justify-start pl-2 sm:h-8 pr-3" src="src/assets/vue.svg" alt="Workflow" />
-              <div class="text-4xl font-bold justify-start">Online Timer</div>
+              <div class="text-4xl font-bold justify-start">Online Exam Timer</div>
             </a>
           </div>
           <PopoverGroup as="nav" class="hidden space-x-10 md:flex">
