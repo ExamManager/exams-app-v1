@@ -6,6 +6,9 @@ const router = createRouter({
     {
       path: '/',
       component: () => import('./views/Home.vue'),
+      //log 'left' in console before leaving this route
+      
+
     },
     {
       path: '/free',

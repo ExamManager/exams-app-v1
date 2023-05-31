@@ -22,12 +22,12 @@ const userNavigation = [
   { name: "Sign out", href: "signout()" }
 ];
 const subNavigation = [
-  { name: "Profile", href: "#", icon: UserCircleIcon, current: true },
-  { name: "Account", href: "#", icon: CogIcon, current: false },
-  { name: "Password", href: "#", icon: KeyIcon, current: false },
-  { name: "Notifications", href: "#", icon: BellIcon, current: false },
-  { name: "Plan & Billing", href: "#", icon: CreditCardIcon, current: false },
-  { name: "Integrations", href: "#", icon: SquaresPlusIcon, current: false }
+  { name: "Profile", href: "#", icon: UserCircleIcon, current: true, idx: 0 },
+  { name: "Account", href: "#", icon: CogIcon, current: false, idx: 1 },
+  { name: "Password", href: "#", icon: KeyIcon, current: false, idx: 2 },
+  { name: "Notifications", href: "#", icon: BellIcon, current: false, idx: 3 },
+  { name: "Plan & Billing", href: "#", icon: CreditCardIcon, current: false, idx: 4 },
+  { name: "Integrations", href: "#", icon: SquaresPlusIcon, current: false, idx: 5 }
 ];
 
 const plans = [
@@ -121,9 +121,14 @@ export default {
     this.getLoggedIn();
   },
   watch: {
-    $route(to, from) {
+    $route (to, from) {
       this.getLoggedIn();
+      
     }
+  },
+  beforeRouteUpdate(to, from, next) {
+    console.log('hi')
+    next()
   },
   methods: {
     getLoggedIn() {
@@ -148,6 +153,7 @@ export default {
       this.$emit("show-notification", notificationData);
       }, 1000);
     },
+    setSubNav(idx) {sessionStorage.setItem("subNav", idx)},
     async getUserInfo() {
       const user = await this.getUserData()
       this.user = await user;
@@ -199,7 +205,7 @@ export default {
       </transition>
     </Menu>
   </transition>
-  <div class="h-full pt-20"></div>
+  <div class="h-full pt-20"></div>        
   <main class="mx-auto max-w-7xl pb-10 lg:py-12 lg:px-8">
     <div class="lg:grid lg:grid-cols-12 lg:gap-x-5">
       <aside class="py-6 px-2 sm:px-6 lg:col-span-3 lg:py-0 lg:px-0">
@@ -207,12 +213,16 @@ export default {
           <!-- on click change old one to false and the one that was clicked to true -->
           <a v-for="item in subNavigation" :key="item.name" @click="
             subNavigation.forEach((item) => (item.current = false));
-          item.current = true;" :class="[
-  item.current
-    ? 'bg-gray-50 text-orange-600 hover:bg-white'
-    : 'text-gray-900 hover:text-gray-900 hover:bg-gray-50',
-  'group rounded-md px-3 py-2 flex items-center text-sm font-medium'
-]" :aria-current="item.current ? 'page' : undefined">
+            item.current = true;
+            this.setSubNav(item.idx);
+            " 
+            :class="[
+              item.current
+              ? 'bg-gray-50 text-orange-600 hover:bg-white'
+              : 'text-gray-900 hover:text-gray-900 hover:bg-gray-50',
+              'group rounded-md px-3 py-2 flex items-center text-sm font-medium'
+            ]" 
+            :aria-current="item.current ? 'page' : undefined">
             <component :is="item.icon" :class="[
               item.current
                 ? 'text-orange-500'
@@ -236,7 +246,7 @@ export default {
 
               <div class="grid grid-cols-3 gap-6">
                 <div class="col-span-3 sm:col-span-2">
-                  <label for="company-website" class="block text-sm font-medium text-gray-700">Username</label>
+                  <label class="block text-sm font-medium text-gray-700">Username</label>
                   <div class="mt-1 flex rounded-md shadow-sm">
                     <span
                       class="inline-flex items-center rounded-l-md border border-r-0 border-gray-300 bg-gray-50 px-3 text-gray-500 sm:text-sm">examtimer.tech/</span>
@@ -311,52 +321,45 @@ export default {
                   </h2>
                   <p class="mt-1 text-sm text-gray-500">
                     This is the current information for your school. If anything
-                    here is wrong, please contact us to change it. *Currently only showing data for if provider is google
-                    and would be personal account...{{ this.user }}
+                    here is wrong, please contact us to change it.
                   </p>
                 </div>
 
 
                 <!-- Accnt Page -->
                 <div class="mt-6 grid grid-cols-4 gap-6">
-                    <div class="col-span-4 sm:col-span-2">
-                      <label for="first-name" class="block text-sm font-medium text-gray-700">{{this.userMetadata.isEnt ? "School Name" : "First Name"}}</label>
-                      <input v-model="this.userMetadata.schoolName" readonly type="text" name="school-name" id="school-name"
-                        class="mt-1 block w-full rounded-md border border-gray-300 py-2 px-3 shadow-sm focus:border-gray-900 focus:outline-none focus:ring-gray-900 sm:text-sm" />
-                    </div>   
-
-                    <div class="col-span-4 sm:col-span-2">
-                      <label for="first-name" class="block text-sm font-medium text-gray-700">{{this.userMetadata.isEnt ? "School Name" : "First Name"}}</label>
+                    <div v-if="this.userMetadata.isEnt" class="col-span-4 sm:col-span-2">
+                      <label class="block text-sm font-medium text-gray-700">School Name</label>
                       <input v-model="this.userMetadata.schoolName" readonly type="text" name="school-name" id="school-name"
                         class="mt-1 block w-full rounded-md border border-gray-300 py-2 px-3 shadow-sm focus:border-gray-900 focus:outline-none focus:ring-gray-900 sm:text-sm" />
                     </div>   
 
                     <div v-if="!this.userMetadata.isEnt" class="col-span-4 sm:col-span-2">
-                      <label for="first-name" class="block text-sm font-medium text-gray-700">School Name</label>
-                      <input v-model="this.userMetadata.schoolName" readonly type="text" name="school-name" id="school-name"
+                      <label class="block text-sm font-medium text-gray-700">Full Name</label>
+                      <input v-model="this.fullname" readonly type="text" name="school-name" id="school-name"
                         class="mt-1 block w-full rounded-md border border-gray-300 py-2 px-3 shadow-sm focus:border-gray-900 focus:outline-none focus:ring-gray-900 sm:text-sm" />
                     </div>
 
                     <div class="col-span-4 sm:col-span-2">
-                      <label for="last-name" class="block text-sm font-medium text-gray-700">Address Line 1</label>
+                      <label class="block text-sm font-medium text-gray-700">Address Line 1</label>
                       <input v-model="this.userMetadata.address1" :readonly="false" type="text" name="address-1" id="address-2" autocomplete="address-line-1"
                         class="mt-1 block w-full rounded-md border border-gray-300 py-2 px-3 shadow-sm focus:border-gray-900 focus:outline-none focus:ring-gray-900 sm:text-sm" />
                     </div>
 
                     <div class="col-span-4 sm:col-span-2">
-                      <label for="email-address" class="block text-sm font-medium text-gray-700">Email Address</label>
+                      <label class="block text-sm font-medium text-gray-700">Email Address</label>
                       <input v-model="this.email" readonly type="text" name="email-address" id="email-address" autocomplete="email"
                         class="mt-1 block w-full rounded-md border border-gray-300 py-2 px-3 shadow-sm focus:border-gray-900 focus:outline-none focus:ring-gray-900 sm:text-sm" />
                     </div>
 
                     <div class="col-span-4 sm:col-span-2">
-                      <label for="email-address" class="block text-sm font-medium text-gray-700">Address Line 2</label>
+                      <label class="block text-sm font-medium text-gray-700">Address Line 2</label>
                       <input v-model="this.userMetadata.address2" readonly type="text" name="address-2" id="address-2" autocomplete="address-line-2"
                         class="mt-1 block w-full rounded-md border border-gray-300 py-2 px-3 shadow-sm focus:border-gray-900 focus:outline-none focus:ring-gray-900 sm:text-sm" />
                     </div>
 
                     <div class="col-span-4 sm:col-span-2">
-                      <label for="country" class="block text-sm font-medium text-gray-700">Country</label>
+                      <label class="block text-sm font-medium text-gray-700">Country</label>
                       <input v-model="this.userMetadata.country" readonly type="text" name="address-2" id="address-2" autocomplete="address-line-2"
                         class="mt-1 block w-full rounded-md border border-gray-300 py-2 px-3 shadow-sm focus:border-gray-900 focus:outline-none focus:ring-gray-900 sm:text-sm" />
                       <!-- <select readonly id="country" name="Country" autocomplete="country-name"
@@ -640,7 +643,7 @@ export default {
                     </div>
 
                     <div class="col-span-4 sm:col-span-2">
-                      <label for="postal-code" class="block text-sm font-medium text-gray-700">ZIP / Postal code</label>
+                      <label class="block text-sm font-medium text-gray-700">ZIP / Postal code</label>
                       <input v-model="this.userMetadata.zip" readonly type="text" name="postal-code" id="postal-code" autocomplete="postal-code"
                         class="mt-1 block w-full rounded-md border border-gray-300 py-2 px-3 shadow-sm focus:border-gray-900 focus:outline-none focus:ring-gray-900 sm:text-sm" />
                     </div>
@@ -672,13 +675,13 @@ export default {
 
                 <div class="mt-6 grid grid-cols-4 gap-6">
                   <div class="col-span-4 sm:col-span-2">
-                    <label for="first-name" class="block text-sm font-medium text-gray-700">Current Email</label>
+                    <label class="block text-sm font-medium text-gray-700">Current Email</label>
                     <input type="text" readonly name="school-name" id="school-name" v-model="this.email"
                       class="mt-1 block w-full rounded-md border border-gray-300 py-2 px-3 shadow-sm focus:border-gray-900 focus:outline-none focus:ring-gray-900 sm:text-sm" />
                   </div>
 
                   <div class="col-span-4 sm:col-span-2">
-                    <label for="postal-code" class="block text-sm font-medium text-gray-700">Current Password</label>
+                    <label class="block text-sm font-medium text-gray-700">Current Password</label>
                     <input type="password" name="password" id="password" placeholder="••••••••••••••" v-model="this.password" v-mask="'XXXXXXXXXXXXXXXX'"
                       class="mt-1 block peer w-full rounded-md border border-gray-300 py-2 px-3 shadow-sm focus:border-gray-900 focus:outline-none focus:ring-gray-900 sm:text-sm" />
                       <p class="mt-2 invisible peer-focus:visible text-pink-600 text-sm">
