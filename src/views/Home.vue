@@ -45,7 +45,8 @@ export default {
             show4: false,
             show5: false,
             show6: false,
-            test: "test",
+            email: "",
+            loggedin: false,
             includedFeatures: [
                 'Private forum access',
                 'Member resources',
@@ -168,8 +169,6 @@ export default {
     },
     methods: {
         handleScroll() {
-            console.log('scrolling');
-            console.log(window.scrollY);
             if (window.scrollY > 1550) {
                 this.show1 = true;
                 setTimeout(() => {
@@ -212,6 +211,15 @@ export default {
     },
     mounted() {
         this.show6 = true;
+        // if user = null then loggedin = false
+        if (localStorage.getItem('user') === "null") {
+            // if there is, then load it into the people array
+            this.loggedin = false;
+        }
+        else {
+            this.loggedin = true;
+        }
+
     }
         
 }
@@ -241,19 +249,19 @@ export default {
                             <p class="mt-6 text-xl text-gray-500">Anim aute id magna aliqua ad ad non deserunt sunt. Qui
                                 irure qui lorem cupidatat commodo.</p>
                         </div>
-                        <form action="#" class="mt-12 sm:flex sm:w-full sm:max-w-lg">
+                        <div v-if="!loggedin" class="mt-12 sm:flex sm:w-full sm:max-w-lg">
                             <div class="min-w-0 flex-1">
-                                <label for="hero-email" class="sr-only">Email address</label>
-                                <input id="hero-email" type="email"
+                                <label  class="sr-only">Email address</label>
+                                <input v-model="this.email" type="email"
                                     class="block w-full rounded-md border border-gray-300 px-5 py-3 text-base text-gray-900 placeholder-gray-500 shadow-sm focus:border-orange-500 focus:ring-orange-500"
                                     placeholder="Enter your email" />
                             </div>
                             <div class="mt-4 sm:mt-0 sm:ml-3">
-                                <button type="submit"
+                                <button @click="this.$router.push('/register', {email: this.email})"
                                     class="block w-full rounded-md border border-transparent bg-orange-500 px-5 py-3 text-base font-medium text-white shadow hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 sm:px-10">Sign
                                     Up</button>
                             </div>
-                        </form>
+                        </div>
                         <div class="mt-6">
                             <div class="inline-flex items-center divide-x divide-gray-300">
                                 <div class="flex flex-shrink-0 pr-5">
