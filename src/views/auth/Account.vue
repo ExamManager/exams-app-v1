@@ -21,13 +21,16 @@ const userNavigation = [
   { name: "Home", href: "this.$router.push('/')" },
   { name: "Sign out", href: "signout()" }
 ];
+
+const initActiveSubnav = Number(sessionStorage.getItem("subNav")) || 0;
+
 const subNavigation = [
-  { name: "Profile", href: "#", icon: UserCircleIcon, current: true, idx: 0 },
-  { name: "Account", href: "#", icon: CogIcon, current: false, idx: 1 },
-  { name: "Password", href: "#", icon: KeyIcon, current: false, idx: 2 },
-  { name: "Notifications", href: "#", icon: BellIcon, current: false, idx: 3 },
-  { name: "Plan & Billing", href: "#", icon: CreditCardIcon, current: false, idx: 4 },
-  { name: "Integrations", href: "#", icon: SquaresPlusIcon, current: false, idx: 5 }
+  { name: "Profile", href: "#", icon: UserCircleIcon, current: initActiveSubnav == 0, idx: 0 },
+  { name: "Account", href: "#", icon: CogIcon, current: initActiveSubnav == 1, idx: 1 },
+  { name: "Password", href: "#", icon: KeyIcon, current: initActiveSubnav == 2, idx: 2 },
+  { name: "Notifications", href: "#", icon: BellIcon, current: initActiveSubnav == 3, idx: 3 },
+  { name: "Plan & Billing", href: "#", icon: CreditCardIcon, current: initActiveSubnav == 4, idx: 4 },
+  { name: "Integrations", href: "#", icon: SquaresPlusIcon, current: initActiveSubnav == 5, idx: 5 }
 ];
 
 const plans = [
@@ -119,6 +122,7 @@ export default {
   },
   mounted() {
     this.getLoggedIn();
+    sessionStorage.setItem('accountIsCurrent', 'true')
   },
   watch: {
     $route (to, from) {
@@ -666,7 +670,7 @@ export default {
                   </h2>
                   <p class="mt-1 text-sm text-gray-500">
                     This is the current information for your school. If anything
-                    here is wrong, please contact us to change it.
+                    here is wrong, please contact us to change it. {{this.userMetadata}}
                   </p>
                 </div>
 

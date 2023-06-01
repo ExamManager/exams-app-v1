@@ -42,15 +42,11 @@ const router = createRouter({
   ],
 })
 
-router.afterEach((to, from) => {
-  console.log('path', to.path)
-  console.log('hash', to.hash)
-  console.log('query', to.query)
-  console.log('params', to.params)
-  console.log('matched', to.matched)
-  console.log('meta', to.meta)
-  console.log('from', from)
-  
-})
+// router.afterEach((to, from, failure) => {
+//   if (to.path != '/account' && sessionStorage.getItem('accountIsCurrent') == 'true') { 
+//     sessionStorage.setItem('accountIsCurrent', 'false');
+//     sessionStorage.removeItem('subNav');
+//   }
+// })
 
 export default router
