@@ -92,6 +92,24 @@ export default {
       if (response.error) {
         this.setUserName(userid);
       }
+    },
+    async updateUserMetadata(zip: string, isEnt: boolean, country: string, address1: string, address2: string, schoolName?: string, userid?: string) {
+      console.log(userid)
+      const response = await supabase
+        .from('profiles')
+        .update({
+          metadata: {
+            zip: zip,
+            isEnt: isEnt,
+            country: country,
+            address1: address1,
+            address2: address2,
+            schoolName: schoolName
+          }
+        })
+        .eq('id', userid)
+      
+      console.log('response', response)
     }
   }
 }

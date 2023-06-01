@@ -118,12 +118,22 @@ export default {
       user: {},
       email: "",
       password: "",
+      editingAccount: false,
     };
   },
   mounted() {
     this.getLoggedIn();
     sessionStorage.setItem('accountIsCurrent', 'true');
     console.log('mounted')
+
+    window.addEventListener("submit", (e) => {
+      e.preventDefault();
+      if (this.editingAccount) console.log("submit");
+      this.editingAccount = !this.editingAccount;
+      console.log(document.getElementById('address-2').value)
+      if (this.userMetadata.isEnt) {this.updateAccount(document.getElementById('zip').value, document.getElementById('country').value, document.getElementById('address-1').value, document.getElementById('address-2').value, document.getElementById('school-name').value);}
+      else {this.updateAccount(document.getElementById('zip').value, document.getElementById('country').value, document.getElementById('address-1').value, document.getElementById('address-2').value, document.getElementById('full-name').value);}
+    });
   },
   created() {
     console.log('created')
@@ -156,6 +166,11 @@ export default {
       };
       this.$emit("show-notification", notificationData);
       }, 1000);
+    },
+    async updateAccount(zip: string, country: string, address1: string, address2: string, schoolName?: string) {
+      
+      const schoolname = (document.getElementById('school-name') == null) ? "" : document.getElementById('school-name').value;
+      const response = await this.updateUserMetadata(zip, this.userMetadata.isEnt, country, address1, address2, schoolname, this.user.id);
     },
     setSubNav(idx) {sessionStorage.setItem("subNav", idx)},
     async getUserInfo() {
@@ -317,7 +332,7 @@ export default {
       <!-- Account -->
       <div class="space-y-6 sm:px-6 lg:col-span-9 lg:px-0" v-if="subNavigation[1].current && !this.loading">
         <section aria-labelledby="payment-details-heading">
-          <form action="#" method="POST">
+          <form action="">
             <div class="shadow sm:overflow-hidden sm:rounded-md">
               <div class="bg-white py-6 px-4 sm:p-6">
                 <div>
@@ -326,46 +341,46 @@ export default {
                   </h2>
                   <p class="mt-1 text-sm text-gray-500">
                     This is the current information for your school. If anything
-                    here is wrong, please contact us to change it.
+                    here is wrong, please contact us to change it. {{ this.user.id }}
                   </p>
                 </div>
 
 
                 <!-- Accnt Page -->
                 <div class="mt-6 grid grid-cols-4 gap-6">
-                    <div v-if="this.userMetadata.isEnt" class="col-span-4 sm:col-span-2">
+                    <div v-if="userMetadata.isEnt" class="col-span-4 sm:col-span-2">
                       <label class="block text-sm font-medium text-gray-700">School Name</label>
-                      <input v-model="this.userMetadata.schoolName" readonly type="text" name="school-name" id="school-name"
+                      <input v-model="userMetadata.schoolName" :readonly="!editingAccount" type="text" name="school-name" id="school-name"
                         class="mt-1 block w-full rounded-md border border-gray-300 py-2 px-3 shadow-sm focus:border-gray-900 focus:outline-none focus:ring-gray-900 sm:text-sm" />
                     </div>   
 
-                    <div v-if="!this.userMetadata.isEnt" class="col-span-4 sm:col-span-2">
+                    <div v-if="!userMetadata.isEnt" class="col-span-4 sm:col-span-2">
                       <label class="block text-sm font-medium text-gray-700">Full Name</label>
-                      <input v-model="this.fullname" readonly type="text" name="school-name" id="school-name"
+                      <input v-model="fullname" :readonly="!editingAccount" type="text" name="school-name" id="full-name"
                         class="mt-1 block w-full rounded-md border border-gray-300 py-2 px-3 shadow-sm focus:border-gray-900 focus:outline-none focus:ring-gray-900 sm:text-sm" />
                     </div>
 
                     <div class="col-span-4 sm:col-span-2">
                       <label class="block text-sm font-medium text-gray-700">Address Line 1</label>
-                      <input v-model="this.userMetadata.address1" :readonly="false" type="text" name="address-1" id="address-2" autocomplete="address-line-1"
+                      <input v-model="userMetadata.address1" :readonly="!editingAccount" type="text" name="address-1" id="address-1" autocomplete="address-line-1"
                         class="mt-1 block w-full rounded-md border border-gray-300 py-2 px-3 shadow-sm focus:border-gray-900 focus:outline-none focus:ring-gray-900 sm:text-sm" />
                     </div>
 
                     <div class="col-span-4 sm:col-span-2">
                       <label class="block text-sm font-medium text-gray-700">Email Address</label>
-                      <input v-model="this.email" readonly type="text" name="email-address" id="email-address" autocomplete="email"
+                      <input v-model="email" :readonly="!editingAccount" type="text" name="email-address" id="email-address" autocomplete="email"
                         class="mt-1 block w-full rounded-md border border-gray-300 py-2 px-3 shadow-sm focus:border-gray-900 focus:outline-none focus:ring-gray-900 sm:text-sm" />
                     </div>
 
                     <div class="col-span-4 sm:col-span-2">
                       <label class="block text-sm font-medium text-gray-700">Address Line 2</label>
-                      <input v-model="this.userMetadata.address2" readonly type="text" name="address-2" id="address-2" autocomplete="address-line-2"
+                      <input v-model="userMetadata.address2" :readonly="!editingAccount" type="text" name="address-2" id="address-2" autocomplete="address-line-2"
                         class="mt-1 block w-full rounded-md border border-gray-300 py-2 px-3 shadow-sm focus:border-gray-900 focus:outline-none focus:ring-gray-900 sm:text-sm" />
                     </div>
 
                     <div class="col-span-4 sm:col-span-2">
                       <label class="block text-sm font-medium text-gray-700">Country</label>
-                      <input v-model="this.userMetadata.country" readonly type="text" name="address-2" id="address-2" autocomplete="address-line-2"
+                      <input v-model="userMetadata.country" :readonly="!editingAccount" type="text" name="address-2" id="country" autocomplete="address-line-2"
                         class="mt-1 block w-full rounded-md border border-gray-300 py-2 px-3 shadow-sm focus:border-gray-900 focus:outline-none focus:ring-gray-900 sm:text-sm" />
                       <!-- <select readonly id="country" name="Country" autocomplete="country-name"
                         class="mt-1 block w-full rounded-md border border-gray-300 bg-white py-2 px-3 shadow-sm focus:border-gray-900 focus:outline-none focus:ring-gray-900 sm:text-sm">
@@ -649,14 +664,15 @@ export default {
 
                     <div class="col-span-4 sm:col-span-2">
                       <label class="block text-sm font-medium text-gray-700">ZIP / Postal code</label>
-                      <input v-model="this.userMetadata.zip" readonly type="text" name="postal-code" id="postal-code" autocomplete="postal-code"
+                      <input v-model="userMetadata.zip" :readonly="!editingAccount" type="text" name="postal-code" id="zip" autocomplete="postal-code"
                         class="mt-1 block w-full rounded-md border border-gray-300 py-2 px-3 shadow-sm focus:border-gray-900 focus:outline-none focus:ring-gray-900 sm:text-sm" />
                     </div>
                 </div>
               </div>
               <div class="bg-gray-50 px-4 py-3 text-right sm:px-6">
-                <!-- <button 
-                  class="inline-flex justify-center rounded-md border border-transparent bg-gray-800 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2">Save</button> -->
+                <button class="inline-flex justify-center rounded-md border border-transparent bg-gray-800 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2">
+                 {{editingAccount ? 'Save' : 'Edit'}}
+                </button>
               </div>
             </div>
           </form>
