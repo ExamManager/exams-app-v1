@@ -122,13 +122,17 @@ export default {
   },
   mounted() {
     this.getLoggedIn();
-    sessionStorage.setItem('accountIsCurrent', 'true')
+    sessionStorage.setItem('accountIsCurrent', 'true');
+    console.log('mounted')
+  },
+  created() {
+    console.log('created')
+    this.getLoggedIn();
   },
   watch: {
     $route (to, from) {
-      this.getLoggedIn();
-      
-    }
+      this.getLoggedIn();  
+    },
   },
   methods: {
     getLoggedIn() {
@@ -311,7 +315,7 @@ export default {
           </div>
       </div>
       <!-- Account -->
-      <div class="space-y-6 sm:px-6 lg:col-span-9 lg:px-0" v-if="subNavigation[1].current">
+      <div class="space-y-6 sm:px-6 lg:col-span-9 lg:px-0" v-if="subNavigation[1].current && !this.loading">
         <section aria-labelledby="payment-details-heading">
           <form action="#" method="POST">
             <div class="shadow sm:overflow-hidden sm:rounded-md">
@@ -670,7 +674,7 @@ export default {
                   </h2>
                   <p class="mt-1 text-sm text-gray-500">
                     This is the current information for your school. If anything
-                    here is wrong, please contact us to change it. {{this.userMetadata}}
+                    here is wrong, please contact us to change it.
                   </p>
                 </div>
 
