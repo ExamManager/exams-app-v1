@@ -42,11 +42,11 @@ const router = createRouter({
   ],
 })
 
-// router.afterEach((to, from, failure) => {
-//   if (to.path != '/account' && sessionStorage.getItem('accountIsCurrent') == 'true') { 
-//     sessionStorage.setItem('accountIsCurrent', 'false');
-//     sessionStorage.removeItem('subNav');
-//   }
-// })
+router.afterEach((to, from, failure) => {
+  if (to.path != '/account' && sessionStorage.getItem('accountIsCurrent') == 'true') { 
+    sessionStorage.setItem('accountIsCurrent', 'false');
+    sessionStorage.removeItem('subNav');
+  }
+})
 
 export default router
