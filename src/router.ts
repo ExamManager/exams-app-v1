@@ -6,9 +6,6 @@ const router = createRouter({
     {
       path: '/',
       component: () => import('./views/Home.vue'),
-      //log 'left' in console before leaving this route
-      
-
     },
     {
       path: '/free',
@@ -43,6 +40,17 @@ const router = createRouter({
       component: () => import('./views/auth/Account.vue'),
     }
   ],
+})
+
+router.afterEach((to, from) => {
+  console.log('path', to.path)
+  console.log('hash', to.hash)
+  console.log('query', to.query)
+  console.log('params', to.params)
+  console.log('matched', to.matched)
+  console.log('meta', to.meta)
+  console.log('from', from)
+  
 })
 
 export default router

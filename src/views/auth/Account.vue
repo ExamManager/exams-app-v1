@@ -126,10 +126,6 @@ export default {
       
     }
   },
-  beforeRouteUpdate(to, from, next) {
-    console.log('hi')
-    next()
-  },
   methods: {
     getLoggedIn() {
       this.loading = true;
@@ -171,7 +167,8 @@ export default {
 
       return user;
     },
-  }
+  },
+  
 };
 </script>
 <template>
