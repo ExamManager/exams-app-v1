@@ -4,6 +4,8 @@ import {
     StarIcon
 } from '@heroicons/vue/20/solid'
 
+import OverlayComponent from './completeAccount.vue'
+
 import {
     BoltIcon,
     ChatBubbleBottomCenterTextIcon,
@@ -227,6 +229,7 @@ export default {
 
 <template>
     <div class="bg-white pb-8 sm:pb-12 lg:pb-12 -mt-8 z-0 ">
+        <OverlayComponent />
         <div class="overflow-hidden pt-8 sm:pt-12 lg:relative lg:py-48">
             <div class="mx-auto max-w-md px-4 sm:max-w-3xl sm:px-6 lg:grid lg:max-w-7xl lg:grid-cols-2 lg:gap-24 lg:px-8">
                 <div>
