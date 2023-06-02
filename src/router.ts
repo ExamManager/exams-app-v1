@@ -40,8 +40,8 @@ const router = createRouter({
       component: () => import('./views/auth/Account.vue'),
     },
     {
-      path: '/test',
-      component: () => import('./views/completeAccount.vue')
+      path: '/completeAccount',
+      component: () => import('./views/auth/AccountSetup.vue')
     }
   ],
 })
