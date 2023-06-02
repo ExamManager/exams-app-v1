@@ -24,13 +24,33 @@ export default (await import("vue")).defineComponent({
       open: ref(true),
     };
   },
+  mounted() {
+    sessionStorage.setItem('setupPopUpVis', String(this.open))
+  },
+  watch: {
+    open: function() {
+      sessionStorage.setItem('setupPopUpVis', String(this.open))
+
+      window.dispatchEvent(new CustomEvent('stChanged', {
+        detail: {
+          storage: this.open
+        }
+      }))
+    }
+  },
+  methods: {
+    handleClickOut() {
+      if (sessionStorage.getItem('setupComplete') == 'false') {this.open = true}
+      else {this.open = false}
+    },
+  }
 });
 </script>
 
 <!-- This example requires Tailwind CSS v2.0+ -->
 <template>
   <TransitionRoot as="template"  :show="open">
-    <Dialog as="div" class="relative z-10" @close="open = false">
+    <Dialog as="div" class="relative z-10" @close="handleClickOut()">
       <TransitionChild
         as="template"
         enter="ease-out duration-300"
@@ -80,7 +100,8 @@ export default (await import("vue")).defineComponent({
                 <button
                   type="button"
                   class="inline-flex w-full justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:text-sm"
-                  @click="open = false"
+                  @click="open = false; $router.push('/')"
+                  href="/"
                 >
                   Go back to dashboard
                 </button>

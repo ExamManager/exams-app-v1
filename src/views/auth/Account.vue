@@ -4,6 +4,7 @@ import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuIt
 import { MagnifyingGlassIcon, QuestionMarkCircleIcon } from "@heroicons/vue/20/solid";
 import { Bars3Icon, BellIcon, CogIcon, CreditCardIcon, KeyIcon, SquaresPlusIcon, UserCircleIcon, XMarkIcon } from "@heroicons/vue/24/outline";
 import Notification from "../../components/Notifications.vue";
+import ComponentOverlay from "../completeAccount.vue";
 
 const users = {
   name: "Lisa Marie",
@@ -95,7 +96,8 @@ export default {
     KeyIcon,
     SquaresPlusIcon,
     UserCircleIcon,
-    XMarkIcon
+    XMarkIcon,
+    ComponentOverlay
   },
   data() {
     return {
@@ -119,6 +121,7 @@ export default {
       email: "",
       password: "",
       editingAccount: false,
+      setupCompleted: sessionStorage.getItem("setupComplete"),
     };
   },
   mounted() {
@@ -195,7 +198,10 @@ export default {
 };
 </script>
 <template>
+  <ComponentOverlay />
   <!-- Account Page -->
+
+
   <transition enter-active-class="transform ease-in-out duration-500 transition" enter-from-class="opacity-0 "
     enter-to-class=" opacity-100">
     <Menu v-if="loading === false" as="div" class="fixed right-4 top-4 ml-4 flex-shrink-0">
@@ -227,6 +233,7 @@ export default {
   </transition>
   <div class="h-full pt-20"></div>        
   <main class="mx-auto max-w-7xl pb-10 lg:py-12 lg:px-8">
+    
     <div class="lg:grid lg:grid-cols-12 lg:gap-x-5">
       <aside class="py-6 px-2 sm:px-6 lg:col-span-3 lg:py-0 lg:px-0">
         <nav class="space-y-1">
@@ -255,6 +262,8 @@ export default {
       </aside>
 
       <!-- Profile -->
+      
+      
       <div class="space-y-6 sm:px-6 lg:col-span-9 lg:px-0" v-if="subNavigation[0].current">
           <div class="shadow sm:overflow-hidden sm:rounded-md">
             <div class="space-y-6 bg-white py-6 px-4 sm:p-6">

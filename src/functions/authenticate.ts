@@ -75,6 +75,7 @@ export default {
       localStorage.setItem('profilepic', response.data[0].avatar_url);
       localStorage.setItem('email', response.data[0].email);
       localStorage.setItem('provider', response.data[0].provider);
+      sessionStorage.setItem('setupComplete', response.data[0].setup_complete);
       if (response.data[0].username === null) {
         this.setUserName(response.data[0].id);
       }

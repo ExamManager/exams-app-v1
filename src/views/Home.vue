@@ -1,8 +1,6 @@
 <script lang="ts">
 import { ChevronRightIcon, StarIcon } from "@heroicons/vue/20/solid";
 
-import ComponentOverlay from "./completeAccount.vue";
-
 import {
   BoltIcon,
   ChatBubbleBottomCenterTextIcon,
@@ -32,7 +30,6 @@ export default {
     EnvelopeIcon,
     CalendarDaysIcon,
     ScaleIcon,
-    ComponentOverlay,
   },
   created() {
     window.addEventListener("scroll", this.handleScroll);
@@ -227,7 +224,6 @@ export default {
 </script>
 
 <template>
-  <ComponentOverlay />
   <div>
     <div class="bg-white pb-8 sm:pb-12 lg:pb-12 -mt-8 z-0">
       <div class="overflow-hidden pt-8 sm:pt-12 lg:relative lg:py-48">
