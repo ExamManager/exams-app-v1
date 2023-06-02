@@ -21,10 +21,13 @@ export default (await import("vue")).defineComponent({
   },
   data() {
     return {
-      open: ref(true),
+      open: sessionStorage.getItem('setupComplete') == 'true' ? false : true,
+      //setupComplete: sessionStorage.getItem('setupComplete')
     };
   },
   mounted() {
+    //sessionStorage.getItem('setupComplete') == 'true' ? this.open = false : this.open = true;
+    //this.open = !(sessionStorage.getItem('setupComplete'))
     sessionStorage.setItem('setupPopUpVis', String(this.open))
   },
   watch: {
@@ -87,11 +90,11 @@ export default (await import("vue")).defineComponent({
                 </div>
                 <div class="mt-3 text-center sm:mt-5">
                   <DialogTitle as="h3" class="text-lg font-medium leading-6 text-gray-900"
-                    >Testing Sry for iniconvenience</DialogTitle
+                    >You have not finished setting up your account!</DialogTitle
                   >
                   <div class="mt-2">
                     <p class="text-sm text-gray-500">
-                      This popup will eventually be what forces you to complete your account if you haven't already, but I'm testing on herre. Either comment it out wherever it shows up or just click out of it when it pops up. :)
+                      ...
                     </p>
                   </div>
                 </div>
@@ -103,7 +106,7 @@ export default (await import("vue")).defineComponent({
                   @click="open = false; $router.push('/')"
                   href="/"
                 >
-                  Go back to dashboard
+                  Go back to homepage
                 </button>
               </div>
             </DialogPanel>

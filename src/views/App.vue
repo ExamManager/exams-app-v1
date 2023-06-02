@@ -40,7 +40,7 @@ export default {
   data() {
     return {
       setupPopUp: sessionStorage.getItem('setupComplete'),
-      showingPopUp: sessionStorage.getItem('setupPopUpVis'),
+      showingPopUp: sessionStorage.getItem('setupComplete') == 'true' ? false : true ,
       show: false, // changes wheter the banner is shown or not
       show2: false, // changes navbar: false = minimal, true = full
       open1: false,
