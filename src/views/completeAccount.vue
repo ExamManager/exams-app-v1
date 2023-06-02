@@ -83,31 +83,48 @@ export default (await import("vue")).defineComponent({
               class="relative transform overflow-hidden rounded-lg bg-white px-4 pt-5 pb-4 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-sm sm:p-6"
             >
               <div>
-                <div
+                <!-- <div
                   class="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-green-100"
                 >
                   <CheckIcon class="h-6 w-6 text-green-600" aria-hidden="true" />
-                </div>
+                </div> -->
                 <div class="mt-3 text-center sm:mt-5">
                   <DialogTitle as="h3" class="text-lg font-medium leading-6 text-gray-900"
                     >You have not finished setting up your account!</DialogTitle
                   >
                   <div class="mt-2">
                     <p class="text-sm text-gray-500">
-                      ...
+                      The contents of this page are not available (or do not exist) until you finish setting up your account. Please click the button below to finish setting it up, then return to this page to view its contents. If you wish to delete your account, either finish setting it up then delete it or contact us and we will try do it for you.
                     </p>
                   </div>
                 </div>
               </div>
               <div class="mt-5 sm:mt-6">
-                <button
+                <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                  <button
+                    type="button"
+                    class="inline-flex items-center w-full justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:text-sm"
+                    @click="open = false; $router.push('/accountSetup')"
+                  >
+                    Finish setup
+                  </button>
+                  <button
+                    type="button"
+                    class="inline-flex items-center w-full justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:text-sm"
+                    @click="open = false; $router.push('/')"
+                  >
+                    Go back to homepage
+                  </button>
+                </div>
+
+                <!-- <button
                   type="button"
                   class="inline-flex w-full justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:text-sm"
                   @click="open = false; $router.push('/')"
                   href="/"
                 >
                   Go back to homepage
-                </button>
+                </button> -->
               </div>
             </DialogPanel>
           </TransitionChild>
@@ -116,3 +133,5 @@ export default (await import("vue")).defineComponent({
     </Dialog>
   </TransitionRoot>
 </template>
+
+
