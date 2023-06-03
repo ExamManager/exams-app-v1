@@ -111,6 +111,40 @@ export default {
         .eq('id', userid)
       
       console.log('response', response)
+    },
+    async setUserMetadata(userid: string, username: string, entSize: string, firstName: string, lastName: string, email: string, country: string, city: string, state: string, zip: string, address1: string, address2?: string, address3?: string, profilePic?: File) {
+      console.log(userid)
+      if (profilePic) {
+        const profilePicResponse = await supabase.storage
+        .from('avatars')
+        .upload(`profile-pictures/${userid}.png`, profilePic)
+      }
+
+      if (!address2) address2 = '';
+      if (!address3) address3 = '';
+
+      const response = await supabase
+        .from('profiles')
+        .insert({
+          fullData: {
+            username: username,
+            entSize: entSize,
+            firstName: firstName,
+            lastName: lastName,
+            email: email,
+            address: {
+              country: country,
+              city: city,
+              state: state,
+              zip: zip,
+              address1: address1,
+              address2: address2,
+              address3: address3
+            }
+          }
+        })
+        .eq('id', userid)
+      console.log('response', response)
     }
   }
 }
