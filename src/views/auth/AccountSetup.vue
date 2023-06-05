@@ -1,10 +1,14 @@
 <script lang="ts">
 import { stringify } from "querystring"
-
-
-
+//import {FormKit} from '@formkit/vue'
+import authenticate from "../../functions/authenticate"
 
 export default (await import("vue")).defineComponent({
+  name: "completeAccountSetup",
+  mixins: [authenticate],
+  components: {
+    // FormKit,
+  },
   data() {
     return {
       sizes: [
@@ -39,21 +43,17 @@ export default (await import("vue")).defineComponent({
     }
   },
   methods: {
-    chooseImage () {
-      this.$refs.fileInput.click()
-    },
+    handleFiles(event) {
+      // const file = e
+      // const filePath = document.getElementById("file-upload").files.item(0).getAsDataURL()
+      // this.imageData = filePath
+      // console.log(filePath)
 
-    onSelectFile () {
-      const input = this.$refs.fileInput
-      const files = input.files
-      if (files && files[0]) {
-        const reader = new FileReader
-        reader.onload = e => {
-          this.imageData = e.target.result
-        }
-        reader.readAsDataURL(files[0])
-        this.$emit('input', files[0])
-      }
+      // document.getElementById("file-upload").value
+      //document.getElementById("image").src = e.value
+
+      const image: any = document.getElementById("image")
+      image.src = URL.createObjectURL(event.target.files[0])
     }
   },
   mounted() {
@@ -88,34 +88,17 @@ export default (await import("vue")).defineComponent({
             </span>
             <label for="file-upload" class="ml-5 rounded-md border border-gray-300 bg-white py-2 px-3 text-sm font-medium leading-4 text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
               <span>Set Photo</span>
-              <input id="file-upload" name="file-upload" type="file" class="sr-only"/>
+              <input id="file-upload" name="file-upload" type="file" class="sr-only" @onchange="handleFiles($event)"/>
             </label>
           </div>
           <p class="text-xs text-gray-500">PNG or JPG, up to 10MB</p>
         </div>
-
-
-        <div id="app">
-          <image-input v-model="imageData"/>
+        <div>
+          <img id="image"/>
         </div>
-        <div
-          class="image-input"
-          :style="{ 'background-image': `url(${imageData})` }"
-          @click="chooseImage"
-        >
-          <span
-            v-if="!imageData"
-            class="placeholder"
-          >
-            Choose an Image
-          </span>
-          <input
-            class="file-input"
-            ref="fileInput"
-            type="file"
-            @input="onSelectFile"
-          >
-        </div>
+        <!-- <div class="width-100 mt-12">
+          <FormKit type="text" name="text1" id="text1"/>
+        </div> -->
 
         <div class="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
           <div class="sm:col-span-4">

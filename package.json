@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@formkit/vue": "^0.17.2",
     "@headlessui/vue": "^1.7.13",
     "@heroicons/vue": "^2.0.17",
     "@ssibrahimbas/v-mask": "^1.0.0",
