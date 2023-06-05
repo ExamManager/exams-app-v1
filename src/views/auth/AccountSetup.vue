@@ -168,7 +168,7 @@ export default (await import("vue")).defineComponent({
                 <RadioGroupOption as="template" v-for="mailingList in schoolSize" :key="mailingList.id"
                   :value="mailingList" v-slot="{ checked, active }">
                   <div
-                    :class="[checked ? 'border-transparent' : 'border-gray-300', active ? 'border-indigo-500 ring-2 ring-indigo-500' : '', 'relative flex cursor-pointer rounded-lg border bg-white p-4 shadow-sm focus:outline-none']">
+                    :class="[checked ? 'border-transparent' : 'border-gray-300', active ? 'border-orange-500 ring-2 ring-orange-500' : '', 'relative flex cursor-pointer rounded-lg border bg-white p-4 shadow-sm focus:outline-none']">
                     <span class="flex flex-1">
                       <span class="flex flex-col">
                         <RadioGroupLabel as="span" class="block text-sm font-medium text-gray-900">{{ mailingList.title }}
@@ -179,10 +179,10 @@ export default (await import("vue")).defineComponent({
                           mailingList.users }}</RadioGroupDescription>
                       </span>
                     </span>
-                    <CheckCircleIcon :class="[!checked ? 'invisible' : '', 'h-5 w-5 text-indigo-600']"
+                    <CheckCircleIcon :class="[!checked ? 'invisible' : '', 'h-5 w-5 text-orange-600']"
                       aria-hidden="true" />
                     <span
-                      :class="[active ? 'border' : 'border-2', checked ? 'border-indigo-500' : 'border-transparent', 'pointer-events-none absolute -inset-px rounded-lg']"
+                      :class="[active ? 'border' : 'border-2', checked ? 'border-orange-500' : 'border-transparent', 'pointer-events-none absolute -inset-px rounded-lg']"
                       aria-hidden="true" />
                   </div>
                 </RadioGroupOption>
