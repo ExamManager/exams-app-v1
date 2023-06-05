@@ -4,7 +4,7 @@ import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuIt
 import { MagnifyingGlassIcon, QuestionMarkCircleIcon } from "@heroicons/vue/20/solid";
 import { Bars3Icon, BellIcon, CogIcon, CreditCardIcon, KeyIcon, SquaresPlusIcon, UserCircleIcon, XMarkIcon } from "@heroicons/vue/24/outline";
 import Notification from "../../components/Notifications.vue";
-import ComponentOverlay from "../completeAccount.vue";
+import ComponentOverlay from "../../components/completeAccount.vue";
 
 const users = {
   name: "Lisa Marie",
@@ -198,12 +198,12 @@ export default {
 };
 </script>
 <template>
-  <ComponentOverlay />
+  <ComponentOverlay class="z-0"/>
   <!-- Account Page -->
 
 
   <transition enter-active-class="transform ease-in-out duration-500 transition" enter-from-class="opacity-0 "
-    enter-to-class=" opacity-100">
+    enter-to-class=" opacity-100" class="z-9">
     <Menu v-if="loading === false" as="div" class="fixed right-4 top-4 ml-4 flex-shrink-0">
       <div>
         <MenuButton class="flex p-2.5 rounded-lg shadow bg-white">
@@ -221,7 +221,7 @@ export default {
         enter-to-class="transform opacity-100 scale-100" leave-active-class="transition ease-in duration-75"
         leave-from-class="transform opacity-100 scale-100" leave-to-class="transform opacity-0 scale-95">
         <MenuItems
-          class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+          class="absolute right-0 z-0 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
           <MenuItem v-for="item in userNavigation" :key="item.name" v-slot="{ active }">
           <a @click="item.name === 'Home' ? this.$router.push('/') : signout(); this.$router.push('/')"
             :class="[active ? 'bg-gray-100' : '', 'block py-2 px-4 text-sm text-gray-700']">{{ item.name

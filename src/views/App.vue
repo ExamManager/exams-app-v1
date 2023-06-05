@@ -45,7 +45,7 @@ export default {
       show2: false, // changes navbar: false = minimal, true = full
       open1: false,
       open2: false,
-      show3: false, // if on page studentview
+      show3: false, // if on page studentview (the fullscreen BUTTON)
       loggedin: false,
       loading: true,
       fullname: "",
@@ -120,28 +120,23 @@ export default {
       sessionStorage.setItem("show", String(this.show));
     },
     checkvisibility() {
-      if (window.location.pathname == "/") {
-        this.show = false;
-        this.show2 = true;
-      } else if (window.location.pathname == "/payment") {
-        this.show = false;
-        this.show2 = true;
-      } else if (window.location.pathname == "/pricing") {
-        this.show = true;
-        this.show2 = true;
-      } else if (window.location.pathname == "/account") {
-        this.show = false;
-        this.show2 = false;
-      } else {
-        this.show2 = false;
-        var show = sessionStorage.getItem("show");
-        if (show === "false") {
-          this.show = false;
-        } else {
-          this.show = true;
-        }
+      if (window.location.pathname == "/") { // on home page
+        this.show = false; // hides banner
+        this.show2 = true; // shows full navbar
+      } else if (window.location.pathname == "/payment") { // on payment page 
+        this.show = false; // hides banner
+        this.show2 = true; // shows full navbar
+      } else if (window.location.pathname == "/pricing") { // on pricing page
+        this.show = true; // shows banner 
+        this.show2 = true; // shows full navbar
+      } else if (window.location.pathname == "/account") { // on account page
+        this.show = false; // hides banner
+        this.show2 = false; // shows minimal navbar
+      } else { // default
+        this.show2 = false; // shows minimal navbar
+        this.show = false; // hides banner
       }
-      if (window.location.pathname == "/premium/studentview") {
+      if (window.location.pathname == "/premium/studentview") { // Shows enter fullscreen button on studentview page
         this.show3 = true;
         this.show = false;
       } else {
@@ -459,7 +454,7 @@ export default {
     enter-to-class=" opacity-100"
   >
     <nav
-      v-if="this.show2 === false && !showingPopUp"
+      v-if="this.show2 === false"
       class="flex fixed pt-4 pl-4 z-30"
       aria-label="Breadcrumb"
     >

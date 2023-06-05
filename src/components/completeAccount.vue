@@ -1,5 +1,4 @@
 <script lang="ts">
-import { ref } from "vue";
 import {
   Dialog,
   DialogPanel,
@@ -7,7 +6,7 @@ import {
   TransitionChild,
   TransitionRoot,
 } from "@headlessui/vue";
-import { CheckIcon } from "@heroicons/vue/24/outline";
+import { CheckIcon, HomeIcon, AdjustmentsHorizontalIcon } from "@heroicons/vue/24/outline";
 
 export default (await import("vue")).defineComponent({
   name: "CompleteAccount",
@@ -18,6 +17,8 @@ export default (await import("vue")).defineComponent({
     TransitionChild,
     TransitionRoot,
     CheckIcon,
+    HomeIcon,
+    AdjustmentsHorizontalIcon,
   },
   data() {
     return {
@@ -52,8 +53,8 @@ export default (await import("vue")).defineComponent({
 
 <!-- This example requires Tailwind CSS v2.0+ -->
 <template>
-  <TransitionRoot as="template"  :show="open">
-    <Dialog as="div" class="relative z-10" @close="handleClickOut()">
+  <TransitionRoot as="template" :show="open">
+    <Dialog as="div" class="relative z-50" @close="handleClickOut()">
       <TransitionChild
         as="template"
         enter="ease-out duration-300"
@@ -90,11 +91,12 @@ export default (await import("vue")).defineComponent({
                 </div> -->
                 <div class="mt-3 text-center sm:mt-5">
                   <DialogTitle as="h3" class="text-lg font-medium leading-6 text-gray-900"
-                    >You have not finished setting up your account!</DialogTitle
+                    >Account Setup Required</DialogTitle
                   >
                   <div class="mt-2">
                     <p class="text-sm text-gray-500">
-                      The contents of this page are not available (or do not exist) until you finish setting up your account. Please click the button below to finish setting it up, then return to this page to view its contents. If you wish to delete your account, either finish setting it up then delete it or contact us and we will try do it for you.
+                      You have not completed the account setup process. Please
+                      complete the setup process before continuing.
                     </p>
                   </div>
                 </div>
@@ -103,23 +105,25 @@ export default (await import("vue")).defineComponent({
                 <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
                   <button
                     type="button"
-                    class="inline-flex items-center w-full justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:text-sm"
-                    @click="open = false; $router.push('/accountSetup')"
+                    class="inline-flex items-center w-full justify-center rounded-md border border-transparent bg-orange-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 sm:text-sm"
+                    @click="open = false; $router.push('/')"
                   >
-                    Finish setup
+                    <HomeIcon class="-ml-1 mr-2 h-5 w-5" aria-hidden="true" />
+                    Home
                   </button>
                   <button
                     type="button"
-                    class="inline-flex items-center w-full justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:text-sm"
-                    @click="open = false; $router.push('/')"
+                    class="inline-flex items-center w-full justify-center rounded-md border border-transparent bg-orange-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 sm:text-sm"
+                    @click="open = false; $router.push('/setup')"
                   >
-                    Go back to homepage
+                    <AdjustmentsHorizontalIcon class="-ml-1 mr-2 h-5 w-5" aria-hidden="true" />
+                    Finish Setup
                   </button>
                 </div>
 
                 <!-- <button
                   type="button"
-                  class="inline-flex w-full justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:text-sm"
+                  class="inline-flex w-full justify-center rounded-md border border-transparent bg-orange-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 sm:text-sm"
                   @click="open = false; $router.push('/')"
                   href="/"
                 >

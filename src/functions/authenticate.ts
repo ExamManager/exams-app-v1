@@ -145,6 +145,15 @@ export default {
         })
         .eq('id', userid)
       console.log('response', response)
+    },
+    async testingStorageIMG(file: File) {
+      console.log(file);
+      const { response, error } = await supabase
+        .storage
+        .from('avatars')
+        .upload('funnytest.png', file)
+      
+      console.log(response, error)
     }
   }
 }
