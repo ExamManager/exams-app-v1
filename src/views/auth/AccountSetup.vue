@@ -2,6 +2,7 @@
 import { stringify } from "querystring"
 //import {FormKit} from '@formkit/vue'
 import authenticate from "../../functions/authenticate"
+import Jimp from 'jimp'
 
 export default (await import("vue")).defineComponent({
   name: "completeAccountSetup",
@@ -44,11 +45,11 @@ export default (await import("vue")).defineComponent({
     }
   },
   methods: {
-    getBase64(file) {
+    getBase64(file: any) {
       var reader = new FileReader();
       reader.readAsDataURL(file);
       reader.onload = function () {
-        console.log(reader.result);
+        //console.log(reader.result);
         this.base64img = reader.result
         
         const image: any = document.getElementById("b64img")
@@ -58,12 +59,31 @@ export default (await import("vue")).defineComponent({
         console.log('Error: ', error);
       };
     },
-    handleFiles(event) {
+    handleFiles(event: Event) {
       const image: any = document.getElementById("image")
       image.src = URL.createObjectURL(event.target.files[0])
       this.getBase64(event.target.files[0])
+
+      this.JPGtoPNG(event.target.files[0])
     },
-    
+    JPGtoPNG(img) {
+      var canvas = document.createElement('canvas');
+      canvas.width = img.width;
+      canvas.height = img.height;
+
+      var ctx = canvas.getContext('2d');
+
+      var image = new Image()
+
+      image.onload = function() {
+        ctx.drawImage(image, 0, 0);
+      };
+      image.src()
+
+      var pngDataUrl = canvas.toDataURL('image/png');
+      
+      return(pngDataUrl)
+    },
   },
   mounted() {
     const inputElement = document.getElementById("file-upload");
