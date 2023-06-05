@@ -40,21 +40,30 @@ export default (await import("vue")).defineComponent({
       ],
       img: null,
       imageData: '',
+      base64img: '',
     }
   },
   methods: {
+    getBase64(file) {
+      var reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = function () {
+        console.log(reader.result);
+        this.base64img = reader.result
+        
+        const image: any = document.getElementById("b64img")
+        image.src = `${reader.result}`
+      };
+      reader.onerror = function (error) {
+        console.log('Error: ', error);
+      };
+    },
     handleFiles(event) {
-      // const file = e
-      // const filePath = document.getElementById("file-upload").files.item(0).getAsDataURL()
-      // this.imageData = filePath
-      // console.log(filePath)
-
-      // document.getElementById("file-upload").value
-      //document.getElementById("image").src = e.value
-
       const image: any = document.getElementById("image")
       image.src = URL.createObjectURL(event.target.files[0])
-    }
+      this.getBase64(event.target.files[0])
+    },
+    
   },
   mounted() {
     const inputElement = document.getElementById("file-upload");
@@ -96,6 +105,10 @@ export default (await import("vue")).defineComponent({
         <div>
           <img id="image"/>
         </div>
+
+        <p>hi there</p>
+
+        <img id="b64img" />
         <!-- <div class="width-100 mt-12">
           <FormKit type="text" name="text1" id="text1"/>
         </div> -->
