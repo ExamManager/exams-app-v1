@@ -41,48 +41,26 @@ export default (await import("vue")).defineComponent({
       ],
       img: null,
       imageData: '',
-      base64img: '',
+      base64img: 'hi',
     }
   },
   methods: {
     getBase64(file: any) {
       var reader = new FileReader();
       reader.readAsDataURL(file);
-      reader.onload = function () {
-        //console.log(reader.result);
-        this.base64img = reader.result
-        
-        const image: any = document.getElementById("b64img")
-        image.src = `${reader.result}`
-      };
+      reader.onload = () => sessionStorage.setItem('funny', reader.result)
       reader.onerror = function (error) {
         console.log('Error: ', error);
+        
       };
     },
     handleFiles(event: Event) {
       const image: any = document.getElementById("image")
-      image.src = URL.createObjectURL(event.target.files[0])
-      this.getBase64(event.target.files[0])
+      const imgObject = event.target.files[0]
+      image.src = URL.createObjectURL(imgObject)
 
-      this.JPGtoPNG(event.target.files[0])
-    },
-    JPGtoPNG(img) {
-      var canvas = document.createElement('canvas');
-      canvas.width = img.width;
-      canvas.height = img.height;
-
-      var ctx = canvas.getContext('2d');
-
-      var image = new Image()
-
-      image.onload = function() {
-        ctx.drawImage(image, 0, 0);
-      };
-      image.src()
-
-      var pngDataUrl = canvas.toDataURL('image/png');
-      
-      return(pngDataUrl)
+      console.log(imgObject)
+      console.log('url = ', )
     },
   },
   mounted() {
@@ -125,13 +103,6 @@ export default (await import("vue")).defineComponent({
         <div>
           <img id="image"/>
         </div>
-
-        <p>hi there</p>
-
-        <img id="b64img" />
-        <!-- <div class="width-100 mt-12">
-          <FormKit type="text" name="text1" id="text1"/>
-        </div> -->
 
         <div class="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
           <div class="sm:col-span-4">
