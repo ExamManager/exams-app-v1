@@ -1,4 +1,6 @@
 <script lang="ts">
+import { stringify } from "querystring"
+
 
 
 
@@ -31,9 +33,37 @@ export default (await import("vue")).defineComponent({
           name: "Contact Us :)",
           description: "More than 500 students"
         }
-      ]
+      ],
+      img: null,
+      imageData: '',
     }
-  }
+  },
+  methods: {
+    chooseImage () {
+      this.$refs.fileInput.click()
+    },
+
+    onSelectFile () {
+      const input = this.$refs.fileInput
+      const files = input.files
+      if (files && files[0]) {
+        const reader = new FileReader
+        reader.onload = e => {
+          this.imageData = e.target.result
+        }
+        reader.readAsDataURL(files[0])
+        this.$emit('input', files[0])
+      }
+    }
+  },
+  mounted() {
+    const inputElement = document.getElementById("file-upload");
+    inputElement?.addEventListener("change", e => this.handleFiles(e));
+  },
+  unmounted() {
+    document.getElementById("file-upload")?.removeEventListener("change", this.handleFiles)
+  },
+  
 })
   
 
@@ -54,9 +84,37 @@ export default (await import("vue")).defineComponent({
               <svg class="h-full w-full text-gray-300" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" />
               </svg>
+              <img src="" />
             </span>
-            <button type="button" class="ml-5 rounded-md border border-gray-300 bg-white py-2 px-3 text-sm font-medium leading-4 text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">Change</button>
+            <label for="file-upload" class="ml-5 rounded-md border border-gray-300 bg-white py-2 px-3 text-sm font-medium leading-4 text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+              <span>Set Photo</span>
+              <input id="file-upload" name="file-upload" type="file" class="sr-only"/>
+            </label>
           </div>
+          <p class="text-xs text-gray-500">PNG or JPG, up to 10MB</p>
+        </div>
+
+
+        <div id="app">
+          <image-input v-model="imageData"/>
+        </div>
+        <div
+          class="image-input"
+          :style="{ 'background-image': `url(${imageData})` }"
+          @click="chooseImage"
+        >
+          <span
+            v-if="!imageData"
+            class="placeholder"
+          >
+            Choose an Image
+          </span>
+          <input
+            class="file-input"
+            ref="fileInput"
+            type="file"
+            @input="onSelectFile"
+          >
         </div>
 
         <div class="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
@@ -67,26 +125,26 @@ export default (await import("vue")).defineComponent({
               <input type="text" name="username" id="username" autocomplete="username" class="block w-full min-w-0 flex-1 rounded-none rounded-r-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" />
             </div>
           </div>
+        </div>
 
-          <div class="sm:col-span-6">
-            <label for="about" class="block text-sm font-medium text-gray-700">School Size</label>
-            <p class="text-sm text-gray-500 mb-2">How big is your school?</p>
-            <div class="mt-1">
-              <fieldset>
-                <legend class="sr-only">Plan</legend>
-                <div class="space-y-5">
-                  <div v-for="size in sizes" :key="size.id" class="relative flex items-start">
-                    <div class="flex h-5 items-center">
-                      <input :id="size.id" :aria-describedby="`${size.id}-description`" name="plan" type="radio" :checked="size.id === 'small'" class="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-500" />
-                    </div>
-                    <div class="ml-3 text-sm">
-                      <label :for="size.id" class="font-medium text-gray-700">{{ size.name }}</label>
-                      <p :id="`${size.id}-description`" class="text-gray-500">{{ size.description }}</p>
-                    </div>
+        <div class="sm:col-span-6 mt-8">
+          <label for="about" class="block text-sm font-medium text-gray-700">School Size</label>
+          <p class="text-sm text-gray-500 mb-2">How big is your school?</p>
+          <div class="mt-1">
+            <fieldset>
+              <legend class="sr-only">Plan</legend>
+              <div class="space-y-5">
+                <div v-for="size in sizes" :key="size.id" class="relative flex items-start">
+                  <div class="flex h-5 items-center">
+                    <input :id="size.id" :aria-describedby="`${size.id}-description`" name="plan" type="radio" :checked="size.id === 'small'" class="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-500" />
+                  </div>
+                  <div class="ml-3 text-sm">
+                    <label :for="size.id" class="font-medium text-gray-700">{{ size.name }}</label>
+                    <p :id="`${size.id}-description`" class="text-gray-500">{{ size.description }}</p>
                   </div>
                 </div>
-              </fieldset>
-            </div>
+              </div>
+            </fieldset>
           </div>
         </div>
       </div>
