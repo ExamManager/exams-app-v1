@@ -138,6 +138,16 @@ export default {
       else {this.updateAccount(document.getElementById('zip').value, document.getElementById('country').value, document.getElementById('address-1').value, document.getElementById('address-2').value, document.getElementById('full-name').value);}
     });
   },
+  unmounted() {
+    window.addEventListener("submit", (e) => {
+      e.preventDefault();
+      if (this.editingAccount) console.log("submit");
+      this.editingAccount = !this.editingAccount;
+      console.log(document.getElementById('address-2').value)
+      if (this.userMetadata.isEnt) {this.updateAccount(document.getElementById('zip').value, document.getElementById('country').value, document.getElementById('address-1').value, document.getElementById('address-2').value, document.getElementById('school-name').value);}
+      else {this.updateAccount(document.getElementById('zip').value, document.getElementById('country').value, document.getElementById('address-1').value, document.getElementById('address-2').value, document.getElementById('full-name').value);}
+    });
+  },
   created() {
     console.log('created')
     this.getLoggedIn();
@@ -350,7 +360,7 @@ export default {
                   </h2>
                   <p class="mt-1 text-sm text-gray-500">
                     This is the current information for your school. If anything
-                    here is wrong, please contact us to change it. {{ this.user.id }}
+                    here is wrong, please contact us to change it.
                   </p>
                 </div>
 

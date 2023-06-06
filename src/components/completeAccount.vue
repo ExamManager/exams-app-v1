@@ -6,7 +6,7 @@ import {
   TransitionChild,
   TransitionRoot,
 } from "@headlessui/vue";
-import { CheckIcon, HomeIcon, AdjustmentsHorizontalIcon } from "@heroicons/vue/24/outline";
+import { CheckIcon, HomeIcon, AdjustmentsHorizontalIcon, CogIcon } from "@heroicons/vue/24/outline";
 
 export default (await import("vue")).defineComponent({
   name: "CompleteAccount",
@@ -19,6 +19,7 @@ export default (await import("vue")).defineComponent({
     CheckIcon,
     HomeIcon,
     AdjustmentsHorizontalIcon,
+    CogIcon,
   },
   data() {
     return {
@@ -84,11 +85,11 @@ export default (await import("vue")).defineComponent({
               class="relative transform overflow-hidden rounded-lg bg-white px-4 pt-5 pb-4 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-sm sm:p-6"
             >
               <div>
-                <!-- <div
-                  class="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-green-100"
+                <div
+                  class="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-orange-100"
                 >
-                  <CheckIcon class="h-6 w-6 text-green-600" aria-hidden="true" />
-                </div> -->
+                  <CogIcon class="h-6 w-6 text-orange-600" aria-hidden="true" />
+                </div>
                 <div class="mt-3 text-center sm:mt-5">
                   <DialogTitle as="h3" class="text-lg font-medium leading-6 text-gray-900"
                     >Account Setup Required</DialogTitle
@@ -114,21 +115,12 @@ export default (await import("vue")).defineComponent({
                   <button
                     type="button"
                     class="inline-flex items-center w-full justify-center rounded-md border border-transparent bg-orange-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 sm:text-sm"
-                    @click="open = false; $router.push('/setup')"
+                    @click="$router.push('/setup'), open = false"
                   >
                     <AdjustmentsHorizontalIcon class="-ml-1 mr-2 h-5 w-5" aria-hidden="true" />
                     Finish Setup
                   </button>
                 </div>
-
-                <!-- <button
-                  type="button"
-                  class="inline-flex w-full justify-center rounded-md border border-transparent bg-orange-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 sm:text-sm"
-                  @click="open = false; $router.push('/')"
-                  href="/"
-                >
-                  Go back to homepage
-                </button> -->
               </div>
             </DialogPanel>
           </TransitionChild>
