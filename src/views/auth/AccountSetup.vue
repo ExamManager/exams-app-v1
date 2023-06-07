@@ -71,6 +71,10 @@ export default (await import("vue")).defineComponent({
       },
       img: null,
       userid: "",
+      currentImg: "",
+      imgExists: false,
+      changing: {exists: false},
+      justChanged: true
     };
   },
   methods: {
@@ -83,31 +87,54 @@ export default (await import("vue")).defineComponent({
       };
     },
     handleFiles(event: Event) {      
-    
-      const placeholder = document.getElementById("profilePlaceholder")
 
+      console.log('handleFiles')
+    
       const imgObject = event.target?.files[0];
       this.img = imgObject;
 
-      const image = document.createElement("img");
-      image.src = URL.createObjectURL(imgObject);
-      image.setAttribute("class", "h-full w-full object-cover");
-      image.id = "profilePreview";
-      
-      const parent = document.getElementById("profilePreviewDiv")
+      const placeholder = document.getElementById("profilePlaceholder")
 
-      parent?.insertBefore(image, placeholder)
+      if (this.imgExists.exists) {
+        return ""
+      }
+      else {
+        const image = document.createElement("img");
+          image.src = URL.createObjectURL(imgObject);
+          image.setAttribute("class", "h-full w-full object-cover");
+          //image.id = "profilePreview";
+      
+        const parent = document.getElementById("profilePreviewDiv")
+        
+        parent?.insertBefore(image, placeholder)
+        this.imgExists = {exists: true}
+       }
     },
     removeImg(){
-      this.img = null
-      
+      // if (this.img != null) {
+       //  t//his.img = null
+       //  d//ocument.getElementById("img")?.setAttribute("class", "h-full w-full object-cover")
+      //}
     },
     submit() {
-
       console.log(this.currentState);
       this.userid = localStorage.getItem('user');
       this.setUserMetadata(this.userid, this.currentState, this.img);
     },
+    getImg() {
+      const img = sessionStorage.getItem("imgTmp");
+      if (img) return img;
+      else return false;
+    },
+    getImgSrc() {
+      if (this.img != null) return URL.createObjectURL(this.img)
+      else return ""
+    },
+    getImgExists() {
+      const imgExists = sessionStorage.getItem('imgExists')
+      if (imgExists != 'true') return false
+      else return true
+    }
   },
   watch: {
     selectedschoolSize: {
@@ -116,23 +143,45 @@ export default (await import("vue")).defineComponent({
       },
       deep: true,
     },
+    imgExists: {
+      handler: function () {
+        if (this.justChanged) {this.justChanged = false; return true}
+
+        else {
+          console.log("changing");
+          console.log(this.currentImg)
+
+          const elem = document.getElementById("bigPooPoo");
+          elem.innerHTML = "big funny"
+
+          document.getElementById("img").src = URL.createObjectURL(this.imgExists.img);
+        }
+        
+      },
+      deep: true
+    }
   },
   mounted() {
-    const inputElement = document.getElementById("file-upload");
-    inputElement?.addEventListener("change", (e) => this.handleFiles(e));
+    //const inputElement = document.getElementById("file-upload");
+    //inputElement?.addEventListener("change", (e) => this.handleFiles(e));
+
+    document.getElementById("file-upload")
+      ?.addEventListener("change", (e) => {
+        console.log('stuff happening')
+        document.getElementById("profilePreview")?.setAttribute('src', URL.createObjectURL(e.target.files[0]));
+        sessionStorage.setItem('imageExists', 'true')
+      })
 
     document.addEventListener("submit", (e) => {
       e.preventDefault();
       this.submit();
     });
 
-    this.userid = localStorage.getItem('userid') || '';
+    this.userid = sessionStorage.getItem('userid') || '';
 
   },
   unmounted() {
-    document
-      .getElementById("file-upload")
-      ?.removeEventListener("change", this.handleFiles);
+    //document.getElementById("file-upload")?.removeEventListener("change", this.handleFiles);
     document.removeEventListener("submit", (e) => {
       e.preventDefault();
       this.submit();
@@ -146,7 +195,7 @@ export default (await import("vue")).defineComponent({
         <div>
           <div>
           <h3 class="text-lg font-medium leading-6 text-gray-900">Profile</h3>
-          <p class="mt-1 text-sm text-gray-500">This information will be displayed publicly so be careful what you share.</p>
+          <p id="bigPooPoo" class="mt-1 text-sm text-gray-500">This information will be displayed publicly so be careful what you share.</p>
           </div>
           <div class="lg:flex flex-none w-full">
             <div class="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 lg:grid-cols-6">
@@ -180,16 +229,16 @@ export default (await import("vue")).defineComponent({
               </div>
             </div>
             <div class="sm:col-span-6 pt-8" id="bigfatfunnyparent">
-              <label id="bigfatfunny" for="photo" class="block text-sm font-medium text-gray-700"
+              <label id="bigfatfunny" for="photo" class="block text-sm font-medium text-gray-700" @click="console.log('hi')"
                 >Profile Picture</label
               >
               <div class="mt-1 flex items-center">
                 <span id="profilePreviewDiv" class="h-12 w-12 overflow-hidden rounded-full bg-gray-100 flex justify-center">
+                  <img v-if="getImgExists() == true" id="profilePreview" class="h-full w-full object-cover" />
                   <svg
                     class="h-full w-full text-gray-300"
                     fill="currentColor"
                     viewBox="0 0 24 24"
-                    v-if="!imgPreview"
                     id="profilePlaceholder"
                   >
                     <path
@@ -209,7 +258,6 @@ export default (await import("vue")).defineComponent({
                     name="file-upload"
                     type="file"
                     class="sr-only"
-                    @onchange="handleFiles($event)"
                   />
                 </label>
                 <svg
@@ -219,7 +267,8 @@ export default (await import("vue")).defineComponent({
                   stroke-width="1.5"
                   stroke="currentColor"
                   class="w-8 h-8 p-1.5 text-gray-400 rounded-md hover:text-gray-300 hover:bg-gray-200"
-                  @click = ""
+                  v-if="img != null"
+                  @click="removeImg()"
                 >
                   <path
                     stroke-linecap="round"
@@ -786,4 +835,6 @@ export default (await import("vue")).defineComponent({
         </div>
       </div>
     </form>
+    
+  <button @click="changing = !changing">Change</button>
 </template>
