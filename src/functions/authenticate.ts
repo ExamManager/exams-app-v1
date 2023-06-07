@@ -71,6 +71,7 @@ export default {
         .from('profiles')
         .select()
         .eq('id', userid || localStorage.getItem('user'))
+      console.log(response.data)
       localStorage.setItem('fullname', response.data[0].full_name);
       localStorage.setItem('profilepic', response.data[0].avatar_url);
       localStorage.setItem('email', response.data[0].email);
@@ -112,37 +113,51 @@ export default {
       
       console.log('response', response)
     },
-    async setUserMetadata(userid: string, username: string, entSize: string, firstName: string, lastName: string, email: string, country: string, city: string, state: string, zip: string, address1: string, address2?: string, address3?: string, profilePic?: File) {
+    async setUserMetadata(
+      userid: string,
+      data: {
+        username: string,
+        entSize: string,
+        firstName: string,
+        lastName: string,
+        email: string,
+        address: {
+          country: string,
+          city: string,
+          state: string,
+          zip: string,
+          address1: string,
+          address2?: string,
+          address3?: string,
+        },
+      },
+      img?: any,
+      ) {
       console.log(userid)
-      if (profilePic) {
-        const profilePicResponse = await supabase.storage
-        .from('avatars')
-        .upload(`profile-pictures/${userid}.png`, profilePic)
-      }
+      const profilePic = img
 
-      if (!address2) address2 = '';
-      if (!address3) address3 = '';
+      if (!data.address.address2) data.address.address2 = '';
+      if (!data.address.address3) data.address.address3 = '';
+
+      const toUpload = {fullData: {data}}
+
+      if (profilePic != null) {
+        const fileName: string = `${userid}-${Math.floor(Math.random()*10000)}.png`
+
+        const { profilePicResponse } = await supabase.storage
+          .from('avatars')
+          .upload(`profile-pictures/${fileName}`, profilePic)
+
+        const imageURL = await supabase.storage
+          .from('avatars')
+          .getPublicUrl(`profile-pictures/${fileName}`)
+        console.log(imageURL) // always log the response to see if there was an error
+        toUpload.fullData.avatarURL = imageURL.data.publicUrl
+      }
 
       const response = await supabase
         .from('profiles')
-        .insert({
-          fullData: {
-            username: username,
-            entSize: entSize,
-            firstName: firstName,
-            lastName: lastName,
-            email: email,
-            address: {
-              country: country,
-              city: city,
-              state: state,
-              zip: zip,
-              address1: address1,
-              address2: address2,
-              address3: address3
-            }
-          }
-        })
+        .update(toUpload)
         .eq('id', userid)
       console.log('response', response)
     },
