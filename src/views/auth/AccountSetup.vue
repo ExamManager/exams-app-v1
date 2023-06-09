@@ -70,11 +70,8 @@ export default (await import("vue")).defineComponent({
         },
       },
       img: null,
+      defaultImgURL: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Default_pfp.svg/1200px-Default_pfp.svg.png",
       userid: "",
-      currentImg: "",
-      imgExists: false,
-      changing: {exists: false},
-      justChanged: true
     };
   },
   methods: {
@@ -87,90 +84,42 @@ export default (await import("vue")).defineComponent({
       };
     },
     handleFiles(event: Event) {      
-
       console.log('handleFiles')
-    
-      const imgObject = event.target?.files[0];
-      this.img = imgObject;
 
-      const placeholder = document.getElementById("profilePlaceholder")
-
-      if (this.imgExists.exists) {
-        return ""
-      }
-      else {
-        const image = document.createElement("img");
-          image.src = URL.createObjectURL(imgObject);
-          image.setAttribute("class", "h-full w-full object-cover");
-          //image.id = "profilePreview";
+      const imgObject = event.target.files[0]
       
-        const parent = document.getElementById("profilePreviewDiv")
-        
-        parent?.insertBefore(image, placeholder)
-        this.imgExists = {exists: true}
-       }
+      document.getElementById("image")
+       .src = URL.createObjectURL(imgObject)
+      console.log(imgObject)
+      this.img = imgObject
     },
     removeImg(){
-      // if (this.img != null) {
-       //  t//his.img = null
-       //  d//ocument.getElementById("img")?.setAttribute("class", "h-full w-full object-cover")
-      //}
+      if (this.img != null) {
+        this.img = null
+        document.getElementById("image")
+          .src = this.defaultImgURL
+        document.getElementById("file-upload")
+          .value = ""
+      }
     },
     submit() {
       console.log(this.currentState);
       this.userid = localStorage.getItem('user');
-      this.setUserMetadata(this.userid, this.currentState, this.img);
+      this.setUserData(this.userid, this.currentState, this.img);
+      this.$router.push('/')
     },
-    getImg() {
-      const img = sessionStorage.getItem("imgTmp");
-      if (img) return img;
-      else return false;
-    },
-    getImgSrc() {
-      if (this.img != null) return URL.createObjectURL(this.img)
-      else return ""
-    },
-    getImgExists() {
-      const imgExists = sessionStorage.getItem('imgExists')
-      if (imgExists != 'true') return false
-      else return true
-    }
   },
   watch: {
     selectedschoolSize: {
       handler: function (val: any) {
         this.currentState.entSize = val.id;
       },
-      deep: true,
+      deep: true, //hello
     },
-    imgExists: {
-      handler: function () {
-        if (this.justChanged) {this.justChanged = false; return true}
-
-        else {
-          console.log("changing");
-          console.log(this.currentImg)
-
-          const elem = document.getElementById("bigPooPoo");
-          elem.innerHTML = "big funny"
-
-          document.getElementById("img").src = URL.createObjectURL(this.imgExists.img);
-        }
-        
-      },
-      deep: true
-    }
   },
   mounted() {
-    //const inputElement = document.getElementById("file-upload");
-    //inputElement?.addEventListener("change", (e) => this.handleFiles(e));
-
-    document.getElementById("file-upload")
-      ?.addEventListener("change", (e) => {
-        console.log('stuff happening')
-        document.getElementById("profilePreview")?.setAttribute('src', URL.createObjectURL(e.target.files[0]));
-        sessionStorage.setItem('imageExists', 'true')
-      })
+    document.getElementById("image")
+      .src = this.defaultImgURL
 
     document.addEventListener("submit", (e) => {
       e.preventDefault();
@@ -178,10 +127,8 @@ export default (await import("vue")).defineComponent({
     });
 
     this.userid = sessionStorage.getItem('userid') || '';
-
   },
   unmounted() {
-    //document.getElementById("file-upload")?.removeEventListener("change", this.handleFiles);
     document.removeEventListener("submit", (e) => {
       e.preventDefault();
       this.submit();
@@ -195,7 +142,7 @@ export default (await import("vue")).defineComponent({
         <div>
           <div>
           <h3 class="text-lg font-medium leading-6 text-gray-900">Profile</h3>
-          <p id="bigPooPoo" class="mt-1 text-sm text-gray-500">This information will be displayed publicly so be careful what you share.</p>
+          <p class="mt-1 text-sm text-gray-500">This information will be displayed publicly so be careful what you share.</p>
           </div>
           <div class="lg:flex flex-none w-full">
             <div class="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 lg:grid-cols-6">
@@ -207,7 +154,7 @@ export default (await import("vue")).defineComponent({
                       : "School Name"
                   }}
                 </label>
-                <div class="mt-1 flex rounded-md shadow-sm">
+                <div class="mt-4 flex rounded-md shadow-sm">
                   <span
                     class="inline-flex items-center rounded-l-md border border-r-0 border-gray-300 bg-gray-50 px-3 text-gray-500 sm:text-sm"
                   >
@@ -228,37 +175,18 @@ export default (await import("vue")).defineComponent({
                 </div>
               </div>
             </div>
-            <div class="sm:col-span-6 pt-8" id="bigfatfunnyparent">
-              <label id="bigfatfunny" for="photo" class="block text-sm font-medium text-gray-700" @click="console.log('hi')"
+            <div class="sm:col-span-6 sm:mt-6 mt-8">
+              <label for="photo" class="block text-sm font-medium text-gray-700" @click="console.log('hi')"
                 >Profile Picture</label
               >
-              <div class="mt-1 flex items-center">
+              <div class=" flex items-center">
                 <span id="profilePreviewDiv" class="h-12 w-12 overflow-hidden rounded-full bg-gray-100 flex justify-center">
-                  <img v-if="getImgExists() == true" id="profilePreview" class="h-full w-full object-cover" />
-                  <svg
-                    class="h-full w-full text-gray-300"
-                    fill="currentColor"
-                    viewBox="0 0 24 24"
-                    id="profilePlaceholder"
-                  >
-                    <path
-                      d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z"
-                    />
-                  </svg>
-                  </span>
+                  <img id="image" class="h-full w-full object-cover" />
+                </span>
                 <label
                   for="file-upload"
                   class="ml-5 rounded-md border border-gray-300 bg-white py-2 px-3 text-sm font-medium m-6 mr-4 leading-4 text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2"
                 >
-                  <span>{{
-                    img != null ? "Change Photo" : "Upload Image"
-                  }}</span>
-                  <input
-                    id="file-upload"
-                    name="file-upload"
-                    type="file"
-                    class="sr-only"
-                  />
                 </label>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -835,6 +763,4 @@ export default (await import("vue")).defineComponent({
         </div>
       </div>
     </form>
-    
-  <button @click="changing = !changing">Change</button>
 </template>

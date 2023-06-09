@@ -46,57 +46,61 @@ export default {
       localStorage.setItem('user', 'null');
       return response;
     },
-    async checksession() { // returns userdata if the user is signed in, and false if the user is not signed in
-      // Your method logic here
+    async checkStatus() {
+      // checks if user is logged in by refreshing the session
       const response = await supabase.auth.refreshSession()
-      // find the user variable in the response
-      const user = String(response.data.user);
-      if (user === "null") {
-        // if the user is not signed in, redirect to the login page
-        localStorage.setItem('user', 'null');
-        return false;
+      if (response.data.session != null) {
+        return response.data.session.user.id
       } else {
-        const userid = String(response.data.user?.id);
-        localStorage.setItem('fullname', response.data.user?.user_metadata.full_name);
-        localStorage.setItem('profilepic', response.data.user?.user_metadata.avatar_url);
-        localStorage.setItem('user', userid);
-        // check if the user is signed in using google, and if so, grab the name and profile picture link
-        return this.getUserData(userid);
+        return false
       }
     },
-    async getUserData(userid?: string) {
-      // Your method logic here
-      // if userid is not provided, use the userid from the local storage
-      const response = await supabase
-        .from('profiles')
-        .select()
-        .eq('id', userid || localStorage.getItem('user'))
-      console.log(response.data)
-      localStorage.setItem('fullname', response.data[0].full_name);
-      localStorage.setItem('profilepic', response.data[0].avatar_url);
-      localStorage.setItem('email', response.data[0].email);
-      localStorage.setItem('provider', response.data[0].provider);
-      sessionStorage.setItem('setupComplete', response.data[0].setup_complete);
-      if (response.data[0].username === null) {
-        this.setUserName(response.data[0].id);
+    async getData(userid: string, array: string[]) {
+      const returnData = {}
+      try {
+        const selectString = array.join(',')
+        const response = await supabase
+          .from('profiles')
+          .select(selectString)
+          .eq('id', userid)
+        return response.data[0]
+        console.log(response.data[0])
+      } catch (error) {
+        console.log(error)
+        return "null"
       }
-      return response.data[0];
-
+      return returnData
     },
-    async setUserName(userid: string) {
-      // Your method logic here
-      // create a random username with the layout of user-xxxxxx and make it update the value in the database, if it returns an error, make a loop that keeps trying until it works
-      var username = "user-" + Math.floor(Math.random() * 1000000);
-      const response = await supabase
+    async getMainData(userid: string) {
+      // grabs all userdata expect for the metadata
+      try {
+        const response = await supabase
         .from('profiles')
-        .update({ username: username })
+        .select("username,setup_complete,full_name,avatar_url,provider,email,plan")
         .eq('id', userid)
-      if (response.error) {
-        this.setUserName(userid);
+      return response.data[0];
+      } catch (error) {
+        console.log(error)
+        return "null"
       }
     },
-    async updateUserMetadata(zip: string, isEnt: boolean, country: string, address1: string, address2: string, schoolName?: string, userid?: string) {
+    async getAllData(userid: string) {
+      // grabs all userdata including the metadata
+      try {
+        const response = await supabase
+          .from('profiles')
+          .select("*")
+          .eq('id', userid)
+        return response.data[0];
+      } catch (error) {
+        console.log(error)
+        return "null"
+      }
+    },
+    // all for you <3 but fix them
+    async updateUserData(zip: string, isEnt: boolean, country: string, address1: string, address2: string, address3?: string, schoolName?: string, userid?: string) {
       console.log(userid)
+
       const response = await supabase
         .from('profiles')
         .update({
@@ -106,6 +110,7 @@ export default {
             country: country,
             address1: address1,
             address2: address2,
+            address3: address3,
             schoolName: schoolName
           }
         })
@@ -113,7 +118,7 @@ export default {
       
       console.log('response', response)
     },
-    async setUserMetadata(
+    async setUserData(
       userid: string,
       data: {
         username: string,
@@ -134,12 +139,52 @@ export default {
       img?: any,
       ) {
       console.log(userid)
+
+      const plans = [
+        { 
+          id: 1, 
+          title: "Personal", 
+          description: "For personal use only", 
+          users: "Free" 
+        },
+        {
+          id: 2,
+          title: "Small",
+          description: "For schools with less than 200 students",
+          users: "$19,99",
+        },
+        {
+          id: 3,
+          title: "Medium",
+          description: "For schools with less than 500 students",
+          users: "$29,99",
+        },
+        {
+          id: 4,
+          title: "Large",
+          description: "For schools with less than 750 students",
+          users: "$49,99",
+        },
+        {
+          id: 5,
+          title: "Enterprise",
+          description: "For schools with more than 750 students",
+          users: "starts at $69,99",
+        },
+      ];
+
       const profilePic = img
 
       if (!data.address.address2) data.address.address2 = '';
       if (!data.address.address3) data.address.address3 = '';
 
-      const toUpload = {fullData: {data}}
+      const toUpload = {
+        username: data.username,
+        fullName: `${data.firstName.trim()} ${data.lastName.trim()}`,
+        avatarURL: img,
+        //
+        fullData: {data} //<3 :), my bb <3
+      }
 
       if (profilePic != null) {
         const fileName: string = `${userid}-${Math.floor(Math.random()*10000)}.png`
@@ -149,7 +194,7 @@ export default {
           .upload(`profile-pictures/${fileName}`, profilePic)
 
         const imageURL = await supabase.storage
-          .from('avatars')
+          .from('avatars') // :)
           .getPublicUrl(`profile-pictures/${fileName}`)
         console.log(imageURL) // always log the response to see if there was an error
         toUpload.fullData.avatarURL = imageURL.data.publicUrl
@@ -161,14 +206,5 @@ export default {
         .eq('id', userid)
       console.log('response', response)
     },
-    // async testingStorageIMG(file: File) {
-    //   console.log(file);
-    //   const { response, error } = await supabase
-    //     .storage
-    //     .from('avatars')
-    //     .upload('funnytest.png', file)
-      
-    //   console.log(response, error)
-    // }
   }
 }

@@ -39,8 +39,6 @@ export default {
   },
   data() {
     return {
-      setupPopUp: sessionStorage.getItem('setupComplete'),
-      showingPopUp: sessionStorage.getItem('setupComplete') == 'true' ? false : true ,
       show: false, // changes wheter the banner is shown or not
       show2: false, // changes navbar: false = minimal, true = full
       open1: false,
@@ -172,17 +170,30 @@ export default {
     async checkuser() {
       // makes sure to have the previous value while waiting for the new one
       this.loading = true;
-      // fetches the new value from the server and updates the value
-      const response = await this.checksession();
-      if (response === false) {
-        this.loggedin = false;
+      // fetches the userid from checkStatus
+      const userid = await this.checkStatus();
+      // if returns false then the user is not logged in, else it will return the userid
+      if (userid != false) {
+        // fetches the user data from the userid
+        const response = await this.getData(userid, [
+          "full_name",
+          "avatar_url",
+        ]);
+        // if response is "null" then the user is not logged in
+        if (response != null) {
+          this.loggedin = true;
+          this.fullname = response.full_name;
+          this.profilepic = response.avatar_url;
+        } else {
+          this.loggedin = false;
+          this.fullname = "";
+          this.profilepic = "";
+        }
       } else {
-        this.loggedin = true;
+        this.loggedin = false;
+        this.fullname = "";
+        this.profilepic = "";
       }
-      this.fullname = response.full_name || "User";
-      this.profilepic =
-        response.avatar_url ||
-        "https://images.unsplash.com/photo-1517365830460-955ce3ccd263?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=4&w=256&h=256&q=80";
       this.loading = false;
     },
   },
@@ -193,13 +204,12 @@ export default {
       this.checkuser();
     },
   },
-  mounted() {
+  async mounted() {
     // check which page is shows, and if it is on "/fullscreen" then hide the navbar always
     // this.checkvisibility()
     // this.checkuser()
-    window.addEventListener('stChanged', (e) => {
-      this.showingPopUp = e.detail.storage
-    })
+    this.getAllData("489aefe0-19a7-4f01-86a1-652ebfbd33c8");
+    console.log(this.data);
   },
 };
 </script>
@@ -422,7 +432,7 @@ export default {
                 <div class="flex items-center">
                   <div>
                     <img
-                      class="inline-block h-9 w-9 rounded-full"
+                      class="inline-block h-9 w-9 object-cover rounded-full"
                       :src="this.profilepic"
                       referrerpolicy="no-referrer"
                       alt=""

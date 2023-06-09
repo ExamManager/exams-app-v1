@@ -1,4 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import authenticate from './functions/authenticate';
+
 
 const router = createRouter({
   history: createWebHistory(),
@@ -38,19 +40,35 @@ const router = createRouter({
     {
       path: '/account',
       component: () => import('./views/auth/Account.vue'),
+      // check if user is authenticated
+      beforeEnter: async (to, from, next) => {
+        const isAuthenticated = await authenticate.methods.checkStatus();
+        console.log(isAuthenticated);
+        if (isAuthenticated != false) {
+          // do nothing
+          next()
+        } else {
+          next('/login')
+        }
+      }
     },
     {
       path: '/setup',
-      component: () => import('./views/auth/AccountSetup.vue')
-    }
+      component: () => import('./views/auth/AccountSetup.vue'),
+      beforeEnter: async (to, from, next) => {
+        const isAuthenticated = await authenticate.methods.checkStatus();
+        console.log(isAuthenticated);
+        // returns fals if user is not authenticated and returns the user id if user is authenticated
+        if (isAuthenticated != false) {
+          next()
+        } else {
+          next('/login')
+        }
+      }
+    },
   ],
 })
 
-router.afterEach((to, from, failure) => {
-  if (to.path != '/account' && sessionStorage.getItem('accountIsCurrent') == 'true') { 
-    sessionStorage.setItem('accountIsCurrent', 'false');
-    sessionStorage.removeItem('subNav');
-  }
-})
+
 
 export default router

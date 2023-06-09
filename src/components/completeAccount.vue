@@ -21,41 +21,13 @@ export default (await import("vue")).defineComponent({
     AdjustmentsHorizontalIcon,
     CogIcon,
   },
-  data() {
-    return {
-      open: sessionStorage.getItem('setupComplete') == 'true' ? false : true,
-      //setupComplete: sessionStorage.getItem('setupComplete')
-    };
-  },
-  mounted() {
-    //sessionStorage.getItem('setupComplete') == 'true' ? this.open = false : this.open = true;
-    //this.open = !(sessionStorage.getItem('setupComplete'))
-    sessionStorage.setItem('setupPopUpVis', String(this.open))
-  },
-  watch: {
-    open: function() {
-      sessionStorage.setItem('setupPopUpVis', String(this.open))
-
-      window.dispatchEvent(new CustomEvent('stChanged', {
-        detail: {
-          storage: this.open
-        }
-      }))
-    }
-  },
-  methods: {
-    handleClickOut() {
-      if (sessionStorage.getItem('setupComplete') == 'false') {this.open = true}
-      else {this.open = false}
-    },
-  }
 });
 </script>
 
 <!-- This example requires Tailwind CSS v2.0+ -->
 <template>
-  <TransitionRoot as="template" :show="open">
-    <Dialog as="div" class="relative z-50" @close="handleClickOut()">
+  <TransitionRoot as="template" :show="true">
+    <Dialog as="div" class="relative z-50">
       <TransitionChild
         as="template"
         enter="ease-out duration-300"
@@ -107,7 +79,7 @@ export default (await import("vue")).defineComponent({
                   <button
                     type="button"
                     class="inline-flex items-center w-full justify-center rounded-md border border-transparent bg-orange-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 sm:text-sm"
-                    @click="open = false; $router.push('/')"
+                    @click="$router.push('/')"
                   >
                     <HomeIcon class="-ml-1 mr-2 h-5 w-5" aria-hidden="true" />
                     Home
@@ -115,7 +87,7 @@ export default (await import("vue")).defineComponent({
                   <button
                     type="button"
                     class="inline-flex items-center w-full justify-center rounded-md border border-transparent bg-orange-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 sm:text-sm"
-                    @click="$router.push('/setup'), open = false"
+                    @click="$router.push('/setup')"
                   >
                     <AdjustmentsHorizontalIcon class="-ml-1 mr-2 h-5 w-5" aria-hidden="true" />
                     Finish Setup
