@@ -208,8 +208,6 @@ export default {
     // check which page is shows, and if it is on "/fullscreen" then hide the navbar always
     // this.checkvisibility()
     // this.checkuser()
-    this.getAllData("489aefe0-19a7-4f01-86a1-652ebfbd33c8");
-    console.log(this.data);
   },
 };
 </script>

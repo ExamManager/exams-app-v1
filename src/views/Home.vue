@@ -681,7 +681,7 @@ export default {
                       <div class="flex items-start">
                         <div class="flex-shrink-0">
                           <svg
-                            class="h-6 w-6 text-blue-400"
+                            class="h-6 w-6 text-orange-400"
                             x-description="Heroicon name: outline/check-circle"
                             xmlns="http://www.w3.org/2000/svg"
                             fill="none"

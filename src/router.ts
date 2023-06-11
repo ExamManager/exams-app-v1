@@ -28,10 +28,30 @@ const router = createRouter({
     {
       path: '/login',
       component: () => import('./views/auth/SignIn.vue'),
+      beforeEnter: async (to, from, next) => {
+        const isAuthenticated = await authenticate.methods.checkStatus();
+        console.log(isAuthenticated);
+        if (isAuthenticated === false) {
+          // do nothing
+          next()
+        } else {
+          next('/account')
+        }
+      }
     },
     {
       path: '/register',
       component: () => import('./views/auth/SignUp.vue'),
+      beforeEnter: async (to, from, next) => {
+        const isAuthenticated = await authenticate.methods.checkStatus();
+        console.log(isAuthenticated);
+        if (isAuthenticated === false) {
+          // do nothing
+          next()
+        } else {
+          next('/account')
+        }
+      }
     },
     {
       path: '/:pathMatch(.*)*',

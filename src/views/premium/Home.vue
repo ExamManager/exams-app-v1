@@ -1158,7 +1158,7 @@ export default ({
                       class="inline-flex rounded-full bg-orange-100 px-2 text-xs font-semibold leading-5 text-orange-500">Reading
                       Time</span>
                     <span v-else-if="person.status === 'extra'"
-                      class="inline-flex rounded-full bg-blue-100 px-2 text-xs font-semibold leading-5 text-blue-500">Extra
+                      class="inline-flex rounded-full bg-orange-100 px-2 text-xs font-semibold leading-5 text-orange-500">Extra
                       Time</span>
                     <span v-else-if="person.status === 'inactive'"
                       class="inline-flex rounded-full bg-red-100 px-2 text-xs font-semibold leading-5 text-red-800">Not
@@ -1243,7 +1243,7 @@ export default ({
                   <path stroke-linecap="round" stroke-linejoin="round"
                     d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                 </svg>
-                <svg v-if="this.icon === 'extra'" class="h-6 w-6 text-blue-400"
+                <svg v-if="this.icon === 'extra'" class="h-6 w-6 text-orange-400"
                   x-description="Heroicon name: outline/check-circle" xmlns="http://www.w3.org/2000/svg" fill="none"
                   viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
                   <path stroke-linecap="round" stroke-linejoin="round"
