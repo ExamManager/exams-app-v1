@@ -140,7 +140,7 @@ export default {
       } else {
         this.show3 = false;
       }
-      if (this.show2 === false) {
+      if (this.show2 === 1) {
         // get path name and split it into pages and subpages for a breadcrumb
         var path = window.location.pathname;
         var pages = path.split("/");
