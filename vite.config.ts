@@ -6,5 +6,8 @@ export default defineConfig({
   plugins: [vue()],
   server: {
     port: 6969
+  },
+  build: {
+    target: 'esnext'
   }
 })
