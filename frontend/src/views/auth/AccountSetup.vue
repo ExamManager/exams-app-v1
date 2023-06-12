@@ -187,6 +187,16 @@ export default (await import("vue")).defineComponent({
                   for="file-upload"
                   class="ml-5 rounded-md border border-gray-300 bg-white py-2 px-3 text-sm font-medium m-6 mr-4 leading-4 text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2"
                 >
+                <span>{{
+                    img != null ? "Change Photo" : "Upload Image"
+                  }}</span>
+                  <input
+                    id="file-upload"
+                    name="file-upload"
+                    type="file"
+                    class="sr-only"
+                    @change="handleFiles($event)"
+                  />
                 </label>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"

@@ -98,22 +98,41 @@ export default {
       }
     },
     // all for you <3 but fix them
-    async updateUserData(zip: string, isEnt: boolean, country: string, address1: string, address2: string, address3?: string, schoolName?: string, userid?: string) {
+    async updateUserData(userid: string, toUpdate: object) {
       console.log(userid)
 
+      function getUpdatedObject(objFull, objUpdates) {
+        for (var key in objUpdates) {
+          if (typeof objUpdates[key] ==  "object") {
+            const objOriginal = objFull[key]
+            if (objFull[key]) {
+              const objUpdated = getUpdatedObject(objOriginal, objUpdates[key])
+              objFull[key] = objUpdated
+            }
+            else objFull[key] = objUpdates[key]
+          }
+          else {
+            objFull[key] = objUpdates[key]
+          }
+        }
+        return objFull
+      }
+
+      if (toUpdate.metadata) {
+        const updates = toUpdate.metadata
+
+        const response = await supabase
+          .from('profiles')
+          .select('metadata')
+          .eq('id', userid)
+        const metadata = response.data[0].metadata
+        const newMetadata = getUpdatedObject(metadata, updates)
+        toUpdate.metadata = newMetadata        
+      }
+      
       const response = await supabase
         .from('profiles')
-        .update({
-          metadata: {
-            zip: zip,
-            isEnt: isEnt,
-            country: country,
-            address1: address1,
-            address2: address2,
-            address3: address3,
-            schoolName: schoolName
-          }
-        })
+        .update(toUpdate)
         .eq('id', userid)
       
       console.log('response', response)
@@ -143,33 +162,27 @@ export default {
       const plans = [
         { 
           id: 1, 
-          title: "Personal", 
+          title: "Free", 
           description: "For personal use only", 
           users: "Free" 
         },
         {
           id: 2,
-          title: "Small",
+          title: "Basic",
           description: "For schools with less than 200 students",
-          users: "$19,99",
+          users: "$9.99",
         },
         {
           id: 3,
-          title: "Medium",
+          title: "Pro",
           description: "For schools with less than 500 students",
-          users: "$29,99",
+          users: "$19.99",
         },
         {
           id: 4,
-          title: "Large",
-          description: "For schools with less than 750 students",
-          users: "$49,99",
-        },
-        {
-          id: 5,
           title: "Enterprise",
-          description: "For schools with more than 750 students",
-          users: "starts at $69,99",
+          description: "For schools with less than 750 students",
+          users: "$39.99",
         },
       ];
 
@@ -181,9 +194,17 @@ export default {
       const toUpload = {
         username: data.username,
         fullName: `${data.firstName.trim()} ${data.lastName.trim()}`,
-        avatarURL: img,
-        //
-        fullData: {data} //<3 :), my bb <3
+        provider: "",
+        email: data.email,
+        plan: plans[parseInt(data.entSize)].id,
+        metadata: {
+          address: data.address, 
+          name: {
+            first: data.firstName.trim(),
+            last: data.lastName.trim(),
+            full: `${data.firstName.trim()} ${data.lastName.trim()}`
+          }
+        },
       }
 
       if (profilePic != null) {
@@ -197,7 +218,7 @@ export default {
           .from('avatars') // :)
           .getPublicUrl(`profile-pictures/${fileName}`)
         console.log(imageURL) // always log the response to see if there was an error
-        toUpload.fullData.avatarURL = imageURL.data.publicUrl
+        toUpload.avatarURL = imageURL.data.publicUrl
       }
 
       const response = await supabase
@@ -206,5 +227,8 @@ export default {
         .eq('id', userid)
       console.log('response', response)
     },
-  }
+    async setUserAvatar(userid: string, img: any) {
+      
+    },
+  },
 }

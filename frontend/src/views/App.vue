@@ -48,6 +48,7 @@ export default {
       loading: true,
       fullname: "",
       profilepic: "",
+      showNotifica: true,
       solutions: [
         {
           name: "Home",
@@ -203,6 +204,7 @@ export default {
       this.checkvisibility();
       this.checkuser();
     },
+  
   },
   async mounted() {
     // check which page is shows, and if it is on "/fullscreen" then hide the navbar always
@@ -610,6 +612,7 @@ export default {
     </div>
   </transition>
   <main>
-    <router-view />
+    <router-view></router-view>
   </main>
 </template>
+

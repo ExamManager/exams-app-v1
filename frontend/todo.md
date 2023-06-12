@@ -1,6 +1,8 @@
 - fix extra time calculation
 - add supabase account system
 
+Mr Offline :)
+
 - make subdomain: Simple, Free, Premium
 - examtimer.tech = Homepage with Selection for which subdomain to go to
 - examtimer.tech/singleexam = Single Exam Timer (one exam at a time) - doesn't require account

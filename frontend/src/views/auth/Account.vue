@@ -31,7 +31,6 @@ import {
   XMarkIcon,
   TrashIcon
 } from "@heroicons/vue/24/outline";
-import Notification from "../../components/Notifications.vue";
 import ComponentOverlay from "../../components/completeAccount.vue";
 
 const users = {
@@ -189,6 +188,7 @@ export default {
       editingAccount: false,
       setup_complete: true,
       img: "",
+      showNotification: false,
       // location
       address1: "",
       address2: "",
@@ -283,7 +283,21 @@ export default {
           this.id = response.id || "null"; // this is the user id
           this.plan = response.plan || 0; // 0 = free, 1 = pro, 2 = enterprise
           this.setup_complete = response.setup_complete || false; // if setup_complete is false, then the user has not completed the setup
-        }
+          const address = response.metadata.address || {
+            address1: "",
+            address2: "",
+            address3: "",
+            state: "",
+            country: "",
+            zip: "",
+          };
+          this.address1 = address.address1;
+          this.address2 = address.address2;
+          this.address3 = address.address3;
+          this.state = address.state;
+          this.country = address.country;
+          this.zip = address.zip;
+          }
       } else {
         this.loggedin = false;
       }
@@ -309,7 +323,7 @@ export default {
         schoolname,
         this.user.id
       );
-    }
+    },
   }
 };
 </script>
@@ -380,8 +394,13 @@ export default {
       </transition>
     </Menu>
   </transition>
-  <div class="h-full pt-20"></div>
-  <main class="mx-auto max-w-7xl pb-10 lg:py-12 lg:px-8">
+  <div class="h-full pt-20" v-if="this.loading === false"></div>
+  <transition
+    enter-active-class="transform ease-in-out duration-700 transition"
+    enter-from-class="opacity-0 "
+    enter-to-class=" opacity-100"
+  >
+  <main class="mx-auto max-w-7xl pb-10 lg:py-12 lg:px-8" v-if="this.loading === false">
     <div class="lg:grid lg:grid-cols-12 lg:gap-x-5">
       <aside class="py-6 px-2 sm:px-6 lg:col-span-3 lg:py-0 lg:px-0">
         <nav class="space-y-1">
@@ -1686,6 +1705,40 @@ export default {
         </section>
       </div>
     </div>
-    <Notification />
   </main>
+  </transition>
+  <transition
+    enter-active-class="transform ease-in-out duration-700 transition"
+    enter-from-class="opacity-0 "
+    enter-to-class=" opacity-100"
+  >
+  <div v-if="this.loading === true">
+    <!-- Loading Page -->
+    <div class="flex flex-col items-center justify-center h-screen">
+      <div class="flex items-center space-x-2 text-gray-600">
+        <svg
+          class="w-5 h-5 animate-spin text-orange-500"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+        >
+          <circle
+            class="opacity-25"
+            cx="12"
+            cy="12"
+            r="10"
+            stroke="currentColor"
+            stroke-width="4"
+          />
+          <path
+            class="opacity-75"
+            fill="currentColor"
+            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+          />
+        </svg>
+        <span>Loading...</span>
+      </div>
+    </div>
+  </div>
+  </transition>
 </template>
