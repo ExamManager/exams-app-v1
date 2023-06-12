@@ -157,6 +157,12 @@ export default {
       },
       img?: any,
       ) {
+
+      
+      if (userid == null) {
+        userid = localStorage.getItem('user')
+      }
+
       console.log(userid)
 
       const plans = [
