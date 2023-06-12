@@ -227,7 +227,7 @@ export default {
             <a href="/" class="flex items-center">
               <img
                 class="h-10 justify-start pl-2 sm:h-8 pr-3"
-                src="src/assets/vue.svg"
+                src="../assets/vue.svg"
                 alt="Workflow"
               />
               <div class="text-4xl font-bold justify-start">Online Exam Timer</div>
