@@ -40,7 +40,7 @@ export default {
   data() {
     return {
       show: false, // changes wheter the banner is shown or not
-      show2: false, // changes navbar: false = minimal, true = full
+      show2: 0, // changes navbar: 1 = minimal, true = 2
       open1: false,
       open2: false,
       show3: false, // if on page studentview (the fullscreen BUTTON)
@@ -120,18 +120,18 @@ export default {
     checkvisibility() {
       if (window.location.pathname == "/") { // on home page
         this.show = false; // hides banner
-        this.show2 = true; // shows full navbar
+        this.show2 = 2; // shows full navbar
       } else if (window.location.pathname == "/payment") { // on payment page 
         this.show = false; // hides banner
-        this.show2 = true; // shows full navbar
+        this.show2 = 2; // shows full navbar
       } else if (window.location.pathname == "/pricing") { // on pricing page
         this.show = true; // shows banner 
-        this.show2 = true; // shows full navbar
+        this.show2 = 2; // shows full navbar
       } else if (window.location.pathname == "/account") { // on account page
         this.show = false; // hides banner
-        this.show2 = false; // shows minimal navbar
+        this.show2 = 1; // shows minimal navbar
       } else { // default
-        this.show2 = false; // shows minimal navbar
+        this.show2 = 1; // shows minimal navbar
         this.show = false; // hides banner
       }
       if (window.location.pathname == "/premium/studentview") { // Shows enter fullscreen button on studentview page
@@ -218,7 +218,7 @@ export default {
     enter-from-class="opacity-0 "
     enter-to-class=" opacity-100"
   >
-    <Popover v-if="this.show2" class="relative bg-white z-30">
+    <Popover v-if="this.show2 == 2" class="relative bg-white z-30">
       <div class="mx-auto px-4 sm:px-6">
         <div
           class="flex items-center justify-between border-b-2 border-gray-100 py-6 md:justify-start md:space-x-10"
@@ -462,7 +462,7 @@ export default {
     enter-to-class=" opacity-100"
   >
     <nav
-      v-if="this.show2 === false"
+      v-if="this.show2 === 1"
       class="flex fixed pt-4 pl-4 z-30"
       aria-label="Breadcrumb"
     >
