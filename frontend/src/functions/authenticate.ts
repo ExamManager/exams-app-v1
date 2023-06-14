@@ -200,8 +200,6 @@ export default {
       const toUpload = {
         username: data.username,
         fullName: `${data.firstName.trim()} ${data.lastName.trim()}`,
-        provider: "",
-        email: data.email,
         plan: plans[parseInt(data.entSize)].id,
         metadata: {
           address: data.address, 
@@ -211,6 +209,10 @@ export default {
             full: `${data.firstName.trim()} ${data.lastName.trim()}`
           }
         },
+      }
+
+      if (provider != "google") {
+        toUpdate.email = data.email
       }
 
       if (profilePic != null) {
