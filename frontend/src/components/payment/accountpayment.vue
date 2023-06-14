@@ -1,22 +1,32 @@
 <script lang="ts">
 const plans = [
   {
-    name: "Standard",
+    name: "Free",
     priceMonthly: 0,
     priceYearly: 0,
-    limit: "Up to 5 active job postings"
+    limit: "For Personal Use Only",
+    disabled: false
+  },
+  {
+    name: "Basic",
+    priceMonthly: 29,
+    priceYearly: 320,
+    limit: "For Schools with up to 500 students",
+    disabled: false
   },
   {
     name: "Professional",
-    priceMonthly: 29,
-    priceYearly: 320,
-    limit: "Up to 25 active job postings"
+    priceMonthly: 49,
+    priceYearly: 540,
+    limit: "For Schools with up to 1000 students",
+    disabled: false
   },
   {
     name: "Enterprise",
     priceMonthly: 49,
     priceYearly: 540,
-    limit: "Unlimited active job postings"
+    limit: "For Schools with more than 1000 students",
+    disabled: true
   }
 ];
 const payments = [
@@ -41,13 +51,13 @@ const paymentMethods = [
   }
 ];
 
-const selectedPlan = plans[1];
+const selectedPlan = plans[0];
 const annualBillingEnabled = true;
 
 import authenticate from "../../functions/authenticate";
 import {
   MagnifyingGlassIcon,
-  QuestionMarkCircleIcon,
+  QuestionMarkCircleIcon
 } from "@heroicons/vue/20/solid";
 import { TrashIcon } from "@heroicons/vue/24/outline";
 import {
@@ -150,7 +160,6 @@ export default (await import("vue")).defineComponent({
               class="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-3xl"
             >
               <div class="space-y-6 p-4">
-                
                 <div class="bg-white shadow sm:rounded-lg">
                   <div class="px-4 py-5 sm:p-6">
                     <h3 class="text-lg font-medium leading-6 text-gray-900">
@@ -202,12 +211,14 @@ export default (await import("vue")).defineComponent({
                               </div>
                             </div>
                           </div>
-                          <button class="m-1 p-2 flex-shrink-0 flex border-0 bg-white rounded-md">
-                              <TrashIcon
+                          <button
+                            class="m-1 p-2 flex-shrink-0 flex border-0 bg-white rounded-md"
+                          >
+                            <TrashIcon
                               class="h-6 w-6 text-gray-400 hover:text-gray-700"
                               aria-hidden="true"
-                              />
-                            </button>
+                            />
+                          </button>
                         </div>
                       </div>
                     </div>
@@ -407,8 +418,12 @@ export default (await import("vue")).defineComponent({
                   checked
                     ? 'bg-orange-50 border-orange-200'
                     : 'border-gray-200',
+                  plan.disabled
+                    ? 'cursor-not-allowed disabled opacity-50'
+                    : '',
                   'relative border p-4 flex flex-col cursor-pointer md:pl-4 md:pr-6 md:grid md:grid-cols-3 focus:outline-none'
                 ]"
+                :disabled="plan.disabled"
               >
                 <span class="flex items-center text-sm">
                   <span

@@ -9,34 +9,29 @@ import {
 } from "@headlessui/vue";
 
 const schoolSize = [
-  { id: 1, title: "Personal", description: "For personal use only", users: "Free" },
+  { id: 0, title: "Personal", description: "For personal use only", users: "Free" },
+  {
+    id: 1,
+    title: "Basic",
+    description: "For schools with less than 500 students",
+    users: "$9,99",
+  },
   {
     id: 2,
-    title: "Small",
-    description: "For schools with less than 200 students",
+    title: "Pro",
+    description: "For schools with less than 1000 students",
     users: "$19,99",
   },
   {
     id: 3,
-    title: "Medium",
-    description: "For schools with less than 500 students",
-    users: "$29,99",
-  },
-  {
-    id: 4,
-    title: "Large",
-    description: "For schools with less than 750 students",
-    users: "$49,99",
-  },
-  {
-    id: 5,
     title: "Enterprise",
-    description: "For schools with more than 750 students",
-    users: "starts at $69,99",
+    description: "For schools with more than 1000 students",
+    users: "$39,99",
   },
 ];
 
 const selectedschoolSize = schoolSize[0];
+const entSize = schoolSize[0].id;
 
 export default (await import("vue")).defineComponent({
   name: "completeAccountSetup",
@@ -51,11 +46,12 @@ export default (await import("vue")).defineComponent({
   },
   data() {
     return {
+      provider: "",
       schoolSize,
       selectedschoolSize,
       currentState: {
         username: "",
-        entSize: "",
+        entSize: 0,
         firstName: "",
         lastName: "",
         email: "",
@@ -71,7 +67,7 @@ export default (await import("vue")).defineComponent({
       },
       img: null,
       defaultImgURL: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Default_pfp.svg/1200px-Default_pfp.svg.png",
-      userid: "",
+      userid: localStorage.getItem('user'),
     };
   },
   methods: {
@@ -94,7 +90,7 @@ export default (await import("vue")).defineComponent({
       this.img = imgObject
     },
     removeImg(){
-      if (this.img != null) {
+      if (this.img != null) { 
         this.img = null
         document.getElementById("image")
           .src = this.defaultImgURL
@@ -106,6 +102,8 @@ export default (await import("vue")).defineComponent({
       console.log(this.currentState);
       this.userid = localStorage.getItem('user');
       this.setUserData(this.userid, this.currentState, this.img);
+      console.log("submit")
+
       this.$router.push('/')
     },
   },
@@ -117,7 +115,10 @@ export default (await import("vue")).defineComponent({
       deep: true, //hello
     },
   },
-  mounted() {
+  async mounted() {
+
+    this.checkSession()
+
     document.getElementById("image")
       .src = this.defaultImgURL
 
@@ -125,8 +126,12 @@ export default (await import("vue")).defineComponent({
       e.preventDefault();
       this.submit();
     });
+    
+    this.userdata = await this.getMainData(this.userid)
+    console.log(this.userdata)
 
-    this.userid = sessionStorage.getItem('userid') || '';
+    console.log("provider: ", localStorage.getItem("provider"));
+    this.provider = String(localStorage.getItem("provider")) || "email";
   },
   unmounted() {
     document.removeEventListener("submit", (e) => {
@@ -337,6 +342,8 @@ export default (await import("vue")).defineComponent({
                   v-model="currentState.email"
                   name="email"
                   type="email"
+                  :disabled="this.provider='google'"
+                  :placeholder="this.provider == 'google' ? 'hi' : 'there'"
                   autocomplete="email"
                   class="block w-full rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 sm:text-sm"
                 />

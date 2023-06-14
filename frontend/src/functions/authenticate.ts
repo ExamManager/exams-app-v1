@@ -21,6 +21,19 @@ export default {
       console.log('Success');
       return response;
     },
+    async checkSession() { // there is already one you can call
+      // Your method logic here
+      //const { data } = await supabase.auth.refreshSession()
+      //const { session, user } = data
+
+      const { data: { session, user } } = await supabase.auth.refreshSession()
+      localStorage.setItem('user', user.id)
+      localStorage.setItem('provider', user?.app_metadata.provider || "")
+      if (user?.app_metadata.provider == "google") {
+        localStorage.setItem('googleEmail', user?.app_metadata.email || "noemail")
+      }
+      return user;
+    },
     async signin(email: string, password: string) {
       var reqemail = email;
       var reqpassword = password;
@@ -29,7 +42,7 @@ export default {
         email: reqemail,
         password: reqpassword,
       })
-      this.checksession()
+      this.checkSession()
       return response;
     },
     async signingoogle() {
@@ -57,6 +70,7 @@ export default {
     },
     async getData(userid: string, array: string[]) {
       const returnData = {}
+      console.log(userid, array)
       try {
         const selectString = array.join(',')
         const response = await supabase
@@ -158,7 +172,6 @@ export default {
       img?: any,
       ) {
 
-      
       if (userid == null) {
         userid = localStorage.getItem('user')
       }
@@ -167,25 +180,25 @@ export default {
 
       const plans = [
         { 
-          id: 1, 
+          id: 0, 
           title: "Free", 
           description: "For personal use only", 
           users: "Free" 
         },
         {
-          id: 2,
+          id: 1,
           title: "Basic",
           description: "For schools with less than 200 students",
           users: "$9.99",
         },
         {
-          id: 3,
+          id: 2,
           title: "Pro",
           description: "For schools with less than 500 students",
           users: "$19.99",
         },
         {
-          id: 4,
+          id: 3,
           title: "Enterprise",
           description: "For schools with less than 750 students",
           users: "$39.99",
@@ -199,21 +212,27 @@ export default {
 
       const toUpload = {
         username: data.username,
-        fullName: `${data.firstName.trim()} ${data.lastName.trim()}`,
-        plan: plans[parseInt(data.entSize)].id,
+        full_name: `${data.firstName.trim()} ${data.lastName.trim()}`,
+        plan: data.entSize,
         metadata: {
-          address: data.address, 
+          address: {
+            country: data.address.country.trim(),
+            city: data.address.city.trim(),
+            state: data.address.state.trim(),
+            zip: data.address.zip.trim(),
+            address1: data.address.address1.trim(),
+            address2: data.address.address2.trim(),
+            address3: data.address.address3.trim(),
+          }, 
           name: {
             first: data.firstName.trim(),
             last: data.lastName.trim(),
             full: `${data.firstName.trim()} ${data.lastName.trim()}`
           }
         },
+        setup_complete: true,
       }
-
-      if (provider != "google") {
-        toUpdate.email = data.email
-      }
+      const provider = await this.getData(userid, ['provider'])
 
       if (profilePic != null) {
         const fileName: string = `${userid}-${Math.floor(Math.random()*10000)}.png`
@@ -226,8 +245,11 @@ export default {
           .from('avatars') // :)
           .getPublicUrl(`profile-pictures/${fileName}`)
         console.log(imageURL) // always log the response to see if there was an error
-        toUpload.avatarURL = imageURL.data.publicUrl
+        toUpload.avatar_url = imageURL.data.publicUrl
       }
+
+      console.log('toUpload', toUpload)
+
 
       const response = await supabase
         .from('profiles')

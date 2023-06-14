@@ -31,6 +31,26 @@ const router = createRouter({
       component: () => import('./views/Pricing.vue'),
     },
     {
+      path: '/privacy',
+      publicPath: '/privacy',
+      component: () => import('./views/PrivacyPolicy.vue'),
+    },
+    {
+      path: '/support', 
+      publicPath: '/support',
+      component: () => import('./views/support/HelpCenter.vue'),
+    },
+    {
+      path: '/support/guides',
+      publicPath: '/support/guides',
+      component: () => import('./views/support/Guides.vue'),
+    },
+    {
+      path: '/docs',
+      publicPath: '/docs',
+      component: () => import('./views/documentation/Home.vue'),
+    },
+    {
       path: '/login',
       publicPath: '/login',
       component: () => import('./views/auth/SignIn.vue'),

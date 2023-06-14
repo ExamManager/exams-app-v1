@@ -1,6 +1,7 @@
 <script lang="ts">
 import { Popover, PopoverButton, PopoverGroup, PopoverPanel } from "@headlessui/vue";
 import authenticate from "../functions/authenticate";
+import stripe from "../functions/stripe";
 import {
   BookmarkSquareIcon,
   CursorArrowRaysIcon,
@@ -17,7 +18,7 @@ import { ChevronDownIcon } from "@heroicons/vue/20/solid";
 import { HomeIcon, ChevronRightIcon } from "@heroicons/vue/20/solid";
 
 export default {
-  mixins: [authenticate],
+  mixins: [authenticate, stripe],
   components: {
     BookmarkSquareIcon,
     CursorArrowRaysIcon,
@@ -78,25 +79,25 @@ export default {
           name: "Help Center",
           description:
             "Get all of your questions answered in our forums or contact support.",
-          href: "#",
+          href: "/support",
           icon: LifebuoyIcon,
         },
         {
           name: "Documentation",
           description: "Learn how you can get the most out of our platform.",
-          href: "#",
+          href: "/docs",
           icon: BookOpenIcon,
         },
         {
           name: "Guides",
           description: "Learn how to maximize our platform to get the most out of it.",
-          href: "#",
+          href: "/support/guides",
           icon: BookmarkSquareIcon,
         },
         {
           name: "Policy",
           description: "Read how we deal with your privacy and data security.",
-          href: "#",
+          href: "/privacy",
           icon: ShieldCheckIcon,
         },
       ],
@@ -119,6 +120,7 @@ export default {
       sessionStorage.setItem("show", String(this.show));
     },
     checkvisibility() {
+      this.loading = true;
       if (window.location.pathname == "/") { // on home page
         this.show = false; // hides banner
         this.show2 = 2; // shows full navbar
@@ -131,9 +133,19 @@ export default {
       } else if (window.location.pathname == "/account") { // on account page
         this.show = false; // hides banner
         this.show2 = 1; // shows minimal navbar
-      } else { // default
+      } else if (window.location.pathname == "/privacy") {
+        this.show = true; // shows banner
+        this.show2 = 2; // shows full navbar
+      } else if (window.location.pathname == "/support") {
+        this.show = true; // shows banner
+        this.show2 = 2; // shows full navbar
+      } else if (window.location.pathname == "/docs") {
+        this.show = true; // shows banner
+        this.show2 = 2; // shows full navbar
+      }  else { // default
         this.show2 = 1; // shows minimal navbar
         this.show = false; // hides banner
+        console.log("default");
       }
       if (window.location.pathname == "/premium/studentview") { // Shows enter fullscreen button on studentview page
         this.show3 = true;
@@ -153,7 +165,6 @@ export default {
             if (i == pages.length - 1) {
               breadcrumb.push({
                 name: pages[i].charAt(0).toUpperCase() + pages[i].slice(1),
-                href: "#",
                 current: true,
               });
             } else {
@@ -188,7 +199,7 @@ export default {
         } else {
           this.loggedin = false;
           this.fullname = "";
-          this.profilepic = "";
+          this.profilepic = ""
         }
       } else {
         this.loggedin = false;
@@ -203,6 +214,8 @@ export default {
     $route(to, from) {
       this.checkvisibility();
       this.checkuser();
+      console.log("From: " + from.path + " To: " + to.path);
+      this.createCustomer();
     },
   
   },
@@ -220,13 +233,13 @@ export default {
     enter-from-class="opacity-0 "
     enter-to-class=" opacity-100"
   >
-    <Popover v-if="this.show2 == 2" class="relative bg-white z-30">
+    <Popover v-if="this.show2 == 2" class="select-none relative bg-white z-30">
       <div class="mx-auto px-4 sm:px-6">
         <div
           class="flex items-center justify-between border-b-2 border-gray-100 py-6 md:justify-start md:space-x-10"
         >
           <div class="flex justify-start lg:w-0 lg:flex-1">
-            <a href="/" class="flex items-center">
+            <a @click="this.$router.push('/')" class="flex items-center">
               <img
                 class="h-10 justify-start pl-2 sm:h-8 pr-3"
                 src="https://i.vgy.me/HGoEMr.png"
@@ -276,7 +289,7 @@ export default {
                       <a
                         v-for="item in solutions"
                         :key="item.name"
-                        :href="item.href"
+                         @click="this.$router.push(item.href)"
                         class="-m-3 flex items-start rounded-lg p-3 hover:bg-gray-50"
                       >
                         <component
@@ -301,7 +314,7 @@ export default {
                         class="flow-root"
                       >
                         <a
-                          :href="item.href"
+                          @click="this.$router.push(item.href)"
                           class="-m-3 flex items-center rounded-md p-3 text-base font-medium text-gray-900 hover:bg-gray-100"
                         >
                           <component
@@ -358,7 +371,7 @@ export default {
                       <a
                         v-for="item in resources"
                         :key="item.name"
-                        :href="item.href"
+                        @click="this.$router.push(item.href)"
                         class="-m-3 flex items-start rounded-lg p-3 hover:bg-gray-50"
                       >
                         <component
@@ -379,7 +392,7 @@ export default {
               </transition>
             </Popover>
             <a
-              href="/pricing"
+            @click="this.$router.push('/pricing')"
               class="text-base font-medium text-gray-500 hover:text-gray-900"
               >Pricing</a
             >
@@ -428,7 +441,7 @@ export default {
               v-if="loggedin && !loading"
               class="items-center justify-end md:flex md:flex-1 lg:w-0"
             >
-              <a href="/account" class="group block flex-shrink-0">
+              <a @click="this.$router.push('/account')" class="group block flex-shrink-0 cursor-pointer">
                 <div class="flex items-center">
                   <div>
                     <img
@@ -471,7 +484,7 @@ export default {
       <ol role="list" class="flex space-x-4 rounded-md bg-white px-6 shadow">
         <li class="flex">
           <div class="flex items-center">
-            <a href="/" class="text-gray-400 flex items-center hover:text-gray-500">
+            <a @click="this.$router.push('/')" class="text-gray-400 flex items-center hover:text-gray-500">
               <HomeIcon class="h-10 w-4 flex-shrink-0 text-gray-400" aria-hidden="true" />
               <a class="ml-2 text-sm font-medium text-gray-500 hover:text-gray-700"
                 >Home</a
@@ -486,7 +499,7 @@ export default {
               aria-hidden="true"
             />
             <a
-              :href="page.href"
+              @click="this.$router.push(page.href)"
               class="ml-4 text-sm font-medium text-gray-500 hover:text-gray-700"
               :aria-current="page.current ? 'page' : undefined"
               >{{ page.name }}</a
@@ -576,7 +589,7 @@ export default {
             </div>
             <div class="order-3 mt-2 w-full flex-shrink-0 sm:order-2 sm:mt-0 sm:w-auto">
               <a
-                href="#"
+                @click="this.$router.push('/')"
                 class="flex items-center text-black justify-center rounded-md border border-transparent bg-white px-4 py-2 text-sm font-medium shadow-sm hover:bg-gray-200"
                 >Learn more</a
               >
