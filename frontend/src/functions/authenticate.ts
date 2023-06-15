@@ -23,15 +23,9 @@ export default {
     },
     async checkSession() { // there is already one you can call
       // Your method logic here
-      //const { data } = await supabase.auth.refreshSession()
-      //const { session, user } = data
-
-      const { data: { session, user } } = await supabase.auth.refreshSession()
-      localStorage.setItem('user', user.id)
-      localStorage.setItem('provider', user?.app_metadata.provider || "")
-      if (user?.app_metadata.provider == "google") {
-        localStorage.setItem('googleEmail', user?.app_metadata.email || "noemail")
-      }
+      const { data } = await supabase.auth.refreshSession()
+      const { session, user } = data
+      this.$store.dispatch('updateParam', ['user', user.id])
       return user;
     },
     async signin(email: string, password: string) {
@@ -50,17 +44,18 @@ export default {
       const response = await supabase.auth.signInWithOAuth({
         provider: 'google',
       })
+      this.checkSession()
       return response;
     },
     async signout() {
       // Your method logic here
       const response = await supabase.auth.signOut()
-      localStorage.clear();
-      localStorage.setItem('user', 'null');
+
+      // this.$store.dispatch('updateParam', ['user', 'null'])
+      this.checkSession() // that does it aswell
       return response;
     },
-    async checkStatus() {
-      // checks if user is logged in by refreshing the session
+    async checkStatus() { // Important used for before routing to check if user is logged in
       const response = await supabase.auth.refreshSession()
       if (response.data.session != null) {
         return response.data.session.user.id
@@ -68,6 +63,8 @@ export default {
         return false
       }
     },
+
+    // Updating Data Functions
     async getData(userid: string, array: string[]) {
       const returnData = {}
       console.log(userid, array)
@@ -76,7 +73,7 @@ export default {
         const response = await supabase
           .from('profiles')
           .select(selectString)
-          .eq('id', userid)
+          .eq('userId', userid)
         return response.data[0]
         console.log(response.data[0])
       } catch (error) {
@@ -90,8 +87,8 @@ export default {
       try {
         const response = await supabase
         .from('profiles')
-        .select("username,setup_complete,full_name,avatar_url,provider,email,plan")
-        .eq('id', userid)
+        .select("username,setupComplete,fullName,avatarUrl,provider,email,plan")
+        .eq('userId', userid)
       return response.data[0];
       } catch (error) {
         console.log(error)
@@ -104,14 +101,48 @@ export default {
         const response = await supabase
           .from('profiles')
           .select("*")
-          .eq('id', userid)
+          .eq('userId', userid)
         return response.data[0];
       } catch (error) {
         console.log(error)
         return "null"
       }
     },
-    // all for you <3 but fix them
+    async updateData() { // done, runs on page load once and updates everything
+      const data2 = await supabase.auth.refreshSession()
+      console.log(data2)
+      const userid = data2.data.user.id
+      console.log(userid)
+
+      const { data, error } = await supabase
+          .from('profiles')
+          .select()
+          .eq('userId', userid)
+      
+      this.$store.dispatch('updateParams', {
+        userId: userid,
+        username: data[0].username,
+        setupComplete: data[0].setupComplete,
+        fullName: data[0].fullName,
+        avatarUrl: data[0].avatarUrl,
+        provider: data[0].provider,
+        email: data[0].email,
+        plan: data[0].plan,
+        metadata: data[0].metadata,
+      })
+    },
+
+
+
+
+
+
+
+
+
+
+
+    // Updating Functions
     async updateUserData(userid: string, toUpdate: object) {
       console.log(userid)
 
@@ -173,7 +204,7 @@ export default {
       ) {
 
       if (userid == null) {
-        userid = localStorage.getItem('user')
+        userid = this.$store.state.userId
       }
 
       console.log(userid)

@@ -1,6 +1,10 @@
 <script lang="ts">
 //import {FormKit} from '@formkit/vue'
 import authenticate from "../../functions/authenticate";
+import { toRaw } from "vue";
+
+//import store from '../../osamaStore.ts' 
+
 import {
   RadioGroup,
   RadioGroupDescription,
@@ -67,14 +71,15 @@ export default (await import("vue")).defineComponent({
       },
       img: null,
       defaultImgURL: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Default_pfp.svg/1200px-Default_pfp.svg.png",
-      userid: localStorage.getItem('user'),
+      //userid: localStorage.getItem('user'),
+      userid: this.$store.state.userId,
     };
   },
   methods: {
     getBase64(file: any) {
       var reader = new FileReader();
       reader.readAsDataURL(file);
-      reader.onload = () => sessionStorage.setItem("funny", reader.result);
+      //reader.onload = () => sessionStorage.setItem("funny", reader.result);
       reader.onerror = function (error) {
         console.log("Error: ", error);
       };
@@ -100,7 +105,8 @@ export default (await import("vue")).defineComponent({
     },
     submit() {
       console.log(this.currentState);
-      this.userid = localStorage.getItem('user');
+      //this.userid = localStorage.getItem('user');
+      this.userid = this.$store.state.userId;
       this.setUserData(this.userid, this.currentState, this.img);
       console.log("submit")
 
@@ -125,13 +131,18 @@ export default (await import("vue")).defineComponent({
     document.addEventListener("submit", (e) => {
       e.preventDefault();
       this.submit();
-    });
+    })
+
+    console.log(this.$store.state)
+    console.log(toRaw(this.$store.state))
     
     this.userdata = await this.getMainData(this.userid)
     console.log(this.userdata)
 
-    console.log("provider: ", localStorage.getItem("provider"));
-    this.provider = String(localStorage.getItem("provider")) || "email";
+    //console.log("provider: ", localStorage.getItem("provider"));
+    console.log("provider: ", this.$store.state.provider)
+    //this.provider = String(localStorage.getItem("provider")) || "email";
+    this.provider = this.$store.state.provider || "email";
   },
   unmounted() {
     document.removeEventListener("submit", (e) => {

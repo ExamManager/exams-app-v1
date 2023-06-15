@@ -1,5 +1,6 @@
 <script lang="ts">
 import { Popover, PopoverButton, PopoverGroup, PopoverPanel } from "@headlessui/vue";
+import { toRaw } from "vue";
 import authenticate from "../functions/authenticate";
 import stripe from "../functions/stripe";
 import {
@@ -49,6 +50,17 @@ export default {
       loading: true,
       fullname: "",
       profilepic: "",
+      user: {
+        userId: this.$store.state.userId,
+        userName: this.$store.state.userName,
+        plan: this.$store.state.plan,
+        fullName: this.$store.state.fullName,
+        avatarUrl: this.$store.state.avatarUrl,
+        provider: this.$store.state.provider,
+        email: this.$store.state.email,
+        metaData: this.$store.state.metaData,
+        setupComplete: this.$store.state.setupComplete,
+      },
       showNotifica: true,
       solutions: [
         {
@@ -182,42 +194,28 @@ export default {
     async checkuser() {
       // makes sure to have the previous value while waiting for the new one
       this.loading = true;
-      // fetches the userid from checkStatus
-      const userid = await this.checkStatus();
-      // if returns false then the user is not logged in, else it will return the userid
-      if (userid != false) {
-        // fetches the user data from the userid
-        const response = await this.getData(userid, [
-          "full_name",
-          "avatar_url",
-        ]);
-        // if response is "null" then the user is not logged in
-        if (response != null) {
-          this.loggedin = true;
-          this.fullname = response.full_name;
-          this.profilepic = response.avatar_url;
-        } else {
-          this.loggedin = false;
-          this.fullname = "";
-          this.profilepic = ""
-        }
-      } else {
+     // runs update function to update the store
+      console.log(this.profilepic);
+      console.log(this.fullname);
+      
+      console.log(this.$store.state.userId)
+
+      if (this.user.userId == "") {
         this.loggedin = false;
-        this.fullname = "";
-        this.profilepic = "";
+      } else {
+        this.loggedin = true;
+        this.profilepic = this.$store.state.avatarUrl;
+        this.fullname = this.$store.state.fullName;
       }
       this.loading = false;
+      //fetches the userid from checkStatus
     },
   },
   watch: {
-    // if page routes to this page, then update the navbar
-    $route(to, from) {
+    $route(to, from) { // if page routes to this page, then update the navbar
       this.checkvisibility();
       this.checkuser();
-      console.log("From: " + from.path + " To: " + to.path);
-      this.createCustomer();
     },
-  
   },
   async mounted() {
     // check which page is shows, and if it is on "/fullscreen" then hide the navbar always

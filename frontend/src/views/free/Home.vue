@@ -828,7 +828,7 @@ export default ({
             }, 200);
         },
     },
-})
+});
 </script>
 
 <template>

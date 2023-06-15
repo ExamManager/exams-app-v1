@@ -9,6 +9,11 @@ const router = createRouter({
       path: '/',
       publicPath: '/',
       component: () => import('./views/Home.vue'),
+      beforeEnter: (to, from, next) => {
+        authenticate.methods.updateData();
+        console.log('before each');
+        next();
+      },
     },
     {
       path: '/free',
@@ -49,6 +54,7 @@ const router = createRouter({
       path: '/docs',
       publicPath: '/docs',
       component: () => import('./views/documentation/Home.vue'),
+      
     },
     {
       path: '/login',

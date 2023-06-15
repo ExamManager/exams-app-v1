@@ -17,7 +17,8 @@ export default {
   mixins: [authenticate],
   data() {
     return {
-      userid: String(localStorage.getItem('userid')),
+      //userid: String(localStorage.getItem('userid')),
+      userid: this.$store.state.userId,
       website: "http://localhost:3001",
     }
   },

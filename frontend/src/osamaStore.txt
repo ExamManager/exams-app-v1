@@ -1,0 +1,26 @@
+import { createStore } from 'vuex';
+
+export default createStore({
+  state: {
+   firstName: "Osama",
+   lastName: "Bin Laden",
+   terorristAttacks: ["9/11"]
+  },
+  mutations: {
+   UPDATE_ATTACKS(state, payload) {
+    state.terorristAttacks = payload
+   }
+  },
+  actions:{
+   addToFavourites(context, payload) {
+    const attacks = context.state.terorristAttacks;
+    attacks.push(payload);
+    context.commit('UPDATE_ATTACKS', attacks)
+   }
+  },
+  getters: {
+   fullName: function(state) {
+    return `${state.firstName.trim()} ${state.lastName.trim()}`
+   }
+  }
+});

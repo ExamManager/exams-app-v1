@@ -176,7 +176,6 @@ export default {
   },
   mounted() {
     this.checkuser();
-
     window.addEventListener("submit", (e) => {
       e.preventDefault();
       if (this.editingAccount) console.log("submit");
@@ -211,56 +210,16 @@ export default {
   //     else {this.updateAccount(document.getElementById('zip').value, document.getElementById('country').value, document.getElementById('address-1').value, document.getElementById('address-2').value, document.getElementById('full-name').value);}
   //   });
   // },
-  watch: {
-    $route(to, from) {
-      this.checkuser();
-    }
-  },
   methods: {
     async checkuser() {
       // makes sure to have the previous value while waiting for the new one
-      this.loading = true;
-      // fetches the userid from checkStatus
-      const userid = await this.checkStatus();
-      // if returns false then the user is not logged in, else it will return the userid
-      if (userid != false) {
-        // fetches the user data from the userid
-        const response = await this.getAllData(userid);
-        console.log(response);
-        // if response is "null" then the user is not logged in
-        if (response != null) {
-          this.loggedin = true;
-          this.profilepic =
-            response.avatar_url ||
-            "https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/271deea8-e28c-41a3-aaf5-2913f5f48be6/de7834s-6515bd40-8b2c-4dc6-a843-5ac1a95a8b55.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiJcL2ZcLzI3MWRlZWE4LWUyOGMtNDFhMy1hYWY1LTI5MTNmNWY0OGJlNlwvZGU3ODM0cy02NTE1YmQ0MC04YjJjLTRkYzYtYTg0My01YWMxYTk1YThiNTUuanBnIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmZpbGUuZG93bmxvYWQiXX0.BopkDn1ptIwbmcKHdAOlYHyAOOACXW0Zfgbs0-6BY-E";
-          this.name = response.full_name || "John Doe";
-          this.email = response.email || "example@example.com";
-          // check if username is "" if so, create a random one in the format of "user-xxxx"
-          this.username =
-            response.username || "user-" + Math.floor(Math.random() * 10000); // this generates a random username if the user does not have one
-          this.provider = response.provider || "google"; // this is the provider, either google or email
-          this.id = response.id || "null"; // this is the user id
-          this.plan = response.plan || 0; // 0 = free, 1 = pro, 2 = enterprise
-          this.setup_complete = response.setup_complete || false; // if setup_complete is false, then the user has not completed the setup
-          const address = response.metadata.address || {
-            address1: "",
-            address2: "",
-            address3: "",
-            state: "",
-            country: "",
-            zip: ""
-          };
-          this.address1 = address.address1;
-          this.address2 = address.address2;
-          this.address3 = address.address3;
-          this.state = address.state;
-          this.country = address.country;
-          this.zip = address.zip;
-        }
-      } else {
-        this.loggedin = false;
-      }
-      this.loading = false;
+      // this.loading = true;
+      // this.userid = this.$store.state.userId || "null";
+      // console.log(this.userid);
+
+
+
+      // this.loading = false;
     },
     async updateAccount(
       zip: string,
