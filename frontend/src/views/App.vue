@@ -218,7 +218,7 @@ export default {
       }
       this.loading = false;
       console.log('loading false')
-      //fetches the userid from checkStatus
+      //fetches the userid from checkOnRoute
     },
   },
   watch: {

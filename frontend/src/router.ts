@@ -61,7 +61,7 @@ const router = createRouter({
       publicPath: '/login',
       component: () => import('./views/auth/SignIn.vue'),
       beforeEnter: async (to, from, next) => {
-        const isAuthenticated = await authenticate.methods.checkStatus();
+        const isAuthenticated = await authenticate.methods.checkOnRoute();
         console.log(isAuthenticated);
         if (isAuthenticated === false) {
           // do nothing
@@ -76,7 +76,7 @@ const router = createRouter({
       publicPath: '/register',
       component: () => import('./views/auth/SignUp.vue'),
       beforeEnter: async (to, from, next) => {
-        const isAuthenticated = await authenticate.methods.checkStatus();
+        const isAuthenticated = await authenticate.methods.checkOnRoute();
         console.log(isAuthenticated);
         if (isAuthenticated === false) {
           // do nothing
@@ -98,7 +98,7 @@ const router = createRouter({
       component: () => import('./views/auth/Account.vue'),
       // check if user is authenticated
       beforeEnter: async (to, from, next) => {
-        const isAuthenticated = await authenticate.methods.checkStatus();
+        const isAuthenticated = await authenticate.methods.checkOnRoute();
         console.log(isAuthenticated);
         if (isAuthenticated != false) {
           // do nothing
@@ -113,7 +113,7 @@ const router = createRouter({
       publicPath: '/setup',
       component: () => import('./views/auth/AccountSetup.vue'),
       beforeEnter: async (to, from, next) => {
-        const isAuthenticated = await authenticate.methods.checkStatus();
+        const isAuthenticated = await authenticate.methods.checkOnRoute();
         console.log(isAuthenticated);
         // returns fals if user is not authenticated and returns the user id if user is authenticated
         if (isAuthenticated != false) {

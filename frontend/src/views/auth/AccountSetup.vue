@@ -53,26 +53,29 @@ export default (await import("vue")).defineComponent({
       provider: "",
       schoolSize,
       selectedschoolSize,
-      currentState: {
+      loading: false,
+      user: {// stays the same the whole time, to compare values to...
+        userid: "",
         username: "",
-        entSize: 0,
-        firstName: "",
-        lastName: "",
+        plan: 0,
+        fullname: "",
+        avatarurl: "",
+        provider: "",
         email: "",
-        address: {
-          country: "",
-          city: "",
-          state: "",
-          zip: "",
-          address1: "",
-          address2: "",
-          address3: "",
+        metadata: {
+          enterprise: false,
+          location: {
+            country: "",
+            city: "",
+            state: "",
+            zip: "",
+            address1: "",
+            address2: "",
+            address3: "",
+          },
         },
+        setupComplete: false,
       },
-      img: null,
-      defaultImgURL: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Default_pfp.svg/1200px-Default_pfp.svg.png",
-      //userid: localStorage.getItem('user'),
-      userid: this.$store.state.userid,
     };
   },
   methods: {
@@ -103,6 +106,26 @@ export default (await import("vue")).defineComponent({
           .value = ""
       }
     },
+    async checkuser() {
+      this.loading = true
+      while (this.$store.state.userid === "") {
+        console.log("waiting for userid");
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+      }
+      if (this.$store.state.userid === "null") {
+        this.$router.push("/login");
+      } else {
+        this.user = {
+          ...this.$store.state,
+          metadata: {
+            ...this.$store.state.metadata,
+            location: { ...this.$store.state.metadata.location }
+          }
+        };
+      }
+      console.log("mounted")
+      this.loading = false
+    },
     submit() {
       console.log(this.currentState);
       //this.userid = localStorage.getItem('user');
@@ -113,44 +136,16 @@ export default (await import("vue")).defineComponent({
       this.$router.push('/')
     },
   },
-  watch: {
-    selectedschoolSize: {
-      handler: function (val: any) {
-        this.currentState.entSize = val.id;
-      },
-      deep: true, //hello
-    },
-  },
   async mounted() {
-
-    this.checkSession()
-    this.onPageLoad()
+    this.checkuser()
 
     document.getElementById("image")
       .src = this.defaultImgURL
 
-    this.userid = this.$store.state.userid;
-    this.email = this.$store.state.email;
-
-    console.log(this.email)
-
     document.addEventListener("submit", (e) => {
       e.preventDefault();
       this.submit();
-    })
-
-    console.log(this.$store.state)
-    console.log(toRaw(this.$store.state))
-
-    console.log(this.$store.state.userid)
-    
-    //this.userdata = await this.getMainData(this.userid)
-    console.log(this.userdata)
-
-    //console.log("provider: ", localStorage.getItem("provider"));
-    console.log("provider: ", this.$store.state.provider)
-    //this.provider = String(localStorage.getItem("provider")) || "email";
-    this.provider = this.$store.state.provider || "email";
+    });
   },
   unmounted() {
     document.removeEventListener("submit", (e) => {
@@ -160,7 +155,7 @@ export default (await import("vue")).defineComponent({
   },
 });
 </script>
-<template>
+<template v-if="!loading">
   <form class="sm:px-32 px-10 py-20 space-y-8 divide-y divide-gray-200">
     <div class="space-y-8 divide-y divide-gray-200">
         <div>
@@ -192,7 +187,7 @@ export default (await import("vue")).defineComponent({
                     type="text"
                     name="username"
                     id="username"
-                    v-model="currentState.username"
+                    v-model="user.username"
                     autocomplete="username"
                     class="block w-full min-w-0 flex-1 rounded-none rounded-r-md border-gray-300 focus:border-orange-500 focus:ring-orange-500 sm:text-sm"
                   />
@@ -205,7 +200,11 @@ export default (await import("vue")).defineComponent({
               >
               <div class=" flex items-center">
                 <span id="profilePreviewDiv" class="h-12 w-12 overflow-hidden rounded-full bg-gray-100 flex justify-center">
-                  <img id="image" class="h-full w-full object-cover" />
+                  <img v-if="!loading" id="image" class="h-full w-full object-cover" :src="user.avatarurl" />
+                  <svg v-else  class="animate-spin items-center h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                      <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
                 </span>
                 <label
                   for="file-upload"
@@ -321,12 +320,12 @@ export default (await import("vue")).defineComponent({
           <div class="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
             <div class="sm:col-span-3">
               <label for="first-name" class="block text-sm font-medium text-gray-700"
-                >First name</label
+                >Full name</label
               >
               <div class="mt-1">
                 <input
                   type="text"
-                  v-model="currentState.firstName"
+                  v-model="user.fullname"
                   name="first-name"
                   id="first-name"
                   autocomplete="given-name"
@@ -335,7 +334,7 @@ export default (await import("vue")).defineComponent({
               </div>
             </div>
 
-            <div class="sm:col-span-3">
+            <!-- <div class="sm:col-span-3">
               <label for="last-name" class="block text-sm font-medium text-gray-700"
                 >Last name</label
               >
@@ -349,7 +348,7 @@ export default (await import("vue")).defineComponent({
                   class="block w-full rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 sm:text-sm"
                 />
               </div>
-            </div>
+            </div> -->
 
             <div class="sm:col-span-4">
               <label for="email" class="block text-sm font-medium text-gray-700"
@@ -358,10 +357,9 @@ export default (await import("vue")).defineComponent({
               <div class="mt-1">
                 <input
                   id="email"
-                  v-model="currentState.email"
+                  v-model="user.email"
                   name="email"
                   type="email"
-                  :placeholder="this.email"
                   disabled
                   autocomplete="email"
                   class="block w-full rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 sm:text-sm"
@@ -376,7 +374,7 @@ export default (await import("vue")).defineComponent({
               <div class="mt-1">
                 <select
                   id="country"
-                  v-model="currentState.address.country"
+                  v-model="user.metadata.location.country"
                   name="country"
                   autocomplete="country-name"
                   class="block w-full rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 sm:text-sm"
@@ -689,7 +687,7 @@ export default (await import("vue")).defineComponent({
               <div class="mt-1">
                 <input
                   type="text"
-                  v-model="currentState.address.address1"
+                  v-model="user.metadata.location.address1"
                   name="address-1"
                   id="address-1"
                   autocomplete="address-line1"
@@ -705,7 +703,7 @@ export default (await import("vue")).defineComponent({
               <div class="mt-1">
                 <input
                   type="text"
-                  v-model="currentState.address.address2"
+                  v-model="user.metadata.location.address2"  
                   name="address-2"
                   id="address-2"
                   autocomplete="address-line2"
@@ -721,7 +719,7 @@ export default (await import("vue")).defineComponent({
               <div class="mt-1">
                 <input
                   type="text"
-                  v-model="currentState.address.address3"
+                  v-model="user.metadata.location.address3"
                   name="address-3"
                   id="address-3"
                   autocomplete="address-line3"
@@ -737,7 +735,7 @@ export default (await import("vue")).defineComponent({
               <div class="mt-1">
                 <input
                   type="text"
-                  v-model="currentState.address.city"
+                  v-model="user.metadata.location.city"
                   name="city"
                   id="city"
                   placeholder="City"
@@ -754,7 +752,7 @@ export default (await import("vue")).defineComponent({
               <div class="mt-1">
                 <input
                   type="text"
-                  v-model="currentState.address.state"
+                  v-model="user.metadata.location.state"
                   name="region"
                   id="region"
                   autocomplete="address-level1"
@@ -770,7 +768,7 @@ export default (await import("vue")).defineComponent({
               <div class="mt-1">
                 <input
                   type="text"
-                  v-model="currentState.address.zip"
+                  v-model="user.metadata.location.zip"
                   name="postal-code"
                   id="postal-code"
                   autocomplete="postal-code"

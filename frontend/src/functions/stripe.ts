@@ -26,7 +26,7 @@ export default {
     // Authentication Functions
     // only run when called by a method
     async createCustomer() {
-      // grab user id with this.checkStatus()
+      // grab user id with this.checkOnRoute()
       const user_id = await authenticate
       console.log(user_id)
       console.log("create customer")

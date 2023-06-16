@@ -25,8 +25,13 @@ export default {
       // Your method logic here
       const { data } = await supabase.auth.refreshSession()
       const { session, user } = data
-      this.$store.dispatch('updateParam', ['user', user.id])
-      return user;
+      if (session != null) {
+        this.$store.dispatch('updateParam', ['userid', user.id])
+        return user;
+      } else {
+        this.$store.dispatch('updateParam', ['userid', 'null'])
+        return false;
+      }
     },
     async signin(email: string, password: string) {
       var reqemail = email;
@@ -44,7 +49,6 @@ export default {
       const response = await supabase.auth.signInWithOAuth({
         provider: 'google',
       })
-      this.checkSession()
       return response;
     },
     async signout() {
@@ -55,7 +59,7 @@ export default {
       this.checkSession() // that does it aswell
       return response;
     },
-    async checkStatus() { // Important used for before routing to check if user is logged in
+    async checkOnRoute() { // Important used for before routing to check if user is logged in
       const response = await supabase.auth.refreshSession()
       if (response.data.session != null) {
         return response.data.session.user.id
@@ -110,15 +114,16 @@ export default {
     // },
     async onPageLoad() { // done, runs on page load once and updates everything
       const data2 = await supabase.auth.refreshSession()
+      // Checks if the user is logged in
       if (data2.data.session != null) {
+        // Grabs the userid
         const userid = data2.data.session.user.id
+        // Grabs the data from the database
         const { data } = await supabase
           .from('profiles')
           .select()
           .eq('userid', userid)
-
-        // this.$store.dispatch('updateParam', [userid: userid])
-        
+        // Pushes the data to the store
         this.$store.dispatch('updateParams', {
           userid: userid,
           username: data[0].username,
@@ -147,9 +152,11 @@ export default {
 
 
     // Updating Functions
-    async updateUserData(userid: string, toUpdate: object) {
+    async updateUserData(userid: string, toUpdate: object) { // done
       console.log(toUpdate)
-      // Your method logic here
+      // Pushes the data to the store
+      this.$store.dispatch('updateParams', toUpdate)
+      // Pushes the data to the database
       const response = await supabase
         .from('profiles')
         .update(toUpdate)

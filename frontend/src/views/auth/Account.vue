@@ -149,12 +149,15 @@ export default {
       navigation,
       userNavigation,
       subNavigation,
+      // General
       loading: true,
       loggedin: false,
+      // Profile Subnav
       deletePopup: false,
+      // Account Subnav
       editingAccount: false,
       unsavedChanges: false,
-      // stuff for account page
+      savingdata: false,
       editUser: { // gets set once when page loads and is what v-models sre bound to
         userid: "",
         username: "",
@@ -250,10 +253,32 @@ export default {
 
       this.loading = false;
     },
+    async signUserOut() {
+      await this.signout();
+      // push to home page, but with reloading the whole page
+      window.location.href = "/";
+    },
     async updateAccountData() {
+      this.savingdata = true;
+      this.editingAccount = false;
       console.log("updating data");
-      const response = await this.updateUserData(this.user.userid, { ...this.editUser });
+      const response = await this.updateUserData(this.user.userid, {
+        ...this.editUser,
+        metadata: {
+          ...this.editUser.metadata,
+          location: { ...this.editUser.metadata.location }
+        }
+      });
       console.log(response);
+      this.user = {
+        ...this.editUser,
+        metadata: {
+          ...this.editUser.metadata,
+          location: { ...this.editUser.metadata.location }
+        }
+      };
+      this.unsavedChanges = false;
+      this.savingdata = false;
     },
     discardChanges() {
       this.editingAccount = false;
@@ -405,8 +430,7 @@ export default {
           >
             <a
               @click="
-                item.name === 'Home' ? this.$router.push('/') : signout();
-                this.$router.push('/');
+                item.name === 'Home' ? this.$router.push('/') : signUserOut()
               "
               :class="[
                 active ? 'bg-gray-100' : '',
@@ -1128,10 +1152,10 @@ export default {
                   </div>
                 </div>
                 <div  class="bg-gray-50 flex px-4 py-3 sm:px-6 space-x-2 items-center">
-                  <span v-if="unsavedChanges" class="text-red-500 w-36 text-center px-2 py-0.5 rounded text-xs font-medium bg-red-100 flex-grow">
+                  <span v-if="unsavedChanges && !savingdata" class="text-red-500 w-36 text-center px-2 py-0.5 rounded text-xs font-medium bg-red-100 flex-grow">
                     Unsaved Changes
                   </span>
-                  <div class="text-right w-full justify-end space-x-2 flex-shrink">
+                  <div v-if="!savingdata" class="text-right w-full justify-end space-x-2 flex-shrink">
                     <button v-if="editingAccount" 
                       @click="discardChanges()"
                       class="inline-flex justify-center rounded-md border border-transparent  bg-red-500 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2"
