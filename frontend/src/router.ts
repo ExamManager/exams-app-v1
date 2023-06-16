@@ -9,11 +9,11 @@ const router = createRouter({
       path: '/',
       publicPath: '/',
       component: () => import('./views/Home.vue'),
-      beforeEnter: (to, from, next) => {
-        authenticate.methods.updateData();
-        console.log('before each');
-        next();
-      },
+      // beforeEnter: (to, from, next) => {
+      //   authenticate.methods.updateData();
+      //   console.log('before each');
+      //   next();
+      // },
     },
     {
       path: '/free',
@@ -82,6 +82,7 @@ const router = createRouter({
           // do nothing
           next()
         } else {
+          // set the user id
           next('/account')
         }
       }

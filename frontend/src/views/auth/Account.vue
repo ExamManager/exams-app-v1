@@ -1,6 +1,7 @@
 <script lang="ts">
 import authenticate from "../../functions/authenticate";
 import payment_component from "../../components/payment/accountpayment.vue";
+import { toRaw }  from "vue";
 import {
   Disclosure,
   DisclosureButton,
@@ -150,105 +151,127 @@ export default {
       subNavigation,
       loading: true,
       loggedin: false,
-      deleteaccount: false,
-      // stuff for account page
-      name: "",
-      profilepic: "",
-      provider: "",
-      plan: 0,
-      username: "",
-      user: {},
-      email: "",
-      password: "",
-      id: "",
+      deletePopup: false,
       editingAccount: false,
-      setup_complete: true,
-      img: "",
-      showNotification: false,
-      // location
-      address1: "",
-      address2: "",
-      address3: "",
-      zip: "",
-      state: "",
-      country: ""
+      unsavedChanges: false,
+      // stuff for account page
+      editUser: { // gets set once when page loads and is what v-models sre bound to
+        userid: "",
+        username: "",
+        plan: 0,
+        fullname: "",
+        avatarurl: "",
+        provider: "",
+        email: "",
+        metadata: {
+          name: "",
+          enterprise: false,
+          location: {
+            country: "",
+            city: "",
+            state: "",
+            zip: "",
+            address1: "",
+            address2: "",
+            address3: "",
+          },
+        },
+        setupComplete: false,
+      },
+      user: {// stays the same the whole time, to compare values to...
+        userid: "",
+        username: "",
+        plan: 0,
+        fullname: "",
+        avatarurl: "",
+        provider: "",
+        email: "",
+        metadata: {
+          name: "",
+          enterprise: false,
+          location: {
+            country: "",
+            city: "",
+            state: "",
+            zip: "",
+            address1: "",
+            address2: "",
+            address3: "",
+          },
+        },
+        setupComplete: false,
+      },
     };
   },
   mounted() {
     this.checkuser();
-    window.addEventListener("submit", (e) => {
-      e.preventDefault();
-      if (this.editingAccount) console.log("submit");
-      this.editingAccount = !this.editingAccount;
-      console.log(document.getElementById("address-2").value);
-      if (this.userMetadata.data.isEnt) {
-        this.updateAccount(
-          document.getElementById("zip").value,
-          document.getElementById("country").value,
-          document.getElementById("address-1").value,
-          document.getElementById("address-2").value,
-          document.getElementById("school-name").value
-        );
-      } else {
-        this.updateAccount(
-          document.getElementById("zip").value,
-          document.getElementById("country").value,
-          document.getElementById("address-1").value,
-          document.getElementById("address-2").value,
-          document.getElementById("full-name").value
-        );
-      }
-    });
+    // setInterval(() => {
+    //   console.log(this.$store.state.metadata.location.state);
+    // }, 500);
   },
-  // unmounted() {
-  //   window.addEventListener("submit", (e) => {
-  //     e.preventDefault();
-  //     if (this.editingAccount) console.log("submit");
-  //     this.editingAccount = !this.editingAccount;
-  //     console.log(document.getElementById('address-2').value)
-  //     if (this.userMetadata.data.isEnt) {this.updateAccount(document.getElementById('zip').value, document.getElementById('country').value, document.getElementById('address-1').value, document.getElementById('address-2').value, document.getElementById('school-name').value);}
-  //     else {this.updateAccount(document.getElementById('zip').value, document.getElementById('country').value, document.getElementById('address-1').value, document.getElementById('address-2').value, document.getElementById('full-name').value);}
-  //   });
-  // },
+  watch: {
+    editUser: {
+      // compare this.editUser to this.user 
+      handler: function (val, oldVal) {
+        if (JSON.stringify(val) !== JSON.stringify(this.user)) {
+          this.unsavedChanges = true;
+        } else {
+          this.unsavedChanges = false;
+        }
+      },
+      deep: true,
+    },
+  },
   methods: {
     async checkuser() {
-      // makes sure to have the previous value while waiting for the new one
-      // this.loading = true;
-      // this.userid = this.$store.state.userId || "null";
-      // console.log(this.userid);
+      while (this.$store.state.userid === "") {
+        console.log("waiting for userid");
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+      }
+      if (this.$store.state.userid === "null") {
+        this.signedin = false;
+      } else {
+        this.user = {
+          ...this.$store.state,
+          metadata: {
+            ...this.$store.state.metadata,
+            location: { ...this.$store.state.metadata.location }
+          }
+        };
+        this.editUser = {
+          ...this.$store.state,
+          metadata: {
+            ...this.$store.state.metadata,
+            location: { ...this.$store.state.metadata.location }
+          }
+        };
+      }
+      console.log("mounted")
 
-
-
-      // this.loading = false;
+      this.loading = false;
     },
-    async updateAccount(
-      zip: string,
-      country: string,
-      address1: string,
-      address2: string,
-      schoolName?: string
-    ) {
-      const schoolname =
-        document.getElementById("school-name") == null
-          ? ""
-          : document.getElementById("school-name").value;
-      const response = await this.updateUserData(
-        zip,
-        this.userMetadata.data.isEnt,
-        country,
-        address1,
-        address2,
-        schoolname,
-        this.user.id
-      );
-    }
+    async updateAccountData() {
+      console.log("updating data");
+      const response = await this.updateUserData(this.user.userid, { ...this.editUser });
+      console.log(response);
+    },
+    discardChanges() {
+      this.editingAccount = false;
+      this.editUser = {
+        ...this.$store.state,
+        metadata: {
+          ...this.$store.state.metadata,
+          location: { ...this.$store.state.metadata.location }
+        }
+      };
+    },
   }
 };
 </script>
 <template v-if="this.loading === false">
   <!-- Delete Popup -->
-  <TransitionRoot as="template" :show="deleteaccount">
-    <Dialog as="div" class="relative z-50" @close="deleteaccount = false">
+  <TransitionRoot as="template" :show="deletePopup">
+    <Dialog as="div" class="relative z-50" @close="deletePopup = false">
       <TransitionChild
         as="template"
         enter="ease-out duration-300"
@@ -299,7 +322,7 @@ export default {
                       <p class="text-sm text-gray-500">
                         Are you sure you want to deactivate your account? All of
                         your data will be permanently removed. This action
-                        cannot be undone.
+                        cannot be undone. {{ this.user }}
                       </p>
                     </div>
                   </div>
@@ -311,14 +334,14 @@ export default {
                 <button
                   type="button"
                   class="inline-flex w-full justify-center rounded-md border border-transparent bg-red-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm"
-                  @click="deleteaccount = false"
+                  @click="deletePopup = false"
                 >
                   Deactivate
                 </button>
                 <button
                   type="button"
                   class="mt-3 inline-flex w-full justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-base font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
-                  @click="deleteaccount = false"
+                  @click="deletePopup = false"
                   ref="cancelButtonRef"
                 >
                   Cancel
@@ -331,7 +354,7 @@ export default {
     </Dialog>
   </TransitionRoot>
 
-  <ComponentOverlay v-if="this.setup_complete === false" class="z-0" />
+  <ComponentOverlay v-if="this.user.setupComplete === false && !loading" />
   <!-- Account Page -->
   <transition
     enter-active-class="transform ease-in-out duration-500 transition"
@@ -349,7 +372,7 @@ export default {
             <div>
               <img
                 class="flex h-5 w-5 object-cover rounded-full"
-                :src="this.profilepic"
+                :src="this.user.avatarurl"
                 referrerpolicy="no-referrer"
                 alt=""
               />
@@ -358,7 +381,7 @@ export default {
               <p
                 class="text-sm font-medium text-gray-700 group-hover:text-gray-900"
               >
-                {{ this.name }}
+                {{ this.user.fullname }}
               </p>
             </div>
           </div>
@@ -469,7 +492,7 @@ export default {
                       >examtimer.tech/</span
                     >
                     <input
-                      v-model="this.username"
+                      v-model="this.editUser.username"
                       type="text"
                       name="username"
                       autocomplete="username"
@@ -489,7 +512,7 @@ export default {
                       <img
                         id="image"
                         class="h-full w-full object-cover"
-                        :src="this.profilepic"
+                        :src="this.editUser.avatarurl"
                       />
                     </span>
                     <button
@@ -581,7 +604,7 @@ export default {
                   class="mt-5 sm:mt-0 sm:ml-6 sm:flex sm:flex-shrink-0 sm:items-center"
                 >
                   <button
-                    @click="deleteaccount = true"
+                    @click="deletePopup = true"
                     type="button"
                     class="inline-flex items-center justify-center rounded-md border border-transparent bg-red-100 px-4 py-2 font-medium text-red-700 hover:bg-red-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 sm:text-sm"
                   >
@@ -599,7 +622,7 @@ export default {
           v-if="subNavigation[1].current && !this.loading"
         >
           <section aria-labelledby="payment-details-heading">
-            <form action="">
+            <div>
               <div class="shadow sm:overflow-hidden sm:rounded-md">
                 <div class="bg-white py-6 px-4 sm:p-6">
                   <div>
@@ -615,12 +638,12 @@ export default {
                     </p>
                   </div>
                   <div class="pt-8 grid grid-cols-4 gap-6">
-                    <div v-if="this.plan != 0" class="col-span-4 sm:col-span-2">
+                    <div v-if="this.editUser.plan != 0" class="col-span-4 sm:col-span-2">
                       <label class="block text-sm font-medium text-gray-700"
                         >School Name</label
                       >
                       <input
-                        v-model="name"
+                        v-model="editUser.fullname"
                         :readonly="!editingAccount"
                         type="text"
                         name="school-name"
@@ -629,12 +652,12 @@ export default {
                       />
                     </div>
 
-                    <div v-if="this.plan == 0" class="col-span-4 sm:col-span-2">
+                    <div v-if="this.editUser.plan == 0" class="col-span-4 sm:col-span-2">
                       <label class="block text-sm font-medium text-gray-700"
                         >Full Name</label
                       >
                       <input
-                        v-model="name"
+                        v-model="editUser.fullname"
                         :readonly="!editingAccount"
                         type="text"
                         name="school-name"
@@ -648,7 +671,7 @@ export default {
                         >Email Address</label
                       >
                       <input
-                        v-model="email"
+                        v-model="editUser.email"
                         :readonly="!editingAccount"
                         type="text"
                         name="email-address"
@@ -663,7 +686,7 @@ export default {
                         >Address Line 1</label
                       >
                       <input
-                        v-model="address1"
+                        v-model="editUser.metadata.location.address1"
                         :readonly="!editingAccount"
                         type="text"
                         name="address-1"
@@ -678,7 +701,7 @@ export default {
                         >ZIP / Postal code</label
                       >
                       <input
-                        v-model="zip"
+                        v-model="editUser.metadata.location.zip"
                         :readonly="!editingAccount"
                         type="text"
                         name="postal-code"
@@ -693,7 +716,7 @@ export default {
                         >Address Line 2</label
                       >
                       <input
-                        v-model="address2"
+                        v-model="editUser.metadata.location.address2"
                         :readonly="!editingAccount"
                         type="text"
                         name="address-2"
@@ -708,7 +731,7 @@ export default {
                         >State / County</label
                       >
                       <input
-                        v-model="state"
+                        v-model="editUser.metadata.location.state"
                         :readonly="!editingAccount"
                         type="text"
                         name="state"
@@ -723,7 +746,7 @@ export default {
                         >Address Line 3</label
                       >
                       <input
-                        v-model="address3"
+                        v-model="editUser.metadata.location.address3"
                         :readonly="!editingAccount"
                         type="text"
                         name="address-3"
@@ -740,7 +763,7 @@ export default {
                       <!-- <input v-model="userMetadata.data.address.country" :readonly="!editingAccount" type="text" name="address-2" id="country" autocomplete="address-line-2"
                         class="mt-1 block w-full rounded-md border border-gray-300 py-2 px-3 shadow-sm focus:border-gray-900 focus:outline-none focus:ring-gray-900 sm:text-sm" /> -->
                       <select
-                        v-model="country"
+                        v-model="editUser.metadata.location.country"
                         :disabled="!editingAccount"
                         id="country"
                         name="address-2"
@@ -1104,15 +1127,36 @@ export default {
                     </div>
                   </div>
                 </div>
-                <div class="bg-gray-50 px-4 py-3 text-right sm:px-6">
-                  <button
-                    class="inline-flex justify-center rounded-md border border-transparent bg-gray-800 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2"
-                  >
-                    {{ editingAccount ? "Save" : "Edit" }}
+                <div  class="bg-gray-50 flex px-4 py-3 sm:px-6 space-x-2 items-center">
+                  <span v-if="unsavedChanges" class="text-red-500 w-36 text-center px-2 py-0.5 rounded text-xs font-medium bg-red-100 flex-grow">
+                    Unsaved Changes
+                  </span>
+                  <div class="text-right w-full justify-end space-x-2 flex-shrink">
+                    <button v-if="editingAccount" 
+                      @click="discardChanges()"
+                      class="inline-flex justify-center rounded-md border border-transparent  bg-red-500 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2"
+                    >
+                      Discard Changes
+                    </button>
+                    <button
+                      @click="editingAccount ? updateAccountData() : editingAccount = true"
+                      class="inline-flex justify-center rounded-md border border-transparent  bg-gray-800 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2"
+                    >
+                      {{ editingAccount ? "Save Changes" : "Edit Account Data" }}
+                    </button>
+                  </div>
+                  <div v-if="savingdata" class="text-right w-full justify-end space-x-2 flex-shrink">
+                  <button disabled class="inline-flex justify-center rounded-md border border-transparent  bg-red-500 py-2 px-4 text-sm font-medium text-white shadow-sm ">
+                    <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                      <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    Saving...
                   </button>
                 </div>
+                </div>
               </div>
-            </form>
+            </div>
           </section>
         </div>
         <!-- Password -->
@@ -1147,7 +1191,7 @@ export default {
                         readonly
                         name="school-name"
                         id="school-name"
-                        v-model="this.email"
+                        v-model="editUser.email"
                         class="mt-1 block w-full rounded-md border border-gray-300 py-2 px-3 shadow-sm focus:border-gray-900 focus:outline-none focus:ring-gray-900 sm:text-sm"
                       />
                     </div>
@@ -1160,6 +1204,7 @@ export default {
                         type="password"
                         name="password"
                         id="password"
+                        autocomplete="password"
                         placeholder="••••••••••••••"
                         v-model="this.password"
                         v-mask="'XXXXXXXXXXXXXXXX'"

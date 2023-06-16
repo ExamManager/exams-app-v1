@@ -213,7 +213,7 @@ export default {
   mounted() {
     this.show6 = true;
     // if user = null then loggedin = false
-    if (this.$store.state.userId === "null") {
+    if (this.$store.state.userid === "null") {
       // if there is, then load it into the people array
       this.loggedin = false;
     } else {

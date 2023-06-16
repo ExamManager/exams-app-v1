@@ -64,72 +64,76 @@ export default {
       }
     },
 
-    // Updating Data Functions
-    async getData(userid: string, array: string[]) {
-      const returnData = {}
-      console.log(userid, array)
-      try {
-        const selectString = array.join(',')
-        const response = await supabase
-          .from('profiles')
-          .select(selectString)
-          .eq('userId', userid)
-        return response.data[0]
-        console.log(response.data[0])
-      } catch (error) {
-        console.log(error)
-        return "null"
-      }
-      return returnData
-    },
-    async getMainData(userid: string) {
-      // grabs all userdata expect for the metadata
-      try {
-        const response = await supabase
-        .from('profiles')
-        .select("username,setupComplete,fullName,avatarUrl,provider,email,plan")
-        .eq('userId', userid)
-      return response.data[0];
-      } catch (error) {
-        console.log(error)
-        return "null"
-      }
-    },
-    async getAllData(userid: string) {
-      // grabs all userdata including the metadata
-      try {
-        const response = await supabase
-          .from('profiles')
-          .select("*")
-          .eq('userId', userid)
-        return response.data[0];
-      } catch (error) {
-        console.log(error)
-        return "null"
-      }
-    },
-    async updateData() { // done, runs on page load once and updates everything
+    // // Updating Data Functions
+    // async getData(userid: string, array: string[]) {
+    //   const returnData = {}
+    //   console.log(userid, array)
+    //   try {
+    //     const selectString = array.join(',')
+    //     const response = await supabase
+    //       .from('profiles')
+    //       .select(selectString)
+    //       .eq('userid', userid)
+    //     return response.data[0]
+    //     console.log(response.data[0])
+    //   } catch (error) {
+    //     console.log(error)
+    //     return "null"
+    //   }
+    //   return returnData
+    // },
+    // async getMainData(userid: string) {
+    //   // grabs all userdata expect for the metadata
+    //   try {
+    //     const response = await supabase
+    //     .from('profiles')
+    //     .select("username,setupComplete,fullname,avatarurl,provider,email,plan")
+    //     .eq('userid', userid)
+    //   return response.data[0];
+    //   } catch (error) {
+    //     console.log(error)
+    //     return "null"
+    //   }
+    // },
+    // async getAllData(userid: string) {
+    //   // grabs all userdata including the metadata
+    //   try {
+    //     const response = await supabase
+    //       .from('profiles')
+    //       .select("*")
+    //       .eq('userid', userid)
+    //     return response.data[0];
+    //   } catch (error) {
+    //     console.log(error)
+    //     return "null"
+    //   }
+    // },
+    async onPageLoad() { // done, runs on page load once and updates everything
       const data2 = await supabase.auth.refreshSession()
-      console.log(data2)
-      const userid = data2.data.user.id
-      console.log(userid)
-
-      const { data, error } = await supabase
+      if (data2.data.session != null) {
+        const userid = data2.data.session.user.id
+        const { data } = await supabase
           .from('profiles')
           .select()
-          .eq('userId', userid)
-      
-      this.$store.dispatch('updateParams', {
-        userId: userid,
-        username: data[0].username,
-        setupComplete: data[0].setupComplete,
-        fullName: data[0].fullName,
-        avatarUrl: data[0].avatarUrl,
-        provider: data[0].provider,
-        email: data[0].email,
-        plan: data[0].plan,
-        metadata: data[0].metadata,
-      })
+          .eq('userid', userid)
+
+        // this.$store.dispatch('updateParam', [userid: userid])
+        
+        this.$store.dispatch('updateParams', {
+          userid: userid,
+          username: data[0].username,
+          setupComplete: data[0].setupComplete,
+          fullname: data[0].fullname,
+          avatarurl: data[0].avatarurl,
+          provider: data[0].provider,
+          email: data[0].email,
+          plan: data[0].plan,
+          metadata: data[0].metadata,
+        })
+        return data[0]
+      } else {
+        return false
+      }
     },
 
 
@@ -144,52 +148,18 @@ export default {
 
     // Updating Functions
     async updateUserData(userid: string, toUpdate: object) {
-      console.log(userid)
-
-      function getUpdatedObject(objFull, objUpdates) {
-        for (var key in objUpdates) {
-          if (typeof objUpdates[key] ==  "object") {
-            const objOriginal = objFull[key]
-            if (objFull[key]) {
-              const objUpdated = getUpdatedObject(objOriginal, objUpdates[key])
-              objFull[key] = objUpdated
-            }
-            else objFull[key] = objUpdates[key]
-          }
-          else {
-            objFull[key] = objUpdates[key]
-          }
-        }
-        return objFull
-      }
-
-      if (toUpdate.metadata) {
-        const updates = toUpdate.metadata
-
-        const response = await supabase
-          .from('profiles')
-          .select('metadata')
-          .eq('id', userid)
-        const metadata = response.data[0].metadata
-        const newMetadata = getUpdatedObject(metadata, updates)
-        toUpdate.metadata = newMetadata        
-      }
-      
+      console.log(toUpdate)
+      // Your method logic here
       const response = await supabase
         .from('profiles')
         .update(toUpdate)
-        .eq('id', userid)
-      
-      console.log('response', response)
+        .eq('userid', userid)
+      return response;
     },
     async setUserData(
       userid: string,
       data: {
-        username: string,
-        entSize: string,
-        firstName: string,
-        lastName: string,
-        email: string,
+        enterprise: boolean,
         address: {
           country: string,
           city: string,
@@ -204,37 +174,11 @@ export default {
       ) {
 
       if (userid == null) {
-        userid = this.$store.state.userId
+        userid = this.$store.state.userid
       }
 
       console.log(userid)
 
-      const plans = [
-        { 
-          id: 0, 
-          title: "Free", 
-          description: "For personal use only", 
-          users: "Free" 
-        },
-        {
-          id: 1,
-          title: "Basic",
-          description: "For schools with less than 200 students",
-          users: "$9.99",
-        },
-        {
-          id: 2,
-          title: "Pro",
-          description: "For schools with less than 500 students",
-          users: "$19.99",
-        },
-        {
-          id: 3,
-          title: "Enterprise",
-          description: "For schools with less than 750 students",
-          users: "$39.99",
-        },
-      ];
 
       const profilePic = img
 
@@ -246,7 +190,7 @@ export default {
         full_name: `${data.firstName.trim()} ${data.lastName.trim()}`,
         plan: data.entSize,
         metadata: {
-          address: {
+          location: {
             country: data.address.country.trim(),
             city: data.address.city.trim(),
             state: data.address.state.trim(),
@@ -263,7 +207,7 @@ export default {
         },
         setup_complete: true,
       }
-      const provider = await this.getData(userid, ['provider'])
+      //const provider = await this.getData(userid, ['provider'])
 
       if (profilePic != null) {
         const fileName: string = `${userid}-${Math.floor(Math.random()*10000)}.png`
@@ -272,9 +216,13 @@ export default {
           .from('avatars')
           .upload(`profile-pictures/${fileName}`, profilePic)
 
+        
         const imageURL = await supabase.storage
           .from('avatars') // :)
           .getPublicUrl(`profile-pictures/${fileName}`)
+          
+        console.log('profilePicResponse', profilePicResponse)
+
         console.log(imageURL) // always log the response to see if there was an error
         toUpload.avatar_url = imageURL.data.publicUrl
       }

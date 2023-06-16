@@ -26,7 +26,9 @@ export default {
       }, 500);
     },
     async googlelocal() {
-      const response = this.signingoogle();
+      const response = await this.signingoogle();
+      console.log('googleSignInResponse: ', response)
+      localStorage.setItem("googleSignInReponse", JSON.stringify(response));
       return response
     },
   },

@@ -4,31 +4,31 @@ import { createStore } from 'vuex'
 
 export default createStore({
   state: {
-    userId: "",
-    userName: "",
+    userid: "",
+    username: "",
     plan: 0,
-    fullName: "",
-    avatarUrl: "",
+    fullname: "",
+    avatarurl: "",
     provider: "",
     email: "",
-    metaData: {},
+    metadata: {},
     setupComplete: false,
   },
   mutations: {
-    updateUserId(state, userId) {
-      state.userId = userId
+    updateUserid(state, userid) {
+      state.userid = userid
     },
-    updateUsername(state, userName) {
-      state.userName = userName
+    updateUsername(state, username) {
+      state.username = username
     },
     updatePlan(state, plan) {
       state.plan = plan
     },
-    updateFullName(state, fullName) { 
-      state.fullName = fullName
+    updateFullname(state, fullname) { 
+      state.fullname = fullname
     },
-    updateAvatarUrl(state, avatarUrl) { 
-      state.avatarUrl = avatarUrl
+    updateAvatarurl(state, avatarurl) { 
+      state.avatarurl = avatarurl
     },
     updateProvider(state, provider) {
       state.provider = provider
@@ -37,17 +37,17 @@ export default createStore({
       state.email = email
     },
     updateMetadata(state, metadata) {
-      state.metaData = metadata
+      state.metadata = metadata
     },
     updateSetupComplete(state, setupComplete) {
       state.setupComplete = setupComplete
     },
     updateAllData(state, data) {
-      state.userId = data.userId || state.userId
-      state.userName = data.userName || state.userName
+      state.userid = data.userid || state.userid
+      state.username = data.username || state.username
       state.plan = data.plan ||  state.plan
-      state.fullName = data.fullName  || state.fullName
-      state.avatarUrl = data.avatarUrl  || state.avatarUrl
+      state.fullname = data.fullname  || state.fullname
+      state.avatarurl = data.avatarurl  || state.avatarurl
       state.provider = data.provider  || state.provider
       state.email = data.email || state.email 
       state.metadata = data.metadata || state.metadata 

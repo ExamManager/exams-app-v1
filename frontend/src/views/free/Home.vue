@@ -1,7 +1,7 @@
 <script lang="ts">
-import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue'
+import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue';
 import { HomeIcon, ChevronRightIcon } from '@heroicons/vue/20/solid';
-export default ({
+export default {
     name: 'Free',
     components: {
       Dialog,
@@ -828,7 +828,11 @@ export default ({
             }, 200);
         },
     },
-});
+}
+
+
+
+
 </script>
 
 <template>

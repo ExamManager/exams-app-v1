@@ -1,7 +1,7 @@
 <script lang="ts">
 import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue'
 
-export default ({
+export default {
   name: 'Premium',
   components: {
     Dialog,
@@ -848,7 +848,7 @@ export default ({
       }, 200);
     },
   },
-})
+}
 </script>
 
 <template>

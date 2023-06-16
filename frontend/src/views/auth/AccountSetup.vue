@@ -72,7 +72,7 @@ export default (await import("vue")).defineComponent({
       img: null,
       defaultImgURL: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Default_pfp.svg/1200px-Default_pfp.svg.png",
       //userid: localStorage.getItem('user'),
-      userid: this.$store.state.userId,
+      userid: this.$store.state.userid,
     };
   },
   methods: {
@@ -106,7 +106,7 @@ export default (await import("vue")).defineComponent({
     submit() {
       console.log(this.currentState);
       //this.userid = localStorage.getItem('user');
-      this.userid = this.$store.state.userId;
+      this.userid = this.$store.state.userid;
       this.setUserData(this.userid, this.currentState, this.img);
       console.log("submit")
 
@@ -124,9 +124,15 @@ export default (await import("vue")).defineComponent({
   async mounted() {
 
     this.checkSession()
+    this.onPageLoad()
 
     document.getElementById("image")
       .src = this.defaultImgURL
+
+    this.userid = this.$store.state.userid;
+    this.email = this.$store.state.email;
+
+    console.log(this.email)
 
     document.addEventListener("submit", (e) => {
       e.preventDefault();
@@ -135,8 +141,10 @@ export default (await import("vue")).defineComponent({
 
     console.log(this.$store.state)
     console.log(toRaw(this.$store.state))
+
+    console.log(this.$store.state.userid)
     
-    this.userdata = await this.getMainData(this.userid)
+    //this.userdata = await this.getMainData(this.userid)
     console.log(this.userdata)
 
     //console.log("provider: ", localStorage.getItem("provider"));
@@ -353,8 +361,8 @@ export default (await import("vue")).defineComponent({
                   v-model="currentState.email"
                   name="email"
                   type="email"
-                  :disabled="this.provider='google'"
-                  :placeholder="this.provider == 'google' ? 'hi' : 'there'"
+                  :placeholder="this.email"
+                  disabled
                   autocomplete="email"
                   class="block w-full rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 sm:text-sm"
                 />

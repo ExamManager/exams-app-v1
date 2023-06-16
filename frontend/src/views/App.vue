@@ -46,19 +46,19 @@ export default {
       open1: false,
       open2: false,
       show3: false, // if on page studentview (the fullscreen BUTTON)
-      loggedin: false,
+      loggedin: true,
       loading: true,
       fullname: "",
       profilepic: "",
       user: {
-        userId: this.$store.state.userId,
-        userName: this.$store.state.userName,
+        userid: this.$store.state.userid,
+        username: this.$store.state.username,
         plan: this.$store.state.plan,
-        fullName: this.$store.state.fullName,
-        avatarUrl: this.$store.state.avatarUrl,
+        fullname: this.$store.state.fullname,
+        avatarurl: this.$store.state.avatarurl,
         provider: this.$store.state.provider,
         email: this.$store.state.email,
-        metaData: this.$store.state.metaData,
+        metadata: this.$store.state.metadata,
         setupComplete: this.$store.state.setupComplete,
       },
       showNotifica: true,
@@ -192,22 +192,32 @@ export default {
       }
     },
     async checkuser() {
-      // makes sure to have the previous value while waiting for the new one
       this.loading = true;
-     // runs update function to update the store
-      console.log(this.profilepic);
-      console.log(this.fullname);
-      
-      console.log(this.$store.state.userId)
-
-      if (this.user.userId == "") {
+      this.user = toRaw(this.$store.state)
+      // check if the data in storage is empty
+      if (this.user.userid == "" && this.user.email == "") {
+        console.log("Data not in storage, fetching from server");
+        const allData = await this.onPageLoad();
+        if (allData == false) {
+          console.log("User not logged in");
+        } else {
+          this.user = allData;
+        }
+      } else {
+        console.log("Data in storage");
+      }
+      // check if the user is logged in
+      if (this.user.userid == "") {
+        console.log("User not logged in");
         this.loggedin = false;
       } else {
+        console.log("User logged in");
         this.loggedin = true;
-        this.profilepic = this.$store.state.avatarUrl;
-        this.fullname = this.$store.state.fullName;
+        this.profilepic = this.user.avatarurl
+        this.fullname = this.user.fullname
       }
       this.loading = false;
+      console.log('loading false')
       //fetches the userid from checkStatus
     },
   },
@@ -217,11 +227,16 @@ export default {
       this.checkuser();
     },
   },
-  async mounted() {
-    // check which page is shows, and if it is on "/fullscreen" then hide the navbar always
-    // this.checkvisibility()
-    // this.checkuser()
-  },
+  // async mounted() {
+  //   if (this.user.userid == "") {
+  //       this.loggedin = false;
+  //     } else {
+  //       this.loggedin = true;
+  //       this.profilepic = this.$store.state.avatarurl;
+  //       this.fullname = this.$store.state.fullname;
+  //     }
+  //     this.loading = false;
+  // },
 };
 </script>
 
@@ -301,6 +316,7 @@ export default {
                           </p>
                           <p class="mt-1 text-sm text-gray-500">{{ item.description }}</p>
                         </div>
+                        <span>{{ this.user }}</span>
                       </a>
                     </div>
                     <div

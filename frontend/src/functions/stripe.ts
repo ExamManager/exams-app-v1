@@ -18,7 +18,7 @@ export default {
   data() {
     return {
       //userid: String(localStorage.getItem('userid')),
-      userid: this.$store.state.userId,
+      userid: this.$store.state.userid,
       website: "http://localhost:3001",
     }
   },
