@@ -13,6 +13,45 @@ const port = 3001;
 app.use(express.json());
 
 
+
+app.post("/stripe/createcustomer", async (req, res) => {
+  try {
+    const userid = req.body.userid;
+    const { data, error } = await supabase
+      .from("profiles")
+      .select("email, metadata, fullname")
+      .eq("userid", userid);
+    if (error) {
+      throw new Error(error.message);
+    }
+    const customer = await stripe.customers.create({
+      email: data[0].email,
+      name: data[0].fullname,
+      address: {
+        line1: data[0].metadata.location.address1,
+        line2: data[0].metadata.location.address2,
+        city: data[0].metadata.location.city,
+        postal_code: data[0].metadata.location.zip,
+        country: data[0].metadata.location.country,
+        state: data[0].metadata.location.state,
+      },
+    });
+    const { error: updateError } = await supabase
+      .from("profiles")
+      .update({ customer_id: customer.id })
+      .eq("userid", userid);
+    if (updateError) {
+      throw new Error(updateError.message);
+    }
+    res.status(200).json({ message: "success" });
+  } catch (err) {
+    if (!res.headersSent) {
+      res.status(500).json({ error: err.message });
+    }
+  }
+});
+
+
 app.get("/", (req, res) => {
   res.send("It somehow works well!");
 });

@@ -384,7 +384,7 @@ export default {
   <transition
     enter-active-class="transform ease-in-out duration-500 transition"
     enter-from-class="opacity-0 "
-    enter-to-class=" opacity-100"
+    enter-to-class="x opacity-100"
   >
     <Menu
       v-if="loading === false"

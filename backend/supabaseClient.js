@@ -1,7 +1,7 @@
 import { createClient } from "@supabase/supabase-js";
 
-const supabaseUrl = "REDACTED";
-const supabaseKey = "REDACTED";
+const supabaseUrl = "https://vhnpyawfzfrcezeljwfm.supabase.co"
+const supabaseKey = "REDACTED"
 
 const options = {
   auth: {

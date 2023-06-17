@@ -17,8 +17,7 @@ export default {
   mixins: [authenticate],
   data() {
     return {
-      //userid: String(localStorage.getItem('userid')),
-      userid: this.$store.state.userid,
+      userid: "",
       website: "http://localhost:3001",
     }
   },
@@ -27,11 +26,18 @@ export default {
     // only run when called by a method
     async createCustomer() {
       // grab user id with this.checkOnRoute()
-      const user_id = await authenticate
+      const user_id = await authenticate.methods.checkOnRoute()
       console.log(user_id)
       console.log("create customer")
-
- 
+      const response = await fetch(this.website + "/stripe/createcustomer", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ userid: user_id })
+      })
+      const error = await response.json()
+      console.log(error)
     },
     async createSubscription() {
 

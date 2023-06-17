@@ -67,51 +67,6 @@ export default {
         return false
       }
     },
-
-    // // Updating Data Functions
-    // async getData(userid: string, array: string[]) {
-    //   const returnData = {}
-    //   console.log(userid, array)
-    //   try {
-    //     const selectString = array.join(',')
-    //     const response = await supabase
-    //       .from('profiles')
-    //       .select(selectString)
-    //       .eq('userid', userid)
-    //     return response.data[0]
-    //     console.log(response.data[0])
-    //   } catch (error) {
-    //     console.log(error)
-    //     return "null"
-    //   }
-    //   return returnData
-    // },
-    // async getMainData(userid: string) {
-    //   // grabs all userdata expect for the metadata
-    //   try {
-    //     const response = await supabase
-    //     .from('profiles')
-    //     .select("username,setupComplete,fullname,avatarurl,provider,email,plan")
-    //     .eq('userid', userid)
-    //   return response.data[0];
-    //   } catch (error) {
-    //     console.log(error)
-    //     return "null"
-    //   }
-    // },
-    // async getAllData(userid: string) {
-    //   // grabs all userdata including the metadata
-    //   try {
-    //     const response = await supabase
-    //       .from('profiles')
-    //       .select("*")
-    //       .eq('userid', userid)
-    //     return response.data[0];
-    //   } catch (error) {
-    //     console.log(error)
-    //     return "null"
-    //   }
-    // },
     async onPageLoad() { // done, runs on page load once and updates everything
       const data2 = await supabase.auth.refreshSession()
       // Checks if the user is logged in
@@ -140,17 +95,6 @@ export default {
         return false
       }
     },
-
-
-
-
-
-
-
-
-
-
-
     // Updating Functions
     async updateUserData(userid: string, toUpdate: object) { // done
       console.log(toUpdate)
@@ -166,15 +110,20 @@ export default {
     async setUserData(
       userid: string,
       data: {
-        enterprise: boolean,
-        address: {
-          country: string,
-          city: string,
-          state: string,
-          zip: string,
-          address1: string,
-          address2?: string,
-          address3?: string,
+        username: string,
+        plan: number,
+        fullname: string,
+        metadata: {
+          enterprise: boolean,
+          location: {
+            country: string,
+            state: string,
+            city: string,
+            zip: string,
+            address1: string,
+            address2?: string,
+            address3?: string,
+          }
         },
       },
       img?: any,
@@ -189,30 +138,25 @@ export default {
 
       const profilePic = img
 
-      if (!data.address.address2) data.address.address2 = '';
-      if (!data.address.address3) data.address.address3 = '';
+      if (!data.metadata.location.address2) data.metadata.location.address2 = '';
+      if (!data.metadata.location.address3) data.metadata.location.address3 = '';
 
       const toUpload = {
         username: data.username,
-        full_name: `${data.firstName.trim()} ${data.lastName.trim()}`,
-        plan: data.entSize,
+        fullname: data.fullname,
+        plan: data.plan,
         metadata: {
           location: {
-            country: data.address.country.trim(),
-            city: data.address.city.trim(),
-            state: data.address.state.trim(),
-            zip: data.address.zip.trim(),
-            address1: data.address.address1.trim(),
-            address2: data.address.address2.trim(),
-            address3: data.address.address3.trim(),
-          }, 
-          name: {
-            first: data.firstName.trim(),
-            last: data.lastName.trim(),
-            full: `${data.firstName.trim()} ${data.lastName.trim()}`
-          }
+            country: data.metadata.location.country.trim(),
+            state: data.metadata.location.state.trim(),
+            zip: data.metadata.location.zip.trim(),
+            city: data.metadata.location.city.trim(),
+            address1: data.metadata.location.address1.trim(),
+            address2: data.metadata.location.address2.trim(),
+            address3: data.metadata.location.address3.trim(),
+          },
         },
-        setup_complete: true,
+        setupComplete: true,
       }
       //const provider = await this.getData(userid, ['provider'])
 
@@ -231,20 +175,38 @@ export default {
         console.log('profilePicResponse', profilePicResponse)
 
         console.log(imageURL) // always log the response to see if there was an error
-        toUpload.avatar_url = imageURL.data.publicUrl
+        toUpload.avatarurl = imageURL.data.publicUrl
+        toUpload.avatar_filename = fileName
       }
 
       console.log('toUpload', toUpload)
 
-
       const response = await supabase
         .from('profiles')
         .update(toUpload)
-        .eq('id', userid)
+        .eq('userid', userid)
       console.log('response', response)
-    },
-    async setUserAvatar(userid: string, img: any) {
       
+      return response;
     },
+    deleteUser(userid: string) {
+      // Your method logic here
+      const getUserAvatar = supabase
+        .from('profiles')
+        .select("avatar_filename")
+        .eq('userid', userid)
+
+      const deleteAvatar = supabase
+        .storage
+        .from('avatars')
+        .remove(`profile-pictures/${getUserAvatar}`)
+
+      const response = supabase
+        .auth
+        .users
+        .deleteUser(userid)
+
+      return response;
+    }
   },
 }

@@ -133,16 +133,20 @@ export default {
     },
     checkvisibility() {
       this.loading = true;
-      if (window.location.pathname == "/") { // on home page
+      if (window.location.pathname == "/") {
+        // on home page
         this.show = false; // hides banner
         this.show2 = 2; // shows full navbar
-      } else if (window.location.pathname == "/payment") { // on payment page 
+      } else if (window.location.pathname == "/payment") {
+        // on payment page
         this.show = false; // hides banner
         this.show2 = 2; // shows full navbar
-      } else if (window.location.pathname == "/pricing") { // on pricing page
-        this.show = true; // shows banner 
+      } else if (window.location.pathname == "/pricing") {
+        // on pricing page
+        this.show = true; // shows banner
         this.show2 = 2; // shows full navbar
-      } else if (window.location.pathname == "/account") { // on account page
+      } else if (window.location.pathname == "/account") {
+        // on account page
         this.show = false; // hides banner
         this.show2 = 1; // shows minimal navbar
       } else if (window.location.pathname == "/privacy") {
@@ -154,12 +158,14 @@ export default {
       } else if (window.location.pathname == "/docs") {
         this.show = true; // shows banner
         this.show2 = 2; // shows full navbar
-      }  else { // default
+      } else {
+        // default
         this.show2 = 1; // shows minimal navbar
         this.show = false; // hides banner
         console.log("default");
       }
-      if (window.location.pathname == "/premium/studentview") { // Shows enter fullscreen button on studentview page
+      if (window.location.pathname == "/premium/studentview") {
+        // Shows enter fullscreen button on studentview page
         this.show3 = true;
         this.show = false;
       } else {
@@ -193,7 +199,7 @@ export default {
     },
     async checkuser() {
       this.loading = true;
-      this.user = toRaw(this.$store.state)
+      this.user = toRaw(this.$store.state);
       // check if the data in storage is empty
       if (this.user.userid == "" && this.user.email == "") {
         console.log("Data not in storage, fetching from server");
@@ -213,16 +219,17 @@ export default {
       } else {
         console.log("User logged in");
         this.loggedin = true;
-        this.profilepic = this.user.avatarurl
-        this.fullname = this.user.fullname
+        this.profilepic = this.user.avatarurl;
+        this.fullname = this.user.fullname;
       }
       this.loading = false;
-      console.log('loading false')
+      console.log("loading false");
       //fetches the userid from checkOnRoute
     },
   },
   watch: {
-    $route(to, from) { // if page routes to this page, then update the navbar
+    $route(to, from) {
+      // if page routes to this page, then update the navbar
       this.checkvisibility();
       this.checkuser();
     },
@@ -302,7 +309,7 @@ export default {
                       <a
                         v-for="item in solutions"
                         :key="item.name"
-                         @click="this.$router.push(item.href)"
+                        @click="this.$router.push(item.href)"
                         class="-m-3 flex items-start rounded-lg p-3 hover:bg-gray-50"
                       >
                         <component
@@ -406,7 +413,7 @@ export default {
               </transition>
             </Popover>
             <a
-            @click="this.$router.push('/pricing')"
+              @click="this.$router.push('/pricing')"
               class="text-base font-medium text-gray-500 hover:text-gray-900"
               >Pricing</a
             >
@@ -455,7 +462,10 @@ export default {
               v-if="loggedin && !loading"
               class="items-center justify-end md:flex md:flex-1 lg:w-0"
             >
-              <a @click="this.$router.push('/account')" class="group block flex-shrink-0 cursor-pointer">
+              <a
+                @click="this.$router.push('/account')"
+                class="group block flex-shrink-0 cursor-pointer"
+              >
                 <div class="flex items-center">
                   <div>
                     <img
@@ -498,7 +508,10 @@ export default {
       <ol role="list" class="flex space-x-4 rounded-md bg-white px-6 shadow">
         <li class="flex">
           <div class="flex items-center">
-            <a @click="this.$router.push('/')" class="text-gray-400 flex items-center hover:text-gray-500">
+            <a
+              @click="this.$router.push('/')"
+              class="text-gray-400 flex items-center hover:text-gray-500"
+            >
               <HomeIcon class="h-10 w-4 flex-shrink-0 text-gray-400" aria-hidden="true" />
               <a class="ml-2 text-sm font-medium text-gray-500 hover:text-gray-700"
                 >Home</a
@@ -506,7 +519,7 @@ export default {
             </a>
           </div>
         </li>
-        <li v-for="page in pages" :key="page.name" class="flex"> 
+        <li v-for="page in pages" :key="page.name" class="flex">
           <div class="flex items-center">
             <ChevronRightIcon
               class="h-5 w-5 flex-shrink-0 text-gray-400"
@@ -642,4 +655,3 @@ export default {
     <router-view></router-view>
   </main>
 </template>
-
