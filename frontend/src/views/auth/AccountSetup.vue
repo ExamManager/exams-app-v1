@@ -64,7 +64,9 @@ export default (await import("vue")).defineComponent({
       loading: false,
       avatarfile: null,
       savingdata: false,
-      submitting: false,
+      showingCustomPlanContact: false,
+      uploadData: {},
+      defaultImgURL: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Default_pfp.svg/1200px-Default_pfp.svg.png',
       user: {// stays the same the whole time, to compare values to...
         userid: "",
         username: "",
@@ -137,6 +139,16 @@ export default (await import("vue")).defineComponent({
       console.log("mounted")
       this.loading = false
     },
+    exitComponent() {
+      this.savingData = false
+      this.showingCustomPlanContact = false
+    },
+    successfullComponent() {
+      this.savingData = false
+      this.showingCustomPlanContact = false
+      this.onPageLoad()
+      this.$router.push("/account")
+    },
     async updateAccountData() { // does everything exet the avatar
       this.savingdata = true
       const uploadData = {
@@ -158,8 +170,18 @@ export default (await import("vue")).defineComponent({
           },
         },
       }
-      await this.setUserData(this.user.userid, uploadData.data, this.avatarfile) // that works, as all the data that is there overwrites and the rest stays the same on the database
-      this.savingdata = false
+
+      if (this.user.plan == 4) {
+        this.showingCustomPlanContact = true
+        this.uploadData = uploadData.data
+      }
+      else {
+        await this.setUserData(this.user.userid, uploadData.data, this.avatarfile) // that works, as all the data that is there overwrites and the rest stays the same on the database
+        this.savingdata = false
+        this.$router.push('/account')
+      }
+      //
+      //this.savingdata = false
     },
   },
   watch: {
@@ -180,7 +202,7 @@ export default (await import("vue")).defineComponent({
 });
 </script>
 <template v-if="!loading">
-  <customPlanContact />
+  <customPlanContact v-if=" !loading && showingCustomPlanContact" :email="user.email" :uploadID="user.userid" :uploadData="uploadData" :uploadIMG="avatarfile" v-on:closeComponent="exitComponent()" v-on:dataUpload="successfullComponent()"/>
   <div class="sm:px-20 md:px-40 lg:px-60 xl:px-80 px-10 py-20 space-y-8 divide-y divide-gray-200">
     <div class="space-y-8 divide-y divide-gray-200">
         <div>

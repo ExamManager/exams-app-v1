@@ -18,11 +18,9 @@ export default {
   },
   methods: {
     async signuplocal() {
-      const response = this.signup(this.email, this.password);
+      const response = await this.signup(this.email, this.password);
       console.log(response)
-      setTimeout(() => {
-        this.$router.push("/");
-      }, 500);
+      window.location.href = "/";
     },
     async googlelocal() {
       const response = this.signingoogle();

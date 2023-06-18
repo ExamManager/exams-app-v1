@@ -257,8 +257,7 @@ export default {
                   </h1>
                 </transition>
                 <p class="mt-6 text-xl text-gray-500">
-                  Anim aute id magna aliqua ad ad non deserunt sunt. Qui irure qui lorem
-                  cupidatat commodo.
+                  Easy 
                 </p>
               </div>
               <div v-if="!loggedin" class="mt-12 sm:flex sm:w-full sm:max-w-lg">
@@ -867,7 +866,7 @@ export default {
       </div>
     </div>
 
-    <div class="bg-white">
+    <!-- <div class="bg-white">
       <div class="mx-auto max-w-7xl py-12 px-4 sm:px-6 lg:px-8">
         <div class="grid grid-cols-2 gap-8 md:grid-cols-6 lg:grid-cols-5">
           <div class="col-span-1 flex justify-center md:col-span-2 lg:col-span-1">
@@ -907,9 +906,9 @@ export default {
           </div>
         </div>
       </div>
-    </div>
+    </div> -->
 
-    <div class="bg-white">
+    <!-- <div class="bg-white">
       <div class="pt-12 sm:pt-16 lg:pt-20">
         <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div class="text-center">
@@ -1009,7 +1008,7 @@ export default {
           </div>
         </div>
       </div>
-    </div>
+    </div> -->
   </div>
   <footer class="bg-gray-100">
     <div

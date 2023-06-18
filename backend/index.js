@@ -3,7 +3,9 @@ import cors from "cors";
 import dotenv from "dotenv";
 import Stripe from "stripe";
 import { supabase } from "./supabaseClient.js";
+import { MessageClient } from "cloudmailin"
 
+const client = new MessageClient({ username: "710506dea731b2f9", apiKey: "i9b1YzNd7HHSvZuT5YtTZSjE"});
 const app = express();
 app.use(cors());
 dotenv.config();
@@ -11,6 +13,33 @@ const stripe = new Stripe(process.env.VITE_STRIPE_SECRET_KEY);
 const port = 3001;
 
 app.use(express.json());
+
+
+app.post("/email/accountverified", async (req, res) => {
+  try {
+    const userid = req.body.userid;
+    const { data, error } = await supabase
+      .from("profiles")
+      .select("email, fullname")
+      .eq("userid", userid);
+    if (error) {
+      throw new Error(error.message);
+    }
+    const response = await client.sendMessage({
+      to: 'test@example.net',
+      from: 'test@example.com',
+      plain: 'test message',
+      html:  '<h1>Test Message</h1>',
+      subject: "hello world"
+    });
+    await sgMail.send(msg);
+    res.status(200).json({ message: "success" });
+  } catch (err) {
+    if (!res.headersSent) {
+      res.status(500).json({ error: err.message });
+    }
+  }
+});
 
 
 

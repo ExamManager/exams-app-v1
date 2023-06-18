@@ -69,7 +69,7 @@ export default (await import("vue")).defineComponent({
                   <div class="mt-2">
                     <p class="text-sm text-gray-500">
                       You have not completed the account setup process. Please
-                      complete the setup process before continuing.
+                      complete the setup process before continuing. If you have completed completed your account, try to refresh or wait a bit and load this page again.
                     </p>
                   </div>
                 </div>

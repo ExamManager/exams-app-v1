@@ -1,4 +1,5 @@
 import { supabase } from '../supabase'
+import { supabaseServiceRole } from '../supabase'
 
 export default {
   data() {
@@ -161,16 +162,16 @@ export default {
       //const provider = await this.getData(userid, ['provider'])
 
       if (profilePic != null) {
-        const fileName: string = `${userid}-${Math.floor(Math.random()*10000)}.png`
+        const fileName: string = `${userid}-${Math.floor(Math.random()*10000)}.${profilePic.name.split('.')[1]}`
 
         const { profilePicResponse } = await supabase.storage
           .from('avatars')
-          .upload(`profile-pictures/${fileName}`, profilePic)
+          .upload(`${fileName}`, profilePic)
 
         
         const imageURL = await supabase.storage
           .from('avatars') // :)
-          .getPublicUrl(`profile-pictures/${fileName}`)
+          .getPublicUrl(`${fileName}`)
           
         console.log('profilePicResponse', profilePicResponse)
 
@@ -189,24 +190,116 @@ export default {
       
       return response;
     },
-    deleteUser(userid: string) {
+    async updateAvatar(userid: string, newAvatar: any) {
+      const getOldFileName = await supabase
+        .from('profiles')
+        .select('avatar_filename')
+        .eq('userid', userid)
+      
+      console.log("getOldFileNameResponse: ", getOldFileName)
+      const oldFileName = getOldFileName.data[0].avatar_filename
+      console.log("oldFileName: ", oldFileName)
+
+      const deleteAvatar = await supabase
+        .storage
+        .from('avatars')
+        .remove([`${oldFileName}`])
+
+      console.log("deleteAvatarResponse: ", deleteAvatar)
+
+      const fileName: string = `${userid}-${Math.floor(Math.random()*10000)}.${newAvatar.name.split('.')[1]}`
+
+      console.log("fileName: ", fileName)
+
+      const { profilePicResponse } = await supabase.storage
+        .from('avatars')
+        .upload(`${fileName}`, newAvatar)
+
+      console.log("profilePicResponse: ", profilePicResponse)
+
+      const imageURL = await supabase.storage
+        .from('avatars') // :)
+        .getPublicUrl(`${fileName}`)
+
+      console.log("imageURL: ", imageURL)
+
+      const updateURL = await supabase
+        .from('profiles')
+        .update({ avatarurl: imageURL.data.publicUrl, avatar_filename: fileName })
+        .eq('userid', userid)
+
+      console.log("updateURL: ", updateURL)
+
+      this.onPageLoad()
+
+      return
+    },
+    async resetAvatar(userid: string) {
+      const defaultImgURL =  'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Default_pfp.svg/1200px-Default_pfp.svg.png'
+      const getAvatar = await supabase
+        .from('profiles')
+        .select('avatar_filename')
+        .eq('userid', userid)
+
+      const oldFileName = getAvatar.data[0].avatar_filename
+
+      console.log('oldFileName: ', oldFileName)
+
+      const updateURL = await supabase
+        .from('profiles')
+        .update({ avatarurl: defaultImgURL, avatar_filename: null })
+        .eq('userid', userid)
+
+      this.onPageLoad()
+
+      if (oldFileName != null) {
+        console.log('deleting avatar')
+
+        const deleteAvatar = await supabase
+          .storage
+          .from('avatars')
+          .remove([`${oldFileName}`])
+
+        console.log('deleteAvatar Response: ', deleteAvatar)
+      }
+
+      return
+    },
+    async updateUserAuth(userid: string, update: object) {
+      console.log('updateObject: ', update)
+      const response = await supabaseServiceRole
+        .auth
+        .updateUser({...update })
+
+      return response;
+    },
+    async deleteUser(userid: string) {
       // Your method logic here
-      const getUserAvatar = supabase
+      const getUserAvatar = await supabase
         .from('profiles')
         .select("avatar_filename")
         .eq('userid', userid)
 
-      const deleteAvatar = supabase
-        .storage
-        .from('avatars')
-        .remove(`profile-pictures/${getUserAvatar}`)
 
-      const response = supabase
+      if (getUserAvatar.data[0].avatar_filename != null) { 
+        const oldFileName = getUserAvatar.data[0].avatar_filename      
+
+        const deleteAvatar = await  supabase
+          .storage
+          .from('avatars')
+          .remove([`${oldFileName}`])
+      
+        }
+
+      const response = await supabaseServiceRole
         .auth
-        .users
+        .admin
         .deleteUser(userid)
 
+      console.log(response)
+      this.checkSession()
+      this.$router.push('/')
       return response;
-    }
+    },    
   },
 }

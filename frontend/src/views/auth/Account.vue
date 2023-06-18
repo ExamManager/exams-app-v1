@@ -82,13 +82,13 @@ const subNavigation = [
     current: initActiveSubnav == 2,
     idx: 2
   },
-  {
-    name: "Notifications",
-    href: "#",
-    icon: BellIcon,
-    current: initActiveSubnav == 3,
-    idx: 3
-  },
+  // {
+  //   name: "Notifications",
+  //   href: "#",
+  //   icon: BellIcon,
+  //   current: initActiveSubnav == 3,
+  //   idx: 3
+  // },
   {
     name: "Plan & Billing",
     href: "#",
@@ -204,10 +204,14 @@ export default {
         },
         setupComplete: false,
       },
+      newimg: null,
+      hasimg: false,
+      defaultImgURL: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Default_pfp.svg/1200px-Default_pfp.svg.png',
     };
   },
   mounted() {
     this.checkuser();
+
     // setInterval(() => {
     //   console.log(this.$store.state.metadata.location.state);
     // }, 500);
@@ -224,10 +228,15 @@ export default {
       },
       deep: true,
     },
+    "editUser.avatarurl": function (val, oldVal) {
+      if (val === "") {
+        this.editUser.avatarurl = "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Default_pfp.svg/1200px-Default_pfp.svg.png'::text";
+      }
+    },
   },
   methods: {
     async checkuser() {
-      while (this.$store.state.userid === "") {
+      while (this.$store.state.userid === "null") {
         console.log("waiting for userid");
         await new Promise((resolve) => setTimeout(resolve, 1000));
       }
@@ -248,15 +257,46 @@ export default {
             location: { ...this.$store.state.metadata.location }
           }
         };
+        this.hasimg = this.user.avatarurl != this.defaultImgURL
       }
       console.log("mounted")
 
       this.loading = false;
     },
+    handleFiles(event: Event) {      
+      console.log('handleFiles')
+
+      const imgObject = event.target.files[0]
+      
+      document.getElementById("image")
+       .src = URL.createObjectURL(imgObject)
+      console.log(imgObject)
+      this.avatarfile = imgObject
+      this.newimg = imgObject
+      this.hasimg = true
+
+    },
+    resetProfilePic() {
+      document.getElementById("image").src = this.user.avatarurl;
+      if (this.user.avatarurl != this.defaultImgURL) {
+        this.hasimg = true
+      } else {
+        this.hasimg = false
+      }
+    },
     async signUserOut() {
       await this.signout();
       // push to home page, but with reloading the whole page
       window.location.href = "/";
+    },
+    removeImg(){
+      this.newimg = null
+      document.getElementById("image")
+        .src = this.defaultImgURL
+      document.getElementById("file-upload")
+        .value = ""
+      this.hasimg = false
+      console.log(this)
     },
     async updateAccountData() {
       this.savingdata = true;
@@ -269,6 +309,7 @@ export default {
           location: { ...this.editUser.metadata.location }
         }
       });
+
       console.log(response);
       this.user = {
         ...this.editUser,
@@ -280,7 +321,34 @@ export default {
       this.unsavedChanges = false;
       this.savingdata = false;
     },
+    async updateProfile() {
+      if (this.newimg == null && !this.hasimg) {
+        console.log('resetting avatar')
+        this.resetAvatar(this.user.userid)
+      }
+      else if (this.newimg != null) {
+        console.log('updating avatar')
+        this.updateAvatar(this.user.userid, this.newimg)
+      }
+      else console.log('no changes to avatar')
+
+      if (this.editUser.username != this.user.username) {
+        this.updateUserData(this.user.userid, {username: this.editUser.username})
+      }
+      this.editingAccount = false;
+    },
+    async updatePassword() {
+      if (this.password != '') {
+          await this.updateUserAuth(this.user.userid, {password: this.password})
+      }
+      this.editingAccount = false;
+    },
     discardChanges() {
+      if (this.subNavigation[0].current) {
+        this.resetProfilePic();
+      }
+
+
       this.editingAccount = false;
       this.editUser = {
         ...this.$store.state,
@@ -359,7 +427,7 @@ export default {
                 <button
                   type="button"
                   class="inline-flex w-full justify-center rounded-md border border-transparent bg-red-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm"
-                  @click="deletePopup = false"
+                  @click="deletePopup = false; deleteUser(user.userid)"
                 >
                   Deactivate
                 </button>
@@ -461,8 +529,10 @@ export default {
               v-for="item in subNavigation"
               :key="item.name"
               @click="
+                discardChanges();
                 subNavigation.forEach((item) => (item.current = false));
                 item.current = true;
+                editingAccount = false;
               "
               :class="[
                 item.current
@@ -505,112 +575,100 @@ export default {
                 </p>
               </div>
 
-              <div class="grid grid-cols-3 gap-6">
+              <div class="grid md:grid-cols-3 sm:grid-cols-2 gap-6">
                 <div class="col-span-2 sm:col-span-2">
                   <label class="block text-sm font-medium text-gray-700"
                     >Username</label
                   >
-                  <div class="mt-1 flex rounded-md shadow-sm">
+                  <div class="mt-6 flex rounded-md shadow-sm">
                     <span
                       class="inline-flex items-center rounded-l-md border border-r-0 border-gray-300 bg-gray-50 px-3 text-gray-500 sm:text-sm"
                       >examtimer.tech/</span
                     >
                     <input
-                      v-model="this.editUser.username"
+                      v-model="editUser.username"
                       type="text"
                       name="username"
                       autocomplete="username"
+                      :disabled="!editingAccount"
                       class="block w-full min-w-0 flex-grow rounded-none rounded-r-md border-gray-300 focus:border-orange-500 focus:ring-orange-500 sm:text-sm"
                     />
                   </div>
                 </div>
 
                 <div class="col-span-1">
-                  <label class="block text-sm font-medium text-gray-700"
+                  <label for="photo" class="block text-sm font-medium text-gray-700" @click="console.log('hi')"
                     >Profile Picture</label
                   >
-                  <div class="mt-1 flex items-center">
-                    <span
-                      class="inline-block h-10 w-10 overflow-hidden rounded-full bg-gray-100"
-                    >
-                      <img
-                        id="image"
-                        class="h-full w-full object-cover"
-                        :src="this.editUser.avatarurl"
-                      />
+                  <div class=" flex items-center">
+                    <span id="profilePreviewDiv" class="h-12 w-12 overflow-hidden rounded-full bg-gray-100 flex items-center justify-center">
+                        <img v-if="!loading" id="image" class="h-full w-full object-cover" :src="user.avatarurl" />
+                        <svg v-else class="animate-spin h-5 w-5 text-gray-300" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
                     </span>
-                    <button
-                      type="button"
-                      class="ml-5 rounded-md border border-gray-300 bg-white py-2 px-3 text-sm font-medium leading-4 text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2"
+                    <label
+                      for="file-upload"
+                      class="ml-5 rounded-md border border-gray-300 bg-white py-2 px-3 text-sm font-medium m-6 mr-4 leading-4 text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2"
                     >
-                      Change
-                    </button>
+                    <span>{{
+                        hasimg ? "Change Photo" : "Upload Image"
+                      }}</span>
+                      <input
+                        id="file-upload"
+                        name="file-upload"
+                        type="file"
+                        class="sr-only"
+                        :disabled="!editingAccount"
+                        @change="handleFiles($event)"
+                      />
+                    </label>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke-width="1.5"
+                      stroke="currentColor"
+                      class="w-8 h-8 p-1.5 text-gray-400 rounded-md hover:text-gray-300 hover:bg-gray-200"
+                      v-if="hasimg && editingAccount"
+                      @click="removeImg()"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
+                      />
+                    </svg>
                   </div>
-                </div>
 
-                <!-- <div class="col-span-3">
-                  <label for="about" class="block text-sm font-medium text-gray-700">About</label>
-                  <div class="mt-1">
-                    <textarea id="about" name="about" rows="3"
-                      class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 sm:text-sm"
-                      placeholder="you@example.com" />
-                  </div>
-                  <p class="mt-2 text-sm text-gray-500">Brief description for your profile. URLs are hyperlinked.</p>
-                </div> -->
 
-                <div class="col-span-3">
-                  <label class="block text-sm font-medium text-gray-700"
-                    >Cover photo</label
-                  >
-                  <div
-                    class="mt-1 flex justify-center rounded-md border-2 border-dashed border-gray-300 px-6 pt-5 pb-6"
-                  >
-                    <div class="space-y-1 text-center">
-                      <svg
-                        class="mx-auto h-12 w-12 text-gray-400"
-                        stroke="currentColor"
-                        fill="none"
-                        viewBox="0 0 48 48"
-                        aria-hidden="true"
-                      >
-                        <path
-                          d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02"
-                          stroke-width="2"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                        />
-                      </svg>
-                      <div class="flex text-sm text-gray-600">
-                        <label
-                          for="file-upload"
-                          class="relative cursor-pointer rounded-md bg-white font-medium text-orange-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-orange-500 focus-within:ring-offset-2 hover:text-orange-500"
-                        >
-                          <span>Upload a file</span>
-                          <input
-                            id="file-upload"
-                            name="file-upload"
-                            type="file"
-                            class="sr-only"
-                          />
-                        </label>
-                        <p class="pl-1">or drag and drop</p>
-                      </div>
-                      <p class="text-xs text-gray-500">
-                        PNG, JPG, GIF up to 10MB
-                      </p>
-                    </div>
-                  </div>
                 </div>
               </div>
             </div>
-            <div class="bg-gray-50 px-4 py-3 text-right sm:px-6">
-              <button
-                type="submit"
-                class="inline-flex justify-center rounded-md border border-transparent bg-gray-800 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2"
-              >
-                Save
-              </button>
+
+            <div class="flex md:flex-row sm:flex-col w-full bg-gray-50 md:justify-end sm:justify-center">
+              <div class="bg-gray-50 px-4 py-3 text-right sm:px-6" v-if="editingAccount">
+                <button
+                  type="button"
+                  @click="editingAccount = false; discardChanges()"
+                  class="inline-flex justify-center rounded-md border border-transparent bg-gray-800 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2"
+                >
+                  Cancel
+                </button>
+              </div>
+
+              <div class="bg-gray-50 px-4 py-3 text-right sm:px-6">
+                <button
+                  type="button"
+                  @click="editingAccount ? updateProfile() : editingAccount = true"
+                  class="inline-flex justify-center rounded-md border border-transparent bg-gray-800 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2"
+                >
+                  {{editingAccount ? "Save" : "Edit"}}
+                </button>
+              </div>
             </div>
+            
           </div>
           <div class="bg-white shadow sm:rounded-lg">
             <div class="px-4 py-5 sm:p-6">
@@ -696,7 +754,7 @@ export default {
                       >
                       <input
                         v-model="editUser.email"
-                        :readonly="!editingAccount"
+                        readonly
                         type="text"
                         name="email-address"
                         id="email-address"
@@ -1200,8 +1258,7 @@ export default {
                       Password Information
                     </h2>
                     <p class="mt-1 text-sm text-gray-500">
-                      This is the current information for your school. If
-                      anything here is wrong, please contact us to change it.
+                      If you can't see your password here, it's because you create an account with a different provider, such as Google. To change your password, you have to change the password to your account for that provider
                     </p>
                   </div>
 
@@ -1212,7 +1269,7 @@ export default {
                       >
                       <input
                         type="text"
-                        readonly
+                        disabled
                         name="school-name"
                         id="school-name"
                         v-model="editUser.email"
@@ -1220,7 +1277,7 @@ export default {
                       />
                     </div>
 
-                    <div class="col-span-4 sm:col-span-2">
+                    <div v-if="user.provider!='google'" class="col-span-4 sm:col-span-2">
                       <label class="block text-sm font-medium text-gray-700"
                         >Current Password</label
                       >
@@ -1230,8 +1287,9 @@ export default {
                         id="password"
                         autocomplete="password"
                         placeholder="••••••••••••••"
-                        v-model="this.password"
+                        v-model="password"
                         v-mask="'XXXXXXXXXXXXXXXX'"
+                        :disabled="!editingAccount"
                         class="mt-1 block peer w-full rounded-md border border-gray-300 py-2 px-3 shadow-sm focus:border-gray-900 focus:outline-none focus:ring-gray-900 sm:text-sm"
                       />
                       <p
@@ -1242,20 +1300,33 @@ export default {
                     </div>
                   </div>
                 </div>
-                <div class="bg-gray-50 px-4 py-3 text-right sm:px-6">
-                  <button
-                    type="submit"
-                    class="inline-flex justify-center rounded-md border border-transparent bg-gray-800 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2"
-                  >
-                    Save
-                  </button>
+                <div class="flex md:flex-row sm:flex-col w-full bg-gray-50 md:justify-end sm:justify-center">
+                  <div v-if="user.provider!='google' && editingAccount" class="bg-gray-50 px-4 py-3 text-right sm:px-6">
+                    <button
+                      type="button"
+                      @click="editingAccount = false; discardChanges(); this.password = ''"
+                      class="inline-flex justify-center rounded-md border border-transparent bg-gray-800 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+
+                  <div v-if="user.provider!='google'" class="bg-gray-50 px-4 py-3 text-right sm:px-6">
+                    <button
+                      type="button"
+                      @click="editingAccount ? updatePassword() : editingAccount = true"
+                      class="inline-flex justify-center rounded-md border border-transparent bg-gray-800 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2"
+                    >
+                      {{editingAccount ? "Save" : "Edit"}}
+                    </button>
+                  </div>
                 </div>
               </div>
             </form>
           </section>
         </div>
         <!-- Notifications -->
-        <div
+        <!-- <div
           class="space-y-6 sm:px-6 lg:col-span-9 lg:px-0"
           v-if="subNavigation[3].current"
         >
@@ -1398,12 +1469,19 @@ export default {
               </button>
             </div>
           </div>
+        </div> -->
+        <div
+          class="space-y-6 sm:px-6 lg:col-span-9 lg:px-0"
+          v-if="subNavigation[3].current"
+        >
+          <payment_component />
         </div>
+
         <div
           class="space-y-6 sm:px-6 lg:col-span-9 lg:px-0"
           v-if="subNavigation[4].current"
         >
-          <payment_component />
+          <h2>There's nothing here yet, but we're working on more add-ons and integrations to make youro exam management experience flawless!</h2>
         </div>
       </div>
     </main>

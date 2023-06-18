@@ -200,8 +200,9 @@ export default {
     async checkuser() {
       this.loading = true;
       this.user = toRaw(this.$store.state);
+      console.log(toRaw(this.$store.state.userid));
       // check if the data in storage is empty
-      if (this.user.userid == "" && this.user.email == "") {
+      if (this.user.userid == "null") {
         console.log("Data not in storage, fetching from server");
         const allData = await this.onPageLoad();
         if (allData == false) {
@@ -213,7 +214,7 @@ export default {
         console.log("Data in storage");
       }
       // check if the user is logged in
-      if (this.user.userid == "") {
+      if (this.user.userid == "null") {
         console.log("User not logged in");
         this.loggedin = false;
       } else {
@@ -463,7 +464,7 @@ export default {
               class="items-center justify-end md:flex md:flex-1 lg:w-0"
             >
               <a
-                @click="this.$router.push('/account')"
+                @click="user.setupComplete ? this.$router.push('/account') : this.$router.push('/setup')"
                 class="group block flex-shrink-0 cursor-pointer"
               >
                 <div class="flex items-center">

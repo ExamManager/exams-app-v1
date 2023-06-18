@@ -6,10 +6,13 @@ import {
   TransitionChild,
   TransitionRoot,
 } from "@headlessui/vue";
-import { CheckIcon, HomeIcon, AdjustmentsHorizontalIcon, CogIcon } from "@heroicons/vue/24/outline";
+import { CheckIcon, HomeIcon, AdjustmentsHorizontalIcon, CogIcon, PaperAirplaneIcon, PencilIcon } from "@heroicons/vue/24/outline";
+import authenticate from "../functions/authenticate.ts"
+
 
 export default (await import("vue")).defineComponent({
   name: "CustomPlanContact",
+  mixins: [authenticate],
   components: {
     Dialog,
     DialogPanel,
@@ -19,8 +22,39 @@ export default (await import("vue")).defineComponent({
     CheckIcon,
     HomeIcon,
     AdjustmentsHorizontalIcon,
+    PaperAirplaneIcon,
+    PencilIcon,
     CogIcon,
   },
+  props: {
+    email: String,
+    uploadID: String,
+    uploadData: Object,
+    uploadIMG: File,
+  },
+  data() {
+      return {
+        emailContent: "",
+      }
+  },
+  methods: {
+    async submit() {
+      console.log("submit")
+
+      if (this.emailContent.trim() == "") {
+        alert("Please enter a message")
+        return false
+      }
+      else {
+        //send email
+      }
+      const response = await this.setUserData(this.uploadID, this.uploadData, this.uploadIMG)
+      this.$emit('dataUpload')
+      return true
+    }
+  }
+  
+
 });
 </script>
 
@@ -54,39 +88,45 @@ export default (await import("vue")).defineComponent({
             leave-to="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
           >
             <DialogPanel
-              class="relative transform overflow-hidden rounded-lg bg-white px-4 pt-5 pb-4 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-sm sm:p-6"
+              class="relative transform rounded-lg bg-white px-4 pt-5 pb-4 text-left shadow-xl transition-all sm:my-8 sm:w-full max-w-4xl sm:p-6"
             >
               <div >
                 
                 <div class="mt-3 text-center sm:mt-5">
-                  <DialogTitle as="h3" class="text-lg font-medium leading-6 text-gray-900"
-                    >Send us an email</DialogTitle
-                  >
+                  <div class="flex flex-row sm:flex-column h-8 items-end justify-between">
+                    <DialogTitle as="h3" class="text-lg font-medium leading-6 text-gray-900"
+                      >Send us an email</DialogTitle
+                    >
+                    <DialogTitle as="h3" class="text-md font-medium leading-6 align-bottom"
+                      ><span class="text-gray-400">We will reply to: </span><span class="text-gray-400">{{ email }}</span></DialogTitle
+                    >
+                  </div>
+
                   <div class="mt-2">
-                    <!-- <p class="text-sm text-gray-500">
-                      You have not completed the account setup process. Please
-                      complete the setup process before continuing.
-                    </p> -->
-                    <input type="text" class="h-96 "/>
+                    <textarea
+                    v-model="emailContent"
+                    class="resize-none block w-full h-96 min-w-0 flex-1 rounded-md border-gray-300 focus:border-orange-500 focus:ring-orange-500 sm:text-sm"
+                    placeholder="Tell us a bit about why you are contacting us and any information you think we should know about your specific circumstances."
+                    />
                   </div>
                 </div>
               </div>
               <div class="mt-5 sm:mt-6">
-                <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                <div class="flex md:flex-row sm:flex-col md:justify-end">
                   <button
                     type="button"
-                    class="inline-flex items-center w-full justify-center rounded-md border border-transparent bg-orange-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 sm:text-sm"
-                    @click="$router.push('/')"
+                    class="inline-flex items-center md:mr-2.5 sm:mr-0 w-3/12 justify-center rounded-md border border-transparent bg-orange-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 sm:text-sm"
+                    @click="$emit('closeComponent')"
                   >
-                    <HomeIcon class="-ml-1 mr-2 h-5 w-5" aria-hidden="true" />
-                    Change Plan
+                    <PencilIcon class="-ml-1 mr-2 h-5 w-5" aria-hidden="true" />
+                    Edit Account
                   </button>
                   <button
                     type="button"
-                    class="inline-flex items-center w-full justify-center rounded-md border border-transparent bg-orange-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 sm:text-sm"
-                    @click="$router.push('/setup')"
+                    class="inline-flex items-center w-3/12 justify-center rounded-md border border-transparent bg-orange-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 sm:text-sm"
+                    @click="submit()"
                   >
-                    <AdjustmentsHorizontalIcon class="-ml-1 mr-2 h-5 w-5" aria-hidden="true" />
+                    <PaperAirplaneIcon class="-ml-1 mr-2 h-5 w-5" aria-hidden="true" />
                     Send Email
                   </button>
                 </div>
