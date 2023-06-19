@@ -67,11 +67,11 @@ export default {
           </div>
 
           <div class="flex items-center justify-between">
-            <div class="flex items-center">
+            <!-- <div class="flex items-center">
               <input id="remember-me" name="remember-me" type="checkbox"
                 class="h-4 w-4 rounded border-gray-300 text-orange-600 focus:ring-orange-500" />
               <label for="remember-me" class="ml-2 block text-sm text-gray-900">Remember me</label>
-            </div>
+            </div> -->
 
             <div class="text-sm">
               <a @click='this.$router.push("/")' class="font-medium text-orange-600 hover:text-orange-500">Forgot your

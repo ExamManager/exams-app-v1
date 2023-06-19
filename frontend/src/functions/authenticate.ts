@@ -18,8 +18,6 @@ export default {
         email: reqemail,
         password: reqpassword,
       })
-      // await supabase.from('plans').insert({plan: 0 })
-      console.log('Success');
       return response;
     },
     async checkSession() { // there is already one you can call
@@ -55,8 +53,9 @@ export default {
     async signout() {
       // Your method logic here
       const response = await supabase.auth.signOut()
-
-      // this.$store.dispatch('updateParam', ['user', 'null'])
+      // clear local storage
+      localStorage.clear()
+      this.$store.dispatch('updateParam', ['user', 'null'])
       this.checkSession() // that does it aswell
       return response;
     },
@@ -232,7 +231,7 @@ export default {
 
       this.onPageLoad()
 
-      return
+      return updateURL
     },
     async resetAvatar(userid: string) {
       const defaultImgURL =  'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Default_pfp.svg/1200px-Default_pfp.svg.png'
@@ -243,8 +242,6 @@ export default {
 
       const oldFileName = getAvatar.data[0].avatar_filename
 
-      console.log('oldFileName: ', oldFileName)
-
       const updateURL = await supabase
         .from('profiles')
         .update({ avatarurl: defaultImgURL, avatar_filename: null })
@@ -253,20 +250,17 @@ export default {
       this.onPageLoad()
 
       if (oldFileName != null) {
-        console.log('deleting avatar')
-
         const deleteAvatar = await supabase
           .storage
           .from('avatars')
           .remove([`${oldFileName}`])
 
-        console.log('deleteAvatar Response: ', deleteAvatar)
+        return updateURL
       }
 
-      return
+      return 
     },
     async updateUserAuth(userid: string, update: object) {
-      console.log('updateObject: ', update)
       const response = await supabaseServiceRole
         .auth
         .updateUser({...update })
@@ -280,25 +274,31 @@ export default {
         .select("avatar_filename")
         .eq('userid', userid)
 
-
       if (getUserAvatar.data[0].avatar_filename != null) { 
-        const oldFileName = getUserAvatar.data[0].avatar_filename      
+        const oldFileName = getUserAvatar.data[0].avatar_filename  
+        
+        console.log('oldFileName: ', oldFileName)
 
         const deleteAvatar = await  supabase
           .storage
           .from('avatars')
           .remove([`${oldFileName}`])
-      
-        }
+
+        console.log('deleteAvatar Response: ', deleteAvatar)
+      }
 
       const response = await supabaseServiceRole
         .auth
         .admin
         .deleteUser(userid)
 
+      console.log('response: ', response)
+
       console.log(response)
       this.checkSession()
-      this.$router.push('/')
+
+      localStorage.clear()
+      window.location.href = '/'
       return response;
     },    
   },

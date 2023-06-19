@@ -50,7 +50,7 @@ export default (await import("vue")).defineComponent({
       }
       const response = await this.setUserData(this.uploadID, this.uploadData, this.uploadIMG)
       this.$emit('dataUpload')
-      return true
+      return response
     }
   }
   

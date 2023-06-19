@@ -17,7 +17,7 @@ import {
 } from "@heroicons/vue/24/outline";
 import { ChevronDownIcon } from "@heroicons/vue/20/solid";
 import { HomeIcon, ChevronRightIcon } from "@heroicons/vue/20/solid";
-
+import Notifications from "../components/Notifications.vue";
 export default {
   mixins: [authenticate, stripe],
   components: {
@@ -38,6 +38,7 @@ export default {
     PopoverPanel,
     HomeIcon,
     ChevronRightIcon,
+    Notifications,
   },
   data() {
     return {
@@ -50,6 +51,7 @@ export default {
       loading: true,
       fullname: "",
       profilepic: "",
+      showNotification: sessionStorage.getItem("showNotification"),
       user: {
         userid: this.$store.state.userid,
         username: this.$store.state.username,
@@ -234,6 +236,14 @@ export default {
       this.checkvisibility();
       this.checkuser();
     },
+    // watch session storage for changes and update the showNotification variable
+    sessionStorage: {
+      handler() {
+        this.showNotification = sessionStorage.getItem("showNotification");
+        console.log("session storage changed");
+      },
+      deep: true,
+    },
   },
   // async mounted() {
   //   if (this.user.userid == "") {
@@ -324,7 +334,6 @@ export default {
                           </p>
                           <p class="mt-1 text-sm text-gray-500">{{ item.description }}</p>
                         </div>
-                        <span>{{ this.user }}</span>
                       </a>
                     </div>
                     <div
@@ -653,6 +662,12 @@ export default {
     </div>
   </transition>
   <main>
-    <router-view></router-view>
+    <router-view class="z-40"></router-view>
+    <transition enter-active-class="transform ease-in duration-400 transition"
+    enter-from-class="translate-y-2 opacity-0 sm:translate-y-0 sm:translate-x-2"
+    enter-to-class="translate-y-0 opacity-100 sm:translate-x-0" leave-active-class="transition ease-in duration-400"
+    leave-from-class="opacity-100" leave-to-class="opacity-0">
+      <Notifications v-if="this.showNotification == 'true'" class=z-50></Notifications>
+    </transition>
   </main>
 </template>

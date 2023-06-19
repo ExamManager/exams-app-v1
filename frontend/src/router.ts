@@ -123,6 +123,11 @@ const router = createRouter({
         }
       }
     },
+    {
+      path: '/resetpassword',
+      publicPath: '/resetpassword',
+      component: () => import('./components/resetPassword.vue'),
+    },
   ],
 })
 

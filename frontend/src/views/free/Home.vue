@@ -328,6 +328,41 @@ export default {
                 console.log("TIMMMMME", time);
                 return time.toString();
             }
+            else if (type === "sectoendtime"){
+              // time will be given in seconds, you will also get the end time in HH:MM:SS format, add the seconds ontop of the end time and return the result in HH:MM:SS format
+              // split the time into hours and minutes and seconds
+              var splitTime2 = time.split(":");
+              var hours = Number(splitTime2[0]);
+              var minutes = Number(splitTime2[1]);
+              var seconds = Number(splitTime2[2]) + Number(sectime);
+              // if the seconds are over 60, add a minute and subtract 60 seconds
+              while (seconds >= 60) {
+                  minutes = minutes + 1;
+                  seconds = seconds - 60;
+              }
+              // if the minutes are over 60, add an hour and subtract 60 minutes
+              while (minutes >= 60) {
+                  hours = hours + 1;
+                  minutes = minutes - 60;
+              }
+              // if the hours are over 24, subtract 24 hours 
+              if (hours >= 24) {
+                  hours = hours - 24;
+              }
+              // add a 0 if the minutes are less than 10  
+              if (minutes < 10) {
+                  var time = hours.toString() + ":0" + minutes.toString() + ":" + seconds.toString();
+              }
+              else {
+                  var time = hours.toString() + ":" + minutes.toString() + ":" + seconds.toString();
+              }
+              // check if string is only 4 characters long, if so add a 0 to the beginning
+              if (time.length === 7) {
+                  var time = "0" + time;
+              }
+              console.log("TIMMMMME", time);
+              return time.toString();
+            }
             else if (type === "timeleft") {
                 // time one is given in HH:MM:SS the second one in HH:MM:SS, subtract the second from the first and return the result in HH:MM:SS format
                 // be careful about 24 hour time and hours being over 24 and minutes being over 60
@@ -636,7 +671,6 @@ export default {
             // set timeleft to 0
             console.log("stop exam");
             // find person with id
-            var personIdx = this.people.findIndex(person => person.id == personIdx);
             this.clearinterval = Number(personIdx);
             console.log(this.clearinterval);
             this.people[personIdx].timeleft = "0:00";
@@ -793,15 +827,14 @@ export default {
             // grab the duration of the exam
             var duration = this.people[Number(personIdx)].duration;
             // convert the duration into minutes
-            var duration2 = this.converter(duration,"","H:MM");
+            var duration2 = this.converter(duration,"","H:MM"); // 1
             // calculate the extra time in minutes
-            var extratime3 = Number(duration2) * extratime2;
-            // add the minutes to the end time
-            console.log("durartion1",duration) // correct
-            console.log("duration",duration2) // correct
-            console.log("extratime3",extratime3)
-            console.log("end",end)
-            var extratimeend = this.converter(end, String(extratime3), "addminutesexacter");
+            var extratime3 = Number(duration2) * extratime2; // 0,25
+
+            var extratime4 = Number(extratime3) * 60; // 15 seconds
+
+
+            var extratimeend = this.converter(end, String(extratime4), "sectoendtime");
             console.log("This is messed up",extratimeend)
             
             var interval2 = setInterval(() => {

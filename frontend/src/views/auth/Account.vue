@@ -40,6 +40,8 @@ import {
 } from "@heroicons/vue/24/outline";
 import { ExclamationTriangleIcon } from "@heroicons/vue/24/outline";
 import ComponentOverlay from "../../components/completeAccount.vue";
+import DataUpdatingPopup from "../../components/dataUpdatingPopup.vue";
+import notification from "../../components/Notifications.vue";
 
 const users = {
   name: "Lisa Marie",
@@ -107,7 +109,7 @@ const subNavigation = [
 
 export default {
   name: "Payment",
-  mixins: [authenticate],
+  mixins: [authenticate, notification],
   components: {
     Disclosure,
     DisclosureButton,
@@ -134,6 +136,7 @@ export default {
     UserCircleIcon,
     XMarkIcon,
     ComponentOverlay,
+    DataUpdatingPopup,
     TrashIcon,
     payment_component,
     Dialog,
@@ -158,6 +161,9 @@ export default {
       editingAccount: false,
       unsavedChanges: false,
       savingdata: false,
+      savingAvatar: false,
+      deletingAccount: false,
+      showUpdatingPopup: false,
       editUser: { // gets set once when page loads and is what v-models sre bound to
         userid: "",
         username: "",
@@ -233,6 +239,18 @@ export default {
         this.editUser.avatarurl = "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Default_pfp.svg/1200px-Default_pfp.svg.png'::text";
       }
     },
+    // savingData: {
+    //   handler: function(newVal, oldVal) {
+    //     if (newVal == false) {
+    //       setTimeout(() => {
+    //         this.showUpdatingPopup = false;
+    //       }, 3000);
+    //     }
+    //     else {
+    //       this.showUpdatingPopup = true;
+    //     }
+    //   }
+    // }
   },
   methods: {
     async checkuser() {
@@ -322,33 +340,37 @@ export default {
       this.savingdata = false;
     },
     async updateProfile() {
+      this.savingdata = true;
+      this.savingAvatar = true;
       if (this.newimg == null && !this.hasimg) {
         console.log('resetting avatar')
-        this.resetAvatar(this.user.userid)
+        await this.resetAvatar(this.user.userid)
       }
       else if (this.newimg != null) {
         console.log('updating avatar')
-        this.updateAvatar(this.user.userid, this.newimg)
+        await this.updateAvatar(this.user.userid, this.newimg)
       }
       else console.log('no changes to avatar')
 
       if (this.editUser.username != this.user.username) {
-        this.updateUserData(this.user.userid, {username: this.editUser.username})
+        await this.updateUserData(this.user.userid, {username: this.editUser.username})
       }
       this.editingAccount = false;
+      this.savingAvatar = false;
+      this.savingdata = false;
     },
     async updatePassword() {
+      this.savingData = true;
       if (this.password != '') {
           await this.updateUserAuth(this.user.userid, {password: this.password})
       }
       this.editingAccount = false;
+      this.savingData = false;
     },
     discardChanges() {
       if (this.subNavigation[0].current) {
         this.resetProfilePic();
       }
-
-
       this.editingAccount = false;
       this.editUser = {
         ...this.$store.state,
@@ -358,6 +380,9 @@ export default {
         }
       };
     },
+    test() {
+      notification.methods.showNotification("simple", "test", "IconHome", 10000)
+    }
   }
 };
 </script>
@@ -415,7 +440,7 @@ export default {
                       <p class="text-sm text-gray-500">
                         Are you sure you want to deactivate your account? All of
                         your data will be permanently removed. This action
-                        cannot be undone. {{ this.user }}
+                        cannot be undone.
                       </p>
                     </div>
                   </div>
@@ -427,7 +452,7 @@ export default {
                 <button
                   type="button"
                   class="inline-flex w-full justify-center rounded-md border border-transparent bg-red-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm"
-                  @click="deletePopup = false; deleteUser(user.userid)"
+                  @click="deletePopup = false; test()"
                 >
                   Deactivate
                 </button>
@@ -648,21 +673,21 @@ export default {
             </div>
 
             <div class="flex md:flex-row sm:flex-col w-full bg-gray-50 md:justify-end sm:justify-center">
-              <div class="bg-gray-50 px-4 py-3 text-right sm:px-6" v-if="editingAccount">
+              <div class="bg-gray-50 pr-2  py-3 text-right s" v-if="editingAccount">
                 <button
                   type="button"
                   @click="editingAccount = false; discardChanges()"
-                  class="inline-flex justify-center rounded-md border border-transparent bg-gray-800 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2"
+                  class="inline-flex justify-center rounded-md border border-transparent bg-red-500 py-2 px-4 text-sm font-medium text-white shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2"
                 >
                   Cancel
                 </button>
               </div>
 
-              <div class="bg-gray-50 px-4 py-3 text-right sm:px-6">
+              <div class="bg-gray-50 pr-6  py-3 text-right ">
                 <button
                   type="button"
                   @click="editingAccount ? updateProfile() : editingAccount = true"
-                  class="inline-flex justify-center rounded-md border border-transparent bg-gray-800 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2"
+                  class="inline-flex justify-center rounded-md border border-transparent bg-gray-800 py-2 px-4 text-sm font-medium text-white shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-800 focus:ring-offset-2"
                 >
                   {{editingAccount ? "Save" : "Edit"}}
                 </button>
@@ -1301,21 +1326,21 @@ export default {
                   </div>
                 </div>
                 <div class="flex md:flex-row sm:flex-col w-full bg-gray-50 md:justify-end sm:justify-center">
-                  <div v-if="user.provider!='google' && editingAccount" class="bg-gray-50 px-4 py-3 text-right sm:px-6">
+                  <div v-if="user.provider!='google' && editingAccount" class="bg-gray-50 pr-2 py-3 text-right ">
                     <button
                       type="button"
                       @click="editingAccount = false; discardChanges(); this.password = ''"
-                      class="inline-flex justify-center rounded-md border border-transparent bg-gray-800 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2"
+                      class="inline-flex justify-center rounded-md border border-transparent bg-red-500 py-2 px-4 text-sm font-medium text-white shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2"
                     >
                       Cancel
                     </button>
                   </div>
 
-                  <div v-if="user.provider!='google'" class="bg-gray-50 px-4 py-3 text-right sm:px-6">
+                  <div v-if="user.provider!='google'" class="bg-gray-50 pr-6  py-3 text-right ">
                     <button
                       type="button"
                       @click="editingAccount ? updatePassword() : editingAccount = true"
-                      class="inline-flex justify-center rounded-md border border-transparent bg-gray-800 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2"
+                      class="inline-flex justify-center rounded-md border border-transparent bg-gray-800 py-2 px-4 text-sm font-medium text-white shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-800 focus:ring-offset-2"
                     >
                       {{editingAccount ? "Save" : "Edit"}}
                     </button>
@@ -1485,6 +1510,13 @@ export default {
         </div>
       </div>
     </main>
+  </transition>
+  <transition
+    enter-active-class="transform ease-in-out duration-700 transition"
+    enter-from-class="opacity-0 "
+    enter-to-class=" opacity-100"
+  >
+    <DataUpdatingPopup v-if="savingAvatar || deletingAccount" />
   </transition>
 
   <transition

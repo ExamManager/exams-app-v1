@@ -3,6 +3,7 @@
 import authenticate from "../../functions/authenticate";
 import { toRaw } from "vue";
 import CustomPlanContact from '../../components/customPlanContact.vue'
+import DataUpdatingPopup from '../../components/dataUpdatingPopup.vue'
 
 //import store from '../../osamaStore.ts' 
 
@@ -54,7 +55,8 @@ export default (await import("vue")).defineComponent({
     RadioGroupDescription,
     RadioGroupLabel,
     RadioGroupOption,
-    CustomPlanContact
+    CustomPlanContact,
+    DataUpdatingPopup
   },
   data() {
     return {
@@ -126,7 +128,7 @@ export default (await import("vue")).defineComponent({
         await new Promise((resolve) => setTimeout(resolve, 1000));
       }
       if (this.$store.state.userid === "null") {
-        this.$router.push("/login");
+        window.location.href = "/login";
       } else {
         this.user = {
           ...this.$store.state,
@@ -144,10 +146,10 @@ export default (await import("vue")).defineComponent({
       this.showingCustomPlanContact = false
     },
     successfullComponent() {
-      this.savingData = false
       this.showingCustomPlanContact = false
       this.onPageLoad()
-      this.$router.push("/account")
+      window.location.href="/account"
+      this.savingData = false
     },
     async updateAccountData() { // does everything exet the avatar
       this.savingdata = true
@@ -177,8 +179,8 @@ export default (await import("vue")).defineComponent({
       }
       else {
         await this.setUserData(this.user.userid, uploadData.data, this.avatarfile) // that works, as all the data that is there overwrites and the rest stays the same on the database
+        window.location.href="/account"
         this.savingdata = false
-        this.$router.push('/account')
       }
       //
       //this.savingdata = false
@@ -202,6 +204,7 @@ export default (await import("vue")).defineComponent({
 });
 </script>
 <template v-if="!loading">
+  <DataUpdatingPopup v-if="savingdata"/>
   <customPlanContact v-if=" !loading && showingCustomPlanContact" :email="user.email" :uploadID="user.userid" :uploadData="uploadData" :uploadIMG="avatarfile" v-on:closeComponent="exitComponent()" v-on:dataUpload="successfullComponent()"/>
   <div class="sm:px-20 md:px-40 lg:px-60 xl:px-80 px-10 py-20 space-y-8 divide-y divide-gray-200">
     <div class="space-y-8 divide-y divide-gray-200">

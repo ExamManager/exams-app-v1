@@ -53,6 +53,7 @@ app.post("/stripe/createcustomer", async (req, res) => {
     if (error) {
       throw new Error(error.message);
     }
+    console.log(data);
     const customer = await stripe.customers.create({
       email: data[0].email,
       name: data[0].fullname,
@@ -65,13 +66,12 @@ app.post("/stripe/createcustomer", async (req, res) => {
         state: data[0].metadata.location.state,
       },
     });
-    const { error: updateError } = await supabase
+    console.log(customer);
+    await supabase
       .from("profiles")
-      .update({ customer_id: customer.id })
+      .insert({ customerid: customer.id })
       .eq("userid", userid);
-    if (updateError) {
-      throw new Error(updateError.message);
-    }
+    console.log("updated");
     res.status(200).json({ message: "success" });
   } catch (err) {
     if (!res.headersSent) {
