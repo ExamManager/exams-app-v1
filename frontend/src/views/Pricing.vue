@@ -1,6 +1,7 @@
 <script lang="ts">
 import { defineComponent, h } from 'vue'
 import { Popover, PopoverButton, PopoverGroup, PopoverPanel } from '@headlessui/vue'
+import notification from "./App.vue"
 import {
   ArrowPathIcon,
   Bars3Icon,
@@ -20,6 +21,7 @@ import { ChevronDownIcon } from '@heroicons/vue/20/solid'
 
 export default {
   name: 'Pricing',
+  mixins: [notification],
   components: {
     Popover,
     PopoverButton,
@@ -131,14 +133,16 @@ export default {
   }
 }
 
-const hobbyFeatures = ['Pariatur quod similique', 'Sapiente libero doloribus', 'Vel ipsa esse repudiandae']
-const scaleFeatures = ['Pariatur quod similique', 'Sapiente libero doloribus', 'Vel ipsa esse repudiandae']
+const hobbyFeatures = ['For Personal Use only','Time up to 3 exams simultaneously', 'Advanced Analytical Tools', 'Save exams up to 1 day ahead' ]
+const scaleFeatures = ['For Schools with under 1000 Students', 'Advanced Exam planning and managing','Student Result Analysis', 'Save exams up to 1 year ahead']
 const growthFeatures = [
-  'Quia rem est sed impedit magnam',
-  'Dolorem vero ratione voluptates',
-  'Qui sed ab doloribus voluptatem dolore',
-  'Laborum commodi molestiae id et fugiat',
-  'Nam ut ipsa nesciunt culpa modi dolor',
+  'For Schools with under 500 Students',
+  'Basic Exam planning',
+  'Exam Timetable Creation',
+  'Exam Seating Plan Creation',
+  'Custom Exam Presets for different subjects',
+  'Save exams up to 1 month ahead',
+
 ]
 
 </script>
@@ -218,11 +222,11 @@ const growthFeatures = [
                       <div class="rounded-t-lg bg-white px-6 pt-12 pb-10">
                         <div>
                           <h3 class="text-center text-3xl font-semibold tracking-tight text-gray-900 sm:-mx-6"
-                            id="tier-growth">Professional</h3>
+                            id="tier-growth">Basic</h3>
                           <div class="mt-4 flex items-center justify-center">
                             <span class="flex items-start px-3 text-6xl tracking-tight text-gray-900 sm:text-6xl">
                               <span class="mt-2 mr-2 text-4xl font-medium tracking-tight">$</span>
-                              <span class="font-bold">29</span>
+                              <span class="font-bold">9,99</span>
                             </span>
                             <span class="text-2xl font-medium text-gray-500">/month</span>
                           </div>
@@ -254,11 +258,11 @@ const growthFeatures = [
                       <div class="flex flex-1 flex-col">
                         <div class="bg-white px-6 py-10">
                           <div>
-                            <h3 class="text-center text-2xl font-medium text-gray-900" id="tier-scale">Enterprise</h3>
+                            <h3 class="text-center text-2xl font-medium text-gray-900" id="tier-scale">Professional</h3>
                             <div class="mt-4 flex items-center justify-center">
                               <span class="flex items-start px-3 text-6xl tracking-tight text-gray-900">
                                 <span class="mt-2 mr-2 text-4xl font-medium tracking-tight">$</span>
-                                <span class="font-bold">49</span>
+                                <span class="font-bold">19,99</span>
                               </span>
                               <span class="text-xl font-medium text-gray-500">/month</span>
                             </div>
@@ -300,7 +304,7 @@ const growthFeatures = [
                   </div>
                   <div class="mt-4 text-lg text-gray-600">Looking for something bigger? Get in touch to explore our
                     custom plans. We offer tailored solutions for teams of any size starting at
-                    <span class="font-semibold text-gray-900">$69</span>/mo
+                    <span class="font-semibold text-gray-900">$39</span>/mo
                   </div>
                 </div>
                 <div class="mt-6 rounded-md shadow lg:mt-0 lg:ml-10 lg:flex-shrink-0">

@@ -29,14 +29,14 @@ export default createStore({
     },
     updateAvatarurl(state, avatarurl) { 
       state.avatarurl = avatarurl
-    },
-    updateProvider(state, provider) {
+    }, // hello
+    updateProvider(state, provider) { 
       state.provider = provider
-    },
-    updateEmail(state, email) {
+    }, //ye i even made 
+    updateEmail(state, email) { 
       state.email = email
-    },
-    updateMetadata(state, metadata) {
+    }, // yh my brain is on like 5 hours of sleep
+    updateMetadata(state, metadata) { 
       state.metadata = metadata
     },
     updateSetupComplete(state, setupComplete) {

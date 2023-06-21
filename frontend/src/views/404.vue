@@ -10,7 +10,7 @@ import {
   CogIcon,
 } from '@heroicons/vue/24/outline'
 
-export default({
+export default{
   name: '404',
   components: {
     ChevronRightIcon,
@@ -26,7 +26,7 @@ export default({
       social,
     }
   },
-})
+}
 
 const links = [
         { 

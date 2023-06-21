@@ -7,7 +7,7 @@
   "scripts": {
     "serve": "nodemon index.js"
   },
-  "author": "DaniDuese, GuglielmoSecci",
+  "author": "DaniDuese, GuglielmoSeccHi",
   "license": "ISC",
   "dependencies": {
     "@supabase/supabase-js": "^2.25.0",

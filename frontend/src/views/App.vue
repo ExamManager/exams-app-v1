@@ -1,6 +1,6 @@
 <script lang="ts">
 import { Popover, PopoverButton, PopoverGroup, PopoverPanel } from "@headlessui/vue";
-import { toRaw } from "vue";
+import { nextTick, toRaw } from "vue";
 import authenticate from "../functions/authenticate";
 import stripe from "../functions/stripe";
 import {
@@ -14,10 +14,10 @@ import {
   BuildingOffice2Icon,
   BookOpenIcon,
   HomeModernIcon,
+  CalendarDaysIcon
 } from "@heroicons/vue/24/outline";
 import { ChevronDownIcon } from "@heroicons/vue/20/solid";
-import { HomeIcon, ChevronRightIcon } from "@heroicons/vue/20/solid";
-import Notifications from "../components/Notifications.vue";
+import * as SolidIcons from "@heroicons/vue/20/solid";
 export default {
   mixins: [authenticate, stripe],
   components: {
@@ -36,9 +36,8 @@ export default {
     PopoverButton,
     PopoverGroup,
     PopoverPanel,
-    HomeIcon,
-    ChevronRightIcon,
-    Notifications,
+    ... SolidIcons,
+    CalendarDaysIcon,
   },
   data() {
     return {
@@ -51,7 +50,16 @@ export default {
       loading: true,
       fullname: "",
       profilepic: "",
-      showNotification: sessionStorage.getItem("showNotification"),
+      // Notification
+      showNotif: false,
+      type: "simple",
+      text: "",
+      icon: "",
+      duration: 3000,
+      href: "",
+      update: 1,
+
+      // Navbar
       user: {
         userid: this.$store.state.userid,
         username: this.$store.state.username,
@@ -72,17 +80,23 @@ export default {
           icon: CursorArrowRaysIcon,
         },
         {
-          name: "Free Tier",
-          description: "Your customers' data will be safe and secure.",
+          name: "Exam Timer Free",
+          description: "Time up to 3 exams simultaneously...",
           href: "/free",
           icon: HomeModernIcon,
         },
         {
-          name: "Paid Tier",
-          description: "Connect with third-party tools that you're already using.",
+          name: "Exam Timer Premium",
+          description: "Time unlimited exams and get access to more features...",
           href: "/premium",
           icon: BuildingOffice2Icon,
         },
+        {
+          name: "Exam Management",
+          description: "Build Exam Timetables and directly import them into Exam Timer...",
+          href: "/dashboard",
+          icon: CalendarDaysIcon,
+        }
       ],
       callsToAction: [
         { name: "Watch Demo", href: "#", icon: PlayIcon },
@@ -120,6 +134,14 @@ export default {
         { name: "Example Subpage", href: "#", current: true },
       ],
     };
+  },
+  watch: {
+    update: {
+      handler() {
+        this.showNotif = true;
+      },
+      immediate: true,
+    },
   },
   methods: {
     fullscreen1() {
@@ -228,21 +250,13 @@ export default {
       this.loading = false;
       console.log("loading false");
       //fetches the userid from checkOnRoute
-    },
+    }, 
   },
   watch: {
     $route(to, from) {
-      // if page routes to this page, then update the navbar
+      // if page routes to this page, then this.update the navbar
       this.checkvisibility();
       this.checkuser();
-    },
-    // watch session storage for changes and update the showNotification variable
-    sessionStorage: {
-      handler() {
-        this.showNotification = sessionStorage.getItem("showNotification");
-        console.log("session storage changed");
-      },
-      deep: true,
     },
   },
   // async mounted() {
@@ -269,7 +283,7 @@ export default {
         <div
           class="flex items-center justify-between border-b-2 border-gray-100 py-6 md:justify-start md:space-x-10"
         >
-          <div class="flex justify-start lg:w-0 lg:flex-1">
+          <div class="flex justify-start lg:w-0 lg:flex-1 cursor-pointer ">
             <a @click="this.$router.push('/')" class="flex items-center">
               <img
                 class="h-10 justify-start pl-2 sm:h-8 pr-3"
@@ -457,7 +471,7 @@ export default {
                 >Sign in</a
               >
               <a
-                @click="this.$router.push('/register')"
+                @click="this.$router.push('/login')"
                 class="ml-8 inline-flex items-center justify-center whitespace-nowrap rounded-md border border-transparent bg-orange-500 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-orange-600"
                 >Sign up</a
               >
@@ -523,7 +537,7 @@ export default {
               class="text-gray-400 flex items-center hover:text-gray-500"
             >
               <HomeIcon class="h-10 w-4 flex-shrink-0 text-gray-400" aria-hidden="true" />
-              <a class="ml-2 text-sm font-medium text-gray-500 hover:text-gray-700"
+              <a class="ml-2 text-sm font-medium text-gray-500 hover:text-gray-700 cursor-pointer"
                 >Home</a
               >
             </a>
@@ -536,8 +550,8 @@ export default {
               aria-hidden="true"
             />
             <a
-              @click="this.$router.push(page.href)"
-              class="ml-4 text-sm font-medium text-gray-500 hover:text-gray-700"
+              @click="page.current ? '' : this.$router.push(page.href)"
+              class="ml-4 text-sm font-medium text-gray-500 hover:text-gray-700 cursor-pointer"
               :aria-current="page.current ? 'page' : undefined"
               >{{ page.name }}</a
             >
@@ -662,12 +676,8 @@ export default {
     </div>
   </transition>
   <main>
-    <router-view class="z-40"></router-view>
-    <transition enter-active-class="transform ease-in duration-400 transition"
-    enter-from-class="translate-y-2 opacity-0 sm:translate-y-0 sm:translate-x-2"
-    enter-to-class="translate-y-0 opacity-100 sm:translate-x-0" leave-active-class="transition ease-in duration-400"
-    leave-from-class="opacity-100" leave-to-class="opacity-0">
-      <Notifications v-if="this.showNotification == 'true'" class=z-50></Notifications>
-    </transition>
+    <router-view class="z-40">
+      
+    </router-view>
   </main>
 </template>

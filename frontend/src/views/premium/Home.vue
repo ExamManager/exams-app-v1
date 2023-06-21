@@ -4,17 +4,27 @@ import {
   DialogPanel,
   DialogTitle,
   TransitionChild,
-  TransitionRoot
+  TransitionRoot,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuItems
 } from "@headlessui/vue";
-
+import { HomeIcon, ChevronRightIcon } from "@heroicons/vue/20/solid";
 export default {
-  name: "Premium",
+  name: "Free",
   components: {
     Dialog,
     DialogPanel,
     DialogTitle,
     TransitionChild,
-    TransitionRoot
+    TransitionRoot,
+    HomeIcon,
+    ChevronRightIcon,
+    Menu,
+    MenuButton,
+    MenuItem,
+    MenuItems
   },
   data() {
     return {
@@ -87,16 +97,6 @@ export default {
     if (localStorage.getItem("people")) {
       // if there is, then load it into the people array
       this.people = JSON.parse(localStorage.getItem("people") || "{}");
-      // set any exams that are set to active to inactive and set their time left to their duration and set their started to false
-      for (var i = 0; i < this.people.length; i++) {
-        if ((this.people[i].status === "active", "reading", "extra")) {
-          this.people[i].status = "inactive";
-          this.people[i].timeleft = this.people[i].duration;
-          this.people[i].started = false;
-        }
-      }
-      // update local storage
-      localStorage.setItem("people", JSON.stringify(this.people));
     }
     setInterval(() => {
       this.updateTime();
@@ -535,28 +535,11 @@ export default {
       if (changed == false) {
         this.notification("error", "Error", "No fields have changed");
       } else {
-        var duration = this.converter(this.newexamduration, "", "H:MM");
-        // convert planned start to minutes
-        var plannedstart = this.converter(
-          this.newexamplannedstart,
-          "",
-          "HH:MM"
-        );
-        // calculate end time
-        var endtime = Number(duration) + Number(plannedstart);
-        this.newexamplannedend = this.converter(
-          endtime.toString(),
-          "",
-          "-HH:MM"
-        );
-        var totalduration2 = Number(duration) + Number(this.newexamreadingtime);
         // if fields have changed, update the person in the database
         this.people[personIdx].name = this.newexamname;
         this.people[personIdx].duration = this.newexamduration;
-        this.people[personIdx].start = this.newexamplannedstart;
-        this.people[personIdx].end = this.newexamplannedend;
+        this.people[personIdx].plannedstart = this.newexamplannedstart;
         this.people[personIdx].about = this.newexamabout;
-        this.people[personIdx].totalduration = totalduration2.toString();
         this.people[personIdx].extratimeenabled = this.newexamextratimeenabled;
         this.people[personIdx].readingtimeenabled =
           this.newexamreadingtimeenabled;
@@ -654,6 +637,9 @@ export default {
       // find person with id
       var personIdx = this.people.find((person) => person.id == personid);
       var personId = this.people.findIndex((person) => person.id == personid);
+      console.log("Person: ", personid);
+      console.log("PersonIdx: ", personIdx);
+      console.log("PersonId: ", personId);
       // duplicate person
       var newPerson = JSON.parse(JSON.stringify(personIdx));
       console.log(newPerson);
@@ -661,13 +647,12 @@ export default {
 
       // make the status of the new person inactive always when duplicating
       newPerson.status = "inactive";
-      newPerson.timeleft = newPerson.duration;
       newPerson.started = false;
+      newPerson.timeleft = newPerson.duration;
+
+      newPerson.id = Math.random().toString(36).substr(2, 9);
       this.people.push(newPerson);
-      // put make the id a random 8 digit uuid
-      this.people[this.people.length - 1].id = Math.random()
-        .toString(36)
-        .substr(2, 9);
+      // make the id a random 8 digit uuid
       // show notification
       this.notification(
         "success",
@@ -753,11 +738,14 @@ export default {
       // also save it to local storage
       localStorage.setItem("people", JSON.stringify(this.people));
     },
-    stopExam(personIdx: string) {
+    stopExam(personId: string) {
       // set timeleft to 0
       console.log("stop exam");
-      // find person with
+      var personIdx = this.people.findIndex((person) => person.id == personId);
       this.clearinterval = Number(personIdx);
+      console.log(personIdx); // 1
+      console.log(personId); // jk23lirufh2l
+      // find person with id
       console.log(this.clearinterval);
       this.people[personIdx].timeleft = "0:00";
       // set status to inactive
@@ -772,7 +760,6 @@ export default {
       this.people[personIdx].started = false;
       // set the end time to the current time
       this.people[personIdx].end = this.time();
-      localStorage.setItem("people", JSON.stringify(this.people));
     },
     startMultipleExams() {
       // start all selected exams
@@ -790,18 +777,14 @@ export default {
         "Exams Started",
         "The selected exams have been started"
       );
-      localStorage.setItem("people", JSON.stringify(this.people));
     },
     // When the button is pressed the exam starts, which should start a timer and set the start time for an exam and calculate the end time using the duration
-    startExam(personIdx: string) {
+    startExam(personId: string) {
       // find person with id
-      var personid = personIdx;
-      var personIdx = this.people.findIndex((person) => person.id == personIdx);
+      var personIdx = this.people.findIndex((person) => person.id == personId);
       // set the status to active
       this.people[personIdx].started = true;
-
       // set the start time which is the current time + the reading time
-
       if (this.people[personIdx].readingtimeenabled === true) {
         this.notification(
           "reading",
@@ -840,12 +823,11 @@ export default {
         console.log("1");
 
         this.calculateTimeLeft(
-          personid,
+          personId,
           starttime,
           endtime,
           this.people[personIdx].readingtime
         );
-        localStorage.setItem("people", JSON.stringify(this.people));
       } else {
         // calculate the new end time with the converter
         this.notification(
@@ -870,12 +852,13 @@ export default {
           "addminutesexact"
         );
         console.log("endtime", endtime);
+        console.log("endtime 2", this.people[personIdx].end);
         console.log("starttime", this.people[personIdx].start);
         // set the status to active
         this.people[personIdx].status = "active";
         console.log("2");
         this.calculateTimeLeft(
-          personid,
+          personId,
           this.people[personIdx].start,
           endtime,
           "null"
@@ -887,16 +870,18 @@ export default {
       // calculate the time left
     },
     async calculateTimeLeft(
-      personid: string,
+      personId: string,
       start: string,
       end: string,
       readingtime: string
     ) {
       console.log("calculate time left");
-      var personid2 = personid;
+      var personIdx = this.people.findIndex((person) => person.id == personId);
+      console.log("personIdx", personIdx);
+      const newperid = String(personIdx);
       var interval = setInterval(() => {
         var personIdx = this.people.findIndex(
-          (person) => person.id == personid
+          (person) => person.id == personId
         );
         // start and end are strings in the format of HH:MM
         // if reading time is disabled, the readingtime variable is null
@@ -917,13 +902,13 @@ export default {
             console.log("balis");
             if (this.people[Number(personIdx)].extratimeenabled === true) {
               clearInterval(interval);
-              this.calculateExtratime(personid2, start, end);
+              this.calculateExtratime(personIdx, start, end);
               // break interval
             } else {
               clearInterval(interval);
               console.log("clear interval");
-              console.log("personIdx", String(personIdx));
-              this.stopExam(String(personIdx));
+              console.log("personIdx", personIdx);
+              this.stopExam(personIdx);
             }
           }
         } else {
@@ -952,22 +937,21 @@ export default {
               console.log("balis");
               if (this.people[Number(personIdx)].extratimeenabled === true) {
                 clearInterval(interval);
-                this.calculateExtratime(personid2, start, end);
+                this.calculateExtratime(personIdx, start, end);
                 // break interval
               } else {
                 clearInterval(interval);
-                this.stopExam(String(personIdx));
+                this.stopExam(personIdx);
               }
             }
           }
         }
-        localStorage.setItem("people", JSON.stringify(this.people));
       }, 200);
     },
-    async calculateExtratime(personid: string, start: string, end: string) {
+    async calculateExtratime(personIdx: string, start: string, end: string) {
       console.log("Start Time", start);
       console.log("End Time", end);
-      var personIdx = this.people.findIndex((person) => person.id == personid);
+      console.log("Person Index", personIdx);
       // set the status to extratime
       this.people[Number(personIdx)].status = "extra";
       // send notification
@@ -997,9 +981,6 @@ export default {
       console.log("This is messed up", extratimeend);
 
       var interval2 = setInterval(() => {
-        var personIdx = this.people.findIndex(
-          (person) => person.id == personid
-        );
         // start and end are strings in the format of HH:MM
         // if reading time is disabled, the readingtime variable is null
         // reading time is the time the reading time ends in the format of HH:MM
@@ -1017,9 +998,8 @@ export default {
           clearInterval(interval2);
           console.log("clear interval");
           console.log("personIdx", personIdx);
-          this.stopExam(String(personIdx));
+          this.stopExam(personIdx);
         }
-        localStorage.setItem("people", JSON.stringify(this.people));
       }, 200);
     }
   }
@@ -1465,10 +1445,10 @@ export default {
       </div>
     </div>
     <div class="mt-4 flex flex-col">
-      <div class="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
+      <div class="-my-2 -mx-4 sm:-mx-6 lg:-mx-8">
         <div class="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
           <div
-            class="relative overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg"
+            class="relative shadow ring-1 ring-black ring-opacity-5 md:rounded-lg"
           >
             <div
               v-if="selectedPeople.length > 0"
@@ -1654,7 +1634,6 @@ export default {
                           </svg>
                         </MenuButton>
                         <transition
-                          v-if="isOpen.includes(person.id)"
                           enter-active-class="transition ease-out duration-100"
                           enter-from-class="transform opacity-0 scale-95"
                           enter-to-class="transform opacity-100 scale-100"
@@ -1663,24 +1642,43 @@ export default {
                           leave-to-class="transform opacity-0 scale-95"
                         >
                           <MenuItems
-                            class="fixed right-14 z-10 mt-10 w-42 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+                            class="absolute right-0 z-50 mt-2 w-24 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
                           >
                             <div class="py-1">
-                              <MenuItem>
+                              <MenuItem v-slot="{ active }">
                                 <a
                                   @click="duplicateButton(person.id)"
-                                  class="hover:bg-gray-100 text-gray-900 block px-4 py-2 text-sm"
+                                  :class="[
+                                    active
+                                      ? 'bg-gray-100 text-gray-900'
+                                      : 'text-gray-700',
+                                    'block px-4 py-2 text-sm'
+                                  ]"
                                   >Duplicate</a
                                 >
+                              </MenuItem>
+                              <MenuItem v-slot="{ active }">
                                 <a
                                   @click="deleteButton(person.id)"
-                                  class="hover:bg-gray-100 text-gray-900 block px-4 py-2 text-sm"
+                                  :class="[
+                                    active
+                                      ? 'bg-gray-100 text-gray-900'
+                                      : 'text-gray-700',
+                                    'block px-4 py-2 text-sm'
+                                  ]"
                                   >Delete</a
                                 >
+                              </MenuItem>
+                              <MenuItem v-slot="{ active }">
                                 <a
                                   @click="editButton(person.id)"
                                   v-if="person.status === 'inactive'"
-                                  class="hover:bg-gray-100 text-gray-900 block px-4 py-2 text-sm"
+                                  :class="[
+                                    active
+                                      ? 'bg-gray-100 text-gray-900'
+                                      : 'text-gray-700',
+                                    'block px-4 py-2 text-sm'
+                                  ]"
                                   >Edit</a
                                 >
                               </MenuItem>
@@ -1700,7 +1698,7 @@ export default {
   </div>
   <div
     aria-live="assertive"
-    class="pointer-events-none z-50 fixed inset-0 flex items-end px-4 py-6 sm:items-start sm:p-4"
+    class="z-50 pointer-events-none fixed inset-0 flex items-end px-4 py-6 sm:items-start sm:p-4"
   >
     <div class="flex w-full flex-col items-center space-y-4 sm:items-end">
       <!-- Notification panel, dynamically insert this into the live region when it needs to be displayed -->

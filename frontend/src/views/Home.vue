@@ -257,7 +257,7 @@ export default {
                   </h1>
                 </transition>
                 <p class="mt-6 text-xl text-gray-500">
-                  Easy 
+                  Easy to use, secure and reliable exam management software for schools.
                 </p>
               </div>
               <div v-if="!loggedin" class="mt-12 sm:flex sm:w-full sm:max-w-lg">
@@ -272,7 +272,7 @@ export default {
                 </div>
                 <div class="mt-4 sm:mt-0 sm:ml-3">
                   <button
-                    @click="this.$router.push('/register', { email: this.email })"
+                    @click="this.$router.push(`/login?${this.email}`)"
                     class="block w-full rounded-md border border-transparent bg-orange-500 px-5 py-3 text-base font-medium text-white shadow hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 sm:px-10"
                   >
                     Sign Up
@@ -680,7 +680,7 @@ export default {
                       <div class="flex items-start">
                         <div class="flex-shrink-0">
                           <svg
-                            class="h-6 w-6 text-blueayy-400"
+                            class="h-6 w-6 text-blue-400"
                             x-description="Heroicon name: outline/check-circle"
                             xmlns="http://www.w3.org/2000/svg"
                             fill="none"
@@ -866,7 +866,7 @@ export default {
       </div>
     </div>
 
-    <!-- <div class="bg-white">
+    <div class="bg-white">
       <div class="mx-auto max-w-7xl py-12 px-4 sm:px-6 lg:px-8">
         <div class="grid grid-cols-2 gap-8 md:grid-cols-6 lg:grid-cols-5">
           <div class="col-span-1 flex justify-center md:col-span-2 lg:col-span-1">
@@ -906,9 +906,9 @@ export default {
           </div>
         </div>
       </div>
-    </div> -->
+    </div>
 
-    <!-- <div class="bg-white">
+   <div class="bg-white">
       <div class="pt-12 sm:pt-16 lg:pt-20">
         <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div class="text-center">
@@ -935,11 +935,10 @@ export default {
                 <h3
                   class="text-2xl font-bold text-gray-900 sm:text-3xl sm:tracking-tight"
                 >
-                  Monthly Subscription
+                  Basic Examtimer Plan
                 </h3>
                 <p class="mt-6 text-base text-gray-500">
-                  Lorem ipsum dolor sit amet consect etur adipisicing elit. Itaque amet
-                  indis perferendis blanditiis repellendus etur quidem assumenda.
+                  Get all of our essential features to time your exams and manage their results.
                 </p>
                 <div class="mt-8">
                   <div class="flex items-center">
@@ -978,7 +977,7 @@ export default {
                   class="mt-4 flex items-center justify-center text-5xl font-bold tracking-tight text-gray-900"
                 >
                   <div class="mt-4 flex items-baseline font-bold tracking-tight">
-                    $29
+                    $9,99
                     <span class="ml-1 text-2xl font-medium tracking-normal text-gray-500"
                       >/mo</span
                     >
@@ -1008,7 +1007,7 @@ export default {
           </div>
         </div>
       </div>
-    </div> -->
+    </div>
   </div>
   <footer class="bg-gray-100">
     <div

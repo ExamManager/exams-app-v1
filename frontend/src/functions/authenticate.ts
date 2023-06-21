@@ -22,7 +22,7 @@ export default {
     },
     async checkSession() { // there is already one you can call
       // Your method logic here
-      const { data } = await supabase.auth.refreshSession()
+      const { data } = await supabase.auth.getSession()
       const { session, user } = data
       if (session != null) {
         this.$store.dispatch('updateParam', ['userid', user.id])
@@ -40,7 +40,9 @@ export default {
         email: reqemail,
         password: reqpassword,
       })
-      this.checkSession()
+
+      console.log("signin response: ", response)
+
       return response;
     },
     async signingoogle() {
@@ -60,7 +62,7 @@ export default {
       return response;
     },
     async checkOnRoute() { // Important used for before routing to check if user is logged in
-      const response = await supabase.auth.refreshSession()
+      const response = await supabase.auth.getSession()
       if (response.data.session != null) {
         return response.data.session.user.id
       } else {
@@ -68,7 +70,7 @@ export default {
       }
     },
     async onPageLoad() { // done, runs on page load once and updates everything
-      const data2 = await supabase.auth.refreshSession()
+      const data2 = await supabase.auth.getSession()
       // Checks if the user is logged in
       if (data2.data.session != null) {
         // Grabs the userid
@@ -301,5 +303,22 @@ export default {
       window.location.href = '/'
       return response;
     },    
+    async checkUserExists(data: { col: string, val: string }) {
+      const response = await supabase
+        .from('profiles')
+        .select('provider')
+        .eq(data.col, data.val)
+
+      console.log(response.data)
+      return response.data;
+    },
+    async sendPasswordResetEmail(email: string) {
+      const response = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: 'http://localhost:6969/setnewpassword',
+      })
+
+      console.log(response)
+      return response;
+    }
   },
 }

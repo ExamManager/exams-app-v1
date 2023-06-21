@@ -26,13 +26,13 @@ app.post("/email/accountverified", async (req, res) => {
       throw new Error(error.message);
     }
     const response = await client.sendMessage({
-      to: 'test@example.net',
-      from: 'test@example.com',
-      plain: 'test message',
-      html:  '<h1>Test Message</h1>',
+      to: "guglielmo.secchi94@gmail.com",
+      from: 'support@examtimer.tech',
+      plain: data[0].fullname,
+      html:  `<h1>${data[0].fullname}</h1>`,
       subject: "hello world"
     });
-    await sgMail.send(msg);
+    //await sgMail.send(msg);
     res.status(200).json({ message: "success" });
   } catch (err) {
     if (!res.headersSent) {

@@ -72,22 +72,6 @@ const router = createRouter({
       }
     },
     {
-      path: '/register',
-      publicPath: '/register',
-      component: () => import('./views/auth/SignUp.vue'),
-      beforeEnter: async (to, from, next) => {
-        const isAuthenticated = await authenticate.methods.checkOnRoute();
-        console.log(isAuthenticated);
-        if (isAuthenticated === false) {
-          // do nothing
-          next()
-        } else {
-          // set the user id
-          next('/account')
-        }
-      }
-    },
-    {
       path: '/:pathMatch(.*)*',
       publicPath: '/:pathMatch(.*)*',
       component: () => import('./views/404.vue'),
@@ -124,9 +108,24 @@ const router = createRouter({
       }
     },
     {
-      path: '/resetpassword',
-      publicPath: '/resetpassword',
-      component: () => import('./components/resetPassword.vue'),
+      path: '/reset',
+      publicPath: '/reset',
+      component: () => import ('./views/auth/ResetPassword.vue')
+    },
+    {
+      path: '/setnewpassword',
+      publicPath: '/setnewpassword', 
+      component: () => import('./views/auth/SetNewPassword.vue'),
+    },
+    {
+      path: '/emailTemplate',
+      publicPath: '/emailTemplate',
+      component: () => import('./views/auth/passwordResetEmail.vue'),
+    },
+    {
+      path: '/emailTemplate2',
+      publicPath: '/emailTemplate2',
+      component: () => import('./views/auth/passwordResetEmail2.vue'),
     },
   ],
 })

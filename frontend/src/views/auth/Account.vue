@@ -164,6 +164,7 @@ export default {
       savingAvatar: false,
       deletingAccount: false,
       showUpdatingPopup: false,
+      password: '',
       editUser: { // gets set once when page loads and is what v-models sre bound to
         userid: "",
         username: "",
@@ -380,8 +381,28 @@ export default {
         }
       };
     },
+    async deleteAccount() {
+      this.deletePopup = false;
+      this.deletingAccount = true;
+      const response = await this.deleteUser(this.user.userid);
+      console.log(response);
+      this.deletingAccount = false;
+    },
     test() {
+
       notification.methods.showNotification("simple", "test", "IconHome", 10000)
+    },
+    async sendEmail() {
+      const response = await fetch("http://localhost:3001/email/accountverified", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ userid: this.user.userid })
+      })
+      const error = await response.json()
+
+      console.log(error)
     }
   }
 };
@@ -452,7 +473,7 @@ export default {
                 <button
                   type="button"
                   class="inline-flex w-full justify-center rounded-md border border-transparent bg-red-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm"
-                  @click="deletePopup = false; test()"
+                  @click="deleteAccount()"
                 >
                   Deactivate
                 </button>
@@ -1238,6 +1259,8 @@ export default {
                   <span v-if="unsavedChanges && !savingdata" class="text-red-500 w-36 text-center px-2 py-0.5 rounded text-xs font-medium bg-red-100 flex-grow">
                     Unsaved Changes
                   </span>
+                    <button @click="sendEmail()" class="inline-flex justify-center rounded-md border border-transparent  bg-gray-800 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2" > test sending email </button>
+
                   <div v-if="!savingdata" class="text-right w-full justify-end space-x-2 flex-shrink">
                     <button v-if="editingAccount" 
                       @click="discardChanges()"
@@ -1317,11 +1340,7 @@ export default {
                         :disabled="!editingAccount"
                         class="mt-1 block peer w-full rounded-md border border-gray-300 py-2 px-3 shadow-sm focus:border-gray-900 focus:outline-none focus:ring-gray-900 sm:text-sm"
                       />
-                      <p
-                        class="mt-2 invisible peer-focus:visible text-pink-600 text-sm"
-                      >
-                        Please remember to save your password...
-                      </p>
+                      <p v-if="password" class="mt-2 text-pink-600 text-sm">Please remember to save your password...</p>
                     </div>
                   </div>
                 </div>
