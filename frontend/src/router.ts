@@ -128,6 +128,9 @@ const router = createRouter({
       component: () => import('./views/auth/passwordResetEmail2.vue'),
     },
   ],
+  scrollBehavior(to, from, savedPosition) {
+    return { top: 0 };
+  },
 })
 
 

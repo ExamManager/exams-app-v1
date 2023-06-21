@@ -43,9 +43,18 @@ export default {
     ChevronDownIcon,
 
   },
+  mounted() {
+        if (this.$store.state.userid === "null") {
+        // if there is, then load it into the people array
+        this.loggedin = false;
+      } else {
+        this.loggedin = true;
+      }
+    },
   data() {
     return {
       test: "test",
+      loggedin: false,
       hobbyFeatures: hobbyFeatures,
       scaleFeatures: scaleFeatures,
       growthFeatures: growthFeatures,
@@ -198,9 +207,9 @@ const growthFeatures = [
                           </ul>
                           <div class="mt-8">
                             <div class="rounded-lg shadow-md">
-                              <a href="#"
+                              <a :href="loggedin ? '/free' : '/login'"
                                 class="block w-full rounded-lg border border-transparent bg-white px-6 py-3 text-center text-base font-medium text-orange-500 hover:bg-gray-50"
-                                aria-describedby="tier-hobby">Create Account</a>
+                                aria-describedby="tier-hobby">{{loggedin ? "Get started" : "Create an account"}}</a>
                             </div>
                           </div>
                         </div>
@@ -243,9 +252,9 @@ const growthFeatures = [
                         </ul>
                         <div class="mt-10">
                           <div class="rounded-lg shadow-md">
-                            <a href="#"
+                            <a @click="loggedin ? $router.push('/account?plan') : $router.push('/login')"
                               class="block w-full rounded-lg border border-transparent bg-orange-500 px-6 py-4 text-center text-xl font-medium leading-6 text-white hover:bg-orange-700"
-                              aria-describedby="tier-growth">Subscribe</a>
+                              aria-describedby="tier-growth">{{loggedin ? "Subscribe" : "Create an account"}}</a>
                           </div>
                         </div>
                       </div>
@@ -280,9 +289,9 @@ const growthFeatures = [
                           </ul>
                           <div class="mt-8">
                             <div class="rounded-lg shadow-md">
-                              <a href="#"
+                              <a @click="loggedin ? $router.push('/account?plan') : $router.push('/login')"
                                 class="block w-full rounded-lg border border-transparent bg-white px-6 py-3 text-center text-base font-medium text-orange-500 hover:bg-gray-50"
-                                aria-describedby="tier-scale">Subscribe</a>
+                                aria-describedby="tier-scale">{{loggedin ? "Subscribe" : "Create an account"}}</a>
                             </div>
                           </div>
                         </div>

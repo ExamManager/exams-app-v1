@@ -1,288 +1,254 @@
-<script lang='ts'>
 
-export default (await import('vue')).defineComponent({
- name: 'PasswordResetEmail',
- mixins: [],
- components: {},
- props: {
-  name: String,
-  link: String
- },
-})
-</script>
-
-// Style for T1
-<style>
-		* {
-			box-sizing: border-box;
-		}
-
-		body {
-			margin: 0;
-			padding: 0;
-		}
-
-		a[x-apple-data-detectors] {
-			color: inherit !important;
-			text-decoration: inherit !important;
-		}
-
-		#MessageViewBody a {
-			color: inherit;
-			text-decoration: none;
-		}
-
-		p {
-			line-height: inherit
-		}
-
-		.desktop_hide,
-		.desktop_hide table {
-			mso-hide: all;
-			display: none;
-			max-height: 0px;
-			overflow: hidden;
-		}
-
-		.image_block img+div {
-			display: none;
-		}
-
-		@media (max-width:620px) {
-
-			.desktop_hide table.icons-inner,
-			.social_block.desktop_hide .social-table {
-				display: inline-block !important;
-			}
-
-			.icons-inner {
-				text-align: center;
-			}
-
-			.icons-inner td {
-				margin: 0 auto;
-			}
-
-			.image_block img.big,
-			.row-content {
-				width: 100% !important;
-			}
-
-			.mobile_hide {
-				display: none;
-			}
-
-			.stack .column {
-				width: 100%;
-				display: block;
-			}
-
-			.mobile_hide {
-				min-height: 0;
-				max-height: 0;
-				max-width: 0;
-				overflow: hidden;
-				font-size: 0px;
-			}
-
-			.desktop_hide,
-			.desktop_hide table {
-				display: table !important;
-				max-height: none !important;
-			}
-		}
-	</style>
-
-
+  <style type="text/css">
+.rollover:hover .rollover-first {
+  max-height:0px!important;
+  display:none!important;
+  }
+  .rollover:hover .rollover-second {
+  max-height:none!important;
+  display:block!important;
+  }
+  .rollover div {
+  font-size:0;
+  }
+  u ~ div img + div > div {
+  display:none;
+  }
+  #outlook a {
+  padding:0;
+  }
+  span.MsoHyperlink,
+span.MsoHyperlinkFollowed {
+  color:inherit;
+  mso-style-priority:99;
+  }
+  a.es-button {
+  mso-style-priority:100!important;
+  text-decoration:none!important;
+  }
+  a[x-apple-data-detectors] {
+  color:inherit!important;
+  text-decoration:none!important;
+  font-size:inherit!important;
+  font-family:inherit!important;
+  font-weight:inherit!important;
+  line-height:inherit!important;
+  }
+  .es-desk-hidden {
+  display:none;
+  float:left;
+  overflow:hidden;
+  width:0;
+  max-height:0;
+  line-height:0;
+  mso-hide:all;
+  }
+  /*
+.es-header-body a:hover {
+  color:#000000!important;
+  }
+*/
+  /*
+.es-content-body a:hover {
+  color:#391484!important;
+  }
+*/
+  /*
+.es-footer-body a:hover {
+  color:#391484!important;
+  }
+*/
+  /*
+.es-infoblock a:hover {
+  color:#cccccc!important;
+  }
+*/
+  .es-button-border:hover a.es-button {
+  color:#000000!important;
+  }
+  @media only screen and (min-width:214px) {
+    .chek-hidden {
+    position:absolute;
+    visibility:hidden;
+    height:0px;
+    width:0px;
+    max-height:0px;
+    overflow:hidden;
+    opacity:0;
+    }
+    lebel,
+    label:hover {
+    cursor:pointer!important;
+    }
+    .vn,
+    .nv,
+    [class*="w-level_"],
+    [class*="d-level_"] {
+    visibility:hidden;
+    display:none;
+    opacity:0;
+    transform:scale(0);
+    height:0;
+    max-height:0px;
+    line-height:0px;
+    mso-hide:all;
+    }
+    #second-option:checked~.choose-zone .nv,
+    #second-option:not(:checked)~.choose-zone .vn,
+    #toLevel_white_0:checked~.choose-zone.goods .w-level_0,
+    #toLevel_white_1:checked~.choose-zone.goods .w-level_1,
+    #toLevel_white_2:checked~.choose-zone.goods .w-level_2,
+    #toLevel_dark_0:checked~.choose-zone.goods .d-level_0,
+    #toLevel_dark_1:checked~.choose-zone.goods .d-level_1,
+    #toLevel_dark_2:checked~.choose-zone.goods .d-level_2,
+    #toLevel_white_1:checked~#toLevel_dark_0:checked~.choose-zone.goods .w-level_3,
+    #toLevel_white_2:checked~#toLevel_dark_0:checked~.choose-zone.goods .w-level_4,
+    #toLevel_white_0:checked~#toLevel_dark_1:checked~.choose-zone.goods .w-level_5,
+    #toLevel_white_0:checked~#toLevel_dark_2:checked~.choose-zone.goods .w-level_6,
+    #toLevel_white_1:checked~#toLevel_dark_1:checked~.choose-zone.goods .w-level_7,
+    #toLevel_white_1:checked~#toLevel_dark_2:checked~.choose-zone.goods .w-level_8,
+    #toLevel_white_2:checked~#toLevel_dark_1:checked~.choose-zone.goods .w-level_9,
+    #toLevel_white_2:checked~#toLevel_dark_2:checked~.choose-zone.goods .w-level_10 {
+    visibility:visible!important;
+    display:inline-block!important;
+    opacity:1!important;
+    transform:scale(1)!important;
+    height:initial!important;
+    max-height:initial!important;
+    line-height:initial!important;
+    }
+    #second-option:checked~.choose-zone table.nv,
+    #second-option:not(:checked)~.choose-zone table.vn,
+    #toLevel_white_0:checked~.choose-zone.goods table.w-level_0,
+    #toLevel_white_1:checked~.choose-zone.goods table.w-level_1,
+    #toLevel_white_2:checked~.choose-zone.goods table.w-level_2,
+    #toLevel_dark_0:checked~.choose-zone.goods table.d-level_0,
+    #toLevel_dark_1:checked~.choose-zone.goods table.d-level_1,
+    #toLevel_dark_2:checked~.choose-zone.goods table.d-level_2 {
+    display:table!important;
+    }
+    #second-option:checked~.choose-zone table tr.nv,
+    #second-option:not(:checked)~.choose-zone table tr.vn {
+    display:table-row!important;
+    }
+    #second-option:checked+.choose-zone table tr td.nv,
+    #second-option:not(:checked)+.choose-zone table tr td.vn {
+    display:table-cell!important;
+    }
+  }
+@media only screen and (min-width:214px) {.chek-hidden { position:absolute; visibility:hidden; height:0px; width:0px; max-height:0px; overflow:hidden; opacity:0 } lebel, label:hover { cursor:pointer!important } .vn, .nv, [class*="w-level_"], [class*="d-level_"] { visibility:hidden; display:none; opacity:0; transform:scale(0); height:0; max-height:0px; line-height:0px; mso-hide:all } #second-option:checked ~ .choose-zone .nv, #second-option:not(:checked) ~ .choose-zone .vn, #toLevel_white_0:checked ~ .choose-zone.goods .w-level_0, #toLevel_white_1:checked ~ .choose-zone.goods .w-level_1, #toLevel_white_2:checked ~ .choose-zone.goods .w-level_2, #toLevel_dark_0:checked ~ .choose-zone.goods .d-level_0, #toLevel_dark_1:checked ~ .choose-zone.goods .d-level_1, #toLevel_dark_2:checked ~ .choose-zone.goods .d-level_2, #toLevel_white_1:checked ~ #toLevel_dark_0:checked ~ .choose-zone.goods .w-level_3, #toLevel_white_2:checked ~ #toLevel_dark_0:checked ~ .choose-zone.goods .w-level_4, #toLevel_white_0:checked ~ #toLevel_dark_1:checked ~ .choose-zone.goods .w-level_5, #toLevel_white_0:checked ~ #toLevel_dark_2:checked ~ .choose-zone.goods .w-level_6, #toLevel_white_1:checked ~ #toLevel_dark_1:checked ~ .choose-zone.goods .w-level_7, #toLevel_white_1:checked ~ #toLevel_dark_2:checked ~ .choose-zone.goods .w-level_8, #toLevel_white_2:checked ~ #toLevel_dark_1:checked ~ .choose-zone.goods .w-level_9, #toLevel_white_2:checked ~ #toLevel_dark_2:checked ~ .choose-zone.goods .w-level_10 { visibility:visible!important; display:inline-block!important; opacity:1!important; transform:scale(1)!important; height:initial!important; max-height:initial!important; line-height:initial!important } #second-option:checked ~ .choose-zone table.nv, #second-option:not(:checked) ~ .choose-zone table.vn, #toLevel_white_0:checked ~ .choose-zone.goods table.w-level_0, #toLevel_white_1:checked ~ .choose-zone.goods table.w-level_1, #toLevel_white_2:checked ~ .choose-zone.goods table.w-level_2, #toLevel_dark_0:checked ~ .choose-zone.goods table.d-level_0, #toLevel_dark_1:checked ~ .choose-zone.goods table.d-level_1, #toLevel_dark_2:checked ~ .choose-zone.goods table.d-level_2 { display:table!important } #second-option:checked ~ .choose-zone table tr.nv, #second-option:not(:checked) ~ .choose-zone table tr.vn { display:table-row!important } #second-option:checked + .choose-zone table tr td.nv, #second-option:not(:checked) + .choose-zone table tr td.vn { display:table-cell!important } }
+@media only screen and (max-width:600px) {.es-m-p15r { padding-right:15px!important } .es-m-p15l { padding-left:15px!important } .es-m-p20 { padding:20px!important } .es-m-p20r { padding-right:20px!important } .es-m-p20l { padding-left:20px!important } .es-m-p20r { padding-right:20px!important } .es-m-p20l { padding-left:20px!important } *[class="gmail-fix"] { display:none!important } p, a { line-height:150%!important } h1, h1 a { line-height:120%!important } h2, h2 a { line-height:120%!important } h3, h3 a { line-height:120%!important } h4, h4 a { line-height:120%!important } h5, h5 a { line-height:120%!important } h6, h6 a { line-height:120%!important } .es-header-body p { } .es-content-body p { } .es-footer-body p { } .es-infoblock p { } h1 { font-size:28px!important; text-align:left } h2 { font-size:24px!important; text-align:left } h3 { font-size:20px!important; text-align:left } h4 { font-size:24px!important; text-align:left } h5 { font-size:20px!important; text-align:left } h6 { font-size:16px!important; text-align:left } .es-header-body h1 a, .es-content-body h1 a, .es-footer-body h1 a { font-size:28px!important } .es-header-body h2 a, .es-content-body h2 a, .es-footer-body h2 a { font-size:24px!important } .es-header-body h3 a, .es-content-body h3 a, .es-footer-body h3 a { font-size:20px!important } .es-header-body h4 a, .es-content-body h4 a, .es-footer-body h4 a { font-size:24px!important } .es-header-body h5 a, .es-content-body h5 a, .es-footer-body h5 a { font-size:20px!important } .es-header-body h6 a, .es-content-body h6 a, .es-footer-body h6 a { font-size:16px!important } .es-menu td a { font-size:16px!important } .es-header-body p, .es-header-body a { font-size:16px!important } .es-content-body p, .es-content-body a { font-size:16px!important } .es-footer-body p, .es-footer-body a { font-size:16px!important } .es-infoblock p, .es-infoblock a { font-size:12px!important } .es-m-txt-c, .es-m-txt-c h1, .es-m-txt-c h2, .es-m-txt-c h3, .es-m-txt-c h4, .es-m-txt-c h5, .es-m-txt-c h6 { text-align:center!important } .es-m-txt-r, .es-m-txt-r h1, .es-m-txt-r h2, .es-m-txt-r h3, .es-m-txt-r h4, .es-m-txt-r h5, .es-m-txt-r h6 { text-align:right!important } .es-m-txt-j, .es-m-txt-j h1, .es-m-txt-j h2, .es-m-txt-j h3, .es-m-txt-j h4, .es-m-txt-j h5, .es-m-txt-j h6 { text-align:justify!important } .es-m-txt-l, .es-m-txt-l h1, .es-m-txt-l h2, .es-m-txt-l h3, .es-m-txt-l h4, .es-m-txt-l h5, .es-m-txt-l h6 { text-align:left!important } .es-m-txt-r img, .es-m-txt-c img, .es-m-txt-l img, .es-m-txt-r .rollover:hover .rollover-second, .es-m-txt-c .rollover:hover .rollover-second, .es-m-txt-l .rollover:hover .rollover-second { display:inline!important } .es-m-txt-r .rollover div, .es-m-txt-c .rollover div, .es-m-txt-l .rollover div { line-height:0!important; font-size:0!important } .es-spacer { display:inline-table } a.es-button, button.es-button { font-size:14px!important } .es-m-fw, .es-m-fw.es-fw, .es-m-fw .es-button { display:block!important } .es-m-il, .es-m-il .es-button, .es-social, .es-social td, .es-menu { display:inline-block!important } .es-adaptive table, .es-left, .es-right { width:100%!important } .es-content table, .es-header table, .es-footer table, .es-content, .es-footer, .es-header { width:100%!important; max-width:600px!important } .adapt-img:not([src*="default-img"]) { width:100%!important; height:auto!important } .es-mobile-hidden, .es-hidden { display:none!important } .es-desk-hidden { width:auto!important; overflow:visible!important; float:none!important; max-height:inherit!important; line-height:inherit!important } tr.es-desk-hidden { display:table-row!important } table.es-desk-hidden { display:table!important } td.es-desk-menu-hidden { display:table-cell!important } .es-menu td { width:1%!important } table.es-table-not-adapt, .esd-block-html table { width:auto!important } .es-social td { padding-bottom:10px } .m-c-p16r { padding-right:8vw } .h-auto, table.h-auto { height:auto!important } a.es-button, button.es-button { display:inline-block!important } .es-button-border { display:inline-block!important } }
+</style>
 
 <template>
-
-<body style="background-color: #d9dffa; margin: 0; padding: 0; -webkit-text-size-adjust: none; text-size-adjust: none;">
-	<table class="nl-container" width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; background-color: #d9dffa;">
-		<tbody>
-			<tr>
-				<td>
-					<table class="row row-1" align="center" width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; background-color: #cfd6f4;">
-						<tbody>
-							<tr>
-								<td>
-									<table class="row-content stack" align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; color: #000000; width: 600px;" width="600">
-										<tbody>
-											<tr>
-												<td class="column column-1" width="100%" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-weight: 400; text-align: left; padding-top: 20px; vertical-align: top; border-top: 0px; border-right: 0px; border-bottom: 0px; border-left: 0px;">
-													<table class="image_block block-1" width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;">
-														<tr>
-															<td class="pad" style="width:100%;padding-right:0px;padding-left:0px;">
-																<div class="alignment" align="center" style="line-height:10px"><img class="big" src="https://d1oco4z2z1fhwp.cloudfront.net/templates/default/3991/animated_header.gif" style="display: block; height: auto; border: 0; width: 600px; max-width: 100%;" width="600" alt="Card Header with Border and Shadow Animated" title="Card Header with Border and Shadow Animated"></div>
-															</td>
-														</tr>
-													</table>
-												</td>
-											</tr>
-										</tbody>
-									</table>
-								</td>
-							</tr>
-						</tbody>
-					</table>
-					<table class="row row-2" align="center" width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; background-color: #d9dffa; background-image: url('https://d1oco4z2z1fhwp.cloudfront.net/templates/default/3991/body_background_2.png'); background-position: top center; background-repeat: repeat;">
-						<tbody>
-							<tr>
-								<td>
-									<table class="row-content stack" align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; color: #000000; width: 600px;" width="600">
-										<tbody>
-											<tr>
-												<td class="column column-1" width="100%" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-weight: 400; text-align: left; padding-bottom: 15px; padding-left: 50px; padding-right: 50px; padding-top: 15px; vertical-align: top; border-top: 0px; border-right: 0px; border-bottom: 0px; border-left: 0px;">
-													<table class="text_block block-1" width="100%" border="0" cellpadding="10" cellspacing="0" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; word-break: break-word;">
-														<tr>
-															<td class="pad">
-																<div style="font-family: sans-serif">
-																	<div class style="font-size: 14px; font-family: Helvetica Neue, Helvetica, Arial, sans-serif; mso-line-height-alt: 16.8px; color: #506bec; line-height: 1.2;">
-																		<p style="margin: 0; font-size: 14px; mso-line-height-alt: 16.8px;"><strong><span style="font-size:38px;">Forgot your password?</span></strong></p>
-																	</div>
-																</div>
-															</td>
-														</tr>
-													</table>
-													<table class="text_block block-2" width="100%" border="0" cellpadding="10" cellspacing="0" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; word-break: break-word;">
-														<tr>
-															<td class="pad">
-																<div style="font-family: sans-serif">
-																	<div class style="font-size: 14px; font-family: Helvetica Neue, Helvetica, Arial, sans-serif; mso-line-height-alt: 16.8px; color: #40507a; line-height: 1.2;">
-																		<p style="margin: 0; font-size: 14px; mso-line-height-alt: 16.8px;"><span style="font-size:16px;">Hey, we received a request to reset your password.</span></p>
-																	</div>
-																</div>
-															</td>
-														</tr>
-													</table>
-													<table class="text_block block-3" width="100%" border="0" cellpadding="10" cellspacing="0" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; word-break: break-word;">
-														<tr>
-															<td class="pad">
-																<div style="font-family: sans-serif">
-																	<div class style="font-size: 14px; font-family: Helvetica Neue, Helvetica, Arial, sans-serif; mso-line-height-alt: 16.8px; color: #40507a; line-height: 1.2;">
-																		<p style="margin: 0; font-size: 14px; mso-line-height-alt: 16.8px;"><span style="font-size:16px;">Let’s get you a new one!</span></p>
-																	</div>
-																</div>
-															</td>
-														</tr>
-													</table>
-													<table class="button_block block-4" width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;">
-														<tr>
-															<td class="pad" style="padding-bottom:20px;padding-left:10px;padding-right:10px;padding-top:20px;text-align:left;">
-																<div class="alignment" align="left"><!--[if mso]><v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="http://www.example.com/" style="height:46px;width:212px;v-text-anchor:middle;" arcsize="35%" stroke="false" fillcolor="#506bec"><w:anchorlock/><v:textbox inset="5px,0px,0px,0px"><center style="color:#ffffff; font-family:Arial, sans-serif; font-size:15px"><![endif]--><a href="http://www.example.com/" target="_blank" style="text-decoration:none;display:inline-block;color:#ffffff;background-color:#506bec;border-radius:16px;width:auto;border-top:0px solid TRANSPARENT;font-weight:undefined;border-right:0px solid TRANSPARENT;border-bottom:0px solid TRANSPARENT;border-left:0px solid TRANSPARENT;padding-top:8px;padding-bottom:8px;font-family:Helvetica Neue, Helvetica, Arial, sans-serif;font-size:15px;text-align:center;mso-border-alt:none;word-break:keep-all;"><span style="padding-left:25px;padding-right:20px;font-size:15px;display:inline-block;letter-spacing:normal;"><span style="word-break:break-word;"><span style="line-height: 30px;" data-mce-style><strong>RESET MY PASSWORD</strong></span></span></span></a><!--[if mso]></center></v:textbox></v:roundrect><![endif]--></div>
-															</td>
-														</tr>
-													</table>
-													
-													<table class="text_block block-6" width="100%" border="0" cellpadding="10" cellspacing="0" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; word-break: break-word;">
-														<tr>
-															<td class="pad">
-																<div style="font-family: sans-serif">
-																	<div class style="font-size: 14px; font-family: Helvetica Neue, Helvetica, Arial, sans-serif; mso-line-height-alt: 16.8px; color: #40507a; line-height: 1.2;">
-																		<p style="margin: 0; font-size: 14px; mso-line-height-alt: 16.8px;">Didn’t request a password reset? You can ignore this message.</p>
-																	</div>
-																</div>
-															</td>
-														</tr>
-													</table>
-												</td>
-											</tr>
-										</tbody>
-									</table>
-								</td>
-							</tr>
-						</tbody>
-					</table>
-					<table class="row row-3" align="center" width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;">
-						<tbody>
-							<tr>
-								<td>
-									<table class="row-content stack" align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; color: #000000; width: 600px;" width="600">
-										<tbody>
-											<tr>
-												<td class="column column-1" width="100%" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-weight: 400; text-align: left; padding-bottom: 5px; vertical-align: top; border-top: 0px; border-right: 0px; border-bottom: 0px; border-left: 0px;">
-													<table class="image_block block-1" width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;">
-														<tr>
-															<td class="pad" style="width:100%;padding-right:0px;padding-left:0px;">
-																<div class="alignment" align="center" style="line-height:10px"><img class="big" src="https://d1oco4z2z1fhwp.cloudfront.net/templates/default/3991/bottom_img.png" style="display: block; height: auto; border: 0; width: 600px; max-width: 100%;" width="600" alt="Card Bottom with Border and Shadow Image" title="Card Bottom with Border and Shadow Image"></div>
-															</td>
-														</tr>
-													</table>
-												</td>
-											</tr>
-										</tbody>
-									</table>
-								</td>
-							</tr>
-						</tbody>
-					</table>
-					<table class="row row-4" align="center" width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;">
-						<tbody>
-							<tr>
-								<td>
-									<table class="row-content stack" align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; color: #000000; width: 600px;" width="600">
-										<tbody>
-											<tr>
-												<td class="column column-1" width="100%" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-weight: 400; text-align: left; padding-bottom: 20px; padding-left: 10px; padding-right: 10px; padding-top: 10px; vertical-align: top; border-top: 0px; border-right: 0px; border-bottom: 0px; border-left: 0px;">
-													<table class="image_block block-1" width="100%" border="0" cellpadding="10" cellspacing="0" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;">
-														<tr>
-															<td class="pad">
-																<div class="alignment" align="center" style="line-height:10px"><a href="http://www.example.com/" target="_blank" style="outline:none" tabindex="-1"><img src="https://d1oco4z2z1fhwp.cloudfront.net/templates/default/3991/logo.png" style="display: block; height: auto; border: 0; width: 145px; max-width: 100%;" width="145" alt="Your Logo" title="Your Logo"></a></div>
-															</td>
-														</tr>
-													</table>
-													<table class="social_block block-2" width="100%" border="0" cellpadding="10" cellspacing="0" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;">
-														<tr>
-															<td class="pad">
-																<div class="alignment" align="center">
-																	<table class="social-table" width="72px" border="0" cellpadding="0" cellspacing="0" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; display: inline-block;">
-																		<tr>
-																			<td style="padding:0 2px 0 2px;"><a href="https://www.instagram.com/" target="_blank"><img src="https://app-rsrc.getbee.io/public/resources/social-networks-icon-sets/t-only-logo-dark-gray/instagram@2x.png" width="32" height="32" alt="Instagram" title="instagram" style="display: block; height: auto; border: 0;"></a></td>
-																			<td style="padding:0 2px 0 2px;"><a href="https://www.twitter.com/" target="_blank"><img src="https://app-rsrc.getbee.io/public/resources/social-networks-icon-sets/t-only-logo-dark-gray/twitter@2x.png" width="32" height="32" alt="Twitter" title="twitter" style="display: block; height: auto; border: 0;"></a></td>
-																		</tr>
-																	</table>
-																</div>
-															</td>
-														</tr>
-													</table>
-													<table class="text_block block-3" width="100%" border="0" cellpadding="10" cellspacing="0" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; word-break: break-word;">
-														<tr>
-															<td class="pad">
-																<div style="font-family: sans-serif">
-																	<div class style="font-size: 14px; font-family: Helvetica Neue, Helvetica, Arial, sans-serif; mso-line-height-alt: 16.8px; color: #97a2da; line-height: 1.2;">
-																		<p style="margin: 0; font-size: 14px; text-align: center; mso-line-height-alt: 16.8px;">+(44) 7944 696969</p>
-																	</div>
-																</div>
-															</td>
-														</tr>
-													</table>
-													<table class="text_block block-5" width="100%" border="0" cellpadding="10" cellspacing="0" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; word-break: break-word;">
-														<tr>
-															<td class="pad">
-																<div style="font-family: sans-serif">
-																	<div class style="font-size: 14px; font-family: Helvetica Neue, Helvetica, Arial, sans-serif; mso-line-height-alt: 16.8px; color: #97a2da; line-height: 1.2;">
-																		<p style="margin: 0; text-align: center; font-size: 12px; mso-line-height-alt: 14.399999999999999px;"><span style="font-size:12px;">Copyright© 2021 Your Brand.</span></p>
-																		<!-- <p id="m_8010100107078456808text01" style="margin: 0; text-align: center; font-size: 12px; mso-line-height-alt: 14.399999999999999px;"><span style="font-size:12px;"><a href="http://www.example.com/" target="_blank" title="Unsubscribe&nbsp;" style="text-decoration: underline; color: #97a2da;" rel="noopener">Unsubscribe</a> |&nbsp;<a href="http://www.example.com/" target="_blank" title="Manage your preferences" style="text-decoration: underline; color: #97a2da;" rel="noopener">Manage your preferences</a>&nbsp;|&nbsp;<a href="http://www.example.com/" target="_blank" title="Privacy Policy" style="text-decoration: underline; color: #97a2da;" rel="noopener">Privacy Policy</a></span></p> -->
-																	</div>
-																</div>
-															</td>
-														</tr>
-													</table>
-												</td>
-											</tr>
-										</tbody>
-									</table>
-								</td>
-							</tr>
-						</tbody>
-					</table>
-					
-				</td>
-			</tr>
-		</tbody>
-	</table><!-- End -->
-</body>
-
-
-
+ <body style="width:100%;height:100%;padding:0;Margin:0">
+  <div class="es-wrapper-color" style="background-color:#FFFFFF"><!--[if gte mso 9]>
+			<v:background xmlns:v="urn:schemas-microsoft-com:vml" fill="t">
+				<v:fill type="tile" color="#ffffff" origin="0.5, 0" position="0.5, 0"></v:fill>
+			</v:background>
+		<![endif]-->
+   <table class="es-wrapper" width="100%" cellspacing="0" cellpadding="0" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;padding:0;Margin:0;width:100%;height:100%;background-repeat:no-repeat;background-position:center top;background-color:#FFFFFF">
+     <tr>
+      <td valign="top" style="padding:0;Margin:0">
+       <table cellpadding="0" cellspacing="0" class="es-content" align="center" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;width:100%;table-layout:fixed !important">
+         <tr>
+          <td class="es-m-p15r es-m-p15l" align="center" style="padding:0;Margin:0">
+           <table bgcolor="#ffffff" class="es-content-body" align="center" cellpadding="0" cellspacing="0" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;background-color:transparent;width:640px">
+             <tr>
+              <td align="left" style="padding:0;Margin:0;padding-top:30px;padding-right:40px;padding-left:40px">
+               <table cellpadding="0" cellspacing="0" width="100%" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px">
+                 <tr>
+                  <td align="center" valign="top" style="padding:0;Margin:0;width:560px">
+                   <table cellpadding="0" cellspacing="0" width="100%" role="presentation" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px">
+                     <tr class="es-mobile-hidden">
+                      <td align="center" height="44" style="padding:0;Margin:0"></td>
+                     </tr>
+                   </table></td>
+                 </tr>
+               </table></td>
+             </tr>
+             <tr>
+              <td class="es-m-p20" align="left" bgcolor="#efefef" style="padding:40px;Margin:0;background-color:#efefef;border-radius:20px 20px 0px 0px;background-image:url(https://sfxhbe.stripocdn.email/content/guids/8149ef34-e14d-42cc-9eb2-97b94e7b0668/images/tesrtsd.png);background-repeat:no-repeat;background-position:left top" background="https://sfxhbe.stripocdn.email/content/guids/8149ef34-e14d-42cc-9eb2-97b94e7b0668/images/tesrtsd.png">
+               <table cellpadding="0" cellspacing="0" width="100%" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px">
+                 <tr>
+                  <td align="left" style="padding:0;Margin:0;width:560px">
+                   <table cellpadding="0" cellspacing="0" width="100%" role="presentation" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px">
+                     <tr>
+                      <td align="center" style="padding:0;Margin:0;font-size:0px"><a target="_blank" href="https://viewstripo.email/" style="mso-line-height-rule:exactly;text-decoration:underline;color:#391484;font-size:18px"><img src="https://sfxhbe.stripocdn.email/content/guids/8149ef34-e14d-42cc-9eb2-97b94e7b0668/images/aatbio_com_image_export_jun_21_2023.png" alt="" style="display:block;font-size:18px;border:0;outline:none;text-decoration:none" height="72"></a></td>
+                     </tr>
+                     <tr>
+                      <td align="center" height="20" style="padding:0;Margin:0"></td>
+                     </tr>
+                   </table></td>
+                 </tr>
+                 <tr>
+                  <td align="left" style="padding:0;Margin:0;width:560px">
+                   <table cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:separate;border-spacing:0px;border-width:0;background:url(&quot;https://demo.stripocdn.email/content/guids/videoImgGuid/images/20220729_16_19_09mouse_highlight_overlay.png&quot;) no-repeat #ffffff;border-radius:20px" background="https://sfxhbe.stripocdn.email/content/guids/videoImgGuid/images/20220729_16_19_09mouse_highlight_overlay.png" role="presentation">
+                     <tr>
+                      <td align="left" class="es-m-txt-l es-m-p20r es-m-p20l" style="padding:0;Margin:0;padding-right:40px;padding-left:40px;padding-top:20px"><h1 style="Margin:0;font-family:'Exo 2', sans-serif;mso-line-height-rule:exactly;letter-spacing:0;font-size:36px;font-style:normal;font-weight:bold;line-height:43px;color:#000000;text-transform:uppercase">Welcome {User},</h1></td>
+                     </tr>
+                     <tr>
+                      <td align="left" class="es-m-txt-l es-m-p20r es-m-p20l" style="Margin:0;padding-right:40px;padding-left:40px;padding-top:15px;padding-bottom:20px"><p style="Margin:0;mso-line-height-rule:exactly;font-family:'Exo 2', sans-serif;line-height:27px;letter-spacing:0;color:#666666;font-size:18px">You have been invited to use ExamTimer. Please use the link below, to create your account and use it...<br><br>{Link}</p><p style="Margin:0;mso-line-height-rule:exactly;font-family:'Exo 2', sans-serif;line-height:27px;letter-spacing:0;color:#666666;font-size:18px"><br></p><p style="Margin:0;mso-line-height-rule:exactly;font-family:'Exo 2', sans-serif;line-height:27px;letter-spacing:0;color:#666666;font-size:18px">We hope you are going to enjoy using it...<br></p><p style="Margin:0;mso-line-height-rule:exactly;font-family:'Exo 2', sans-serif;line-height:27px;letter-spacing:0;color:#666666;font-size:18px">ExamTimer Team</p><p style="Margin:0;mso-line-height-rule:exactly;font-family:'Exo 2', sans-serif;line-height:27px;letter-spacing:0;color:#666666;font-size:18px"><br></p></td>
+                     </tr>
+                   </table></td>
+                 </tr>
+               </table></td>
+             </tr>
+             <tr>
+              <td align="left" bgcolor="#efefef" style="padding:20px;Margin:0;background-color:#efefef;border-radius:0px 0px 20px 20px;background-size:contain">
+               <table cellpadding="0" cellspacing="0" width="100%" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px">
+                 <tr>
+                  <td align="left" style="padding:0;Margin:0;width:600px">
+                   <table cellpadding="0" cellspacing="0" width="100%" role="presentation" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px">
+                     <tr>
+                      <td align="center" style="padding:0;Margin:0;padding-top:5px;padding-bottom:5px;font-size:0px"><a target="_blank" href="https://viewstripo.email/" style="mso-line-height-rule:exactly;text-decoration:underline;color:#391484;font-size:18px"><img src="https://sfxhbe.stripocdn.email/content/guids/8149ef34-e14d-42cc-9eb2-97b94e7b0668/images/aatbio_com_image_export_jun_21_2023.png" alt="" style="display:block;font-size:18px;border:0;outline:none;text-decoration:none" width="180"></a></td>
+                     </tr>
+                     <tr>
+                      <td align="center" style="padding:0;Margin:0;padding-top:15px;font-size:0">
+                       <table cellpadding="0" cellspacing="0" class="es-table-not-adapt es-social" role="presentation" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px">
+                         <tr>
+                          <td align="center" valign="top" style="padding:0;Margin:0;padding-right:15px"><img title="Facebook" src="https://sfxhbe.stripocdn.email/content/assets/img/social-icons/logo-black/facebook-logo-black.png" alt="Fb" width="32" height="32" style="display:block;font-size:18px;border:0;outline:none;text-decoration:none"></td>
+                          <td align="center" valign="top" style="padding:0;Margin:0;padding-right:15px"><img title="Twitter" src="https://sfxhbe.stripocdn.email/content/assets/img/social-icons/logo-black/twitter-logo-black.png" alt="Tw" width="32" height="32" style="display:block;font-size:18px;border:0;outline:none;text-decoration:none"></td>
+                          <td align="center" valign="top" style="padding:0;Margin:0;padding-right:15px"><img title="Instagram" src="https://sfxhbe.stripocdn.email/content/assets/img/social-icons/logo-black/instagram-logo-black.png" alt="Inst" width="32" height="32" style="display:block;font-size:18px;border:0;outline:none;text-decoration:none"></td>
+                          <td align="center" valign="top" style="padding:0;Margin:0"><img title="Youtube" src="https://sfxhbe.stripocdn.email/content/assets/img/social-icons/logo-black/youtube-logo-black.png" alt="Yt" width="32" height="32" style="display:block;font-size:18px;border:0;outline:none;text-decoration:none"></td>
+                         </tr>
+                       </table></td>
+                     </tr>
+                     <tr>
+                      <td align="center" style="padding:0;Margin:0;padding-top:15px"><p style="Margin:0;mso-line-height-rule:exactly;font-family:'Exo 2', sans-serif;line-height:27px;letter-spacing:0;color:#666666;font-size:18px">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p></td>
+                     </tr>
+                     <tr>
+                      <td align="center" style="padding:0;Margin:0;padding-top:10px"><p style="Margin:0;mso-line-height-rule:exactly;font-family:'Exo 2', sans-serif;line-height:27px;letter-spacing:0;color:#666666;font-size:18px"><a target="_blank" href="" style="mso-line-height-rule:exactly;text-decoration:underline;color:#391484;font-size:18px">Unsubscribe</a></p></td>
+                     </tr>
+                   </table></td>
+                 </tr>
+               </table></td>
+             </tr>
+           </table></td>
+         </tr>
+       </table>
+       <table cellpadding="0" cellspacing="0" class="es-content" align="center" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;width:100%;table-layout:fixed !important">
+         <tr>
+          <td align="center" style="padding:0;Margin:0">
+           <table bgcolor="#ffffff" class="es-content-body" align="center" cellpadding="0" cellspacing="0" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;background-color:transparent;width:640px">
+             <tr>
+              <td align="left" style="padding:40px;Margin:0">
+               <table cellpadding="0" cellspacing="0" width="100%" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px">
+                 <tr>
+                  <td align="center" valign="top" style="padding:0;Margin:0;width:560px">
+                   <table cellpadding="0" cellspacing="0" width="100%" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px">
+                     <tr>
+                      <td align="center" style="padding:0;Margin:0;display:none"></td>
+                     </tr>
+                   </table></td>
+                 </tr>
+               </table></td>
+             </tr>
+           </table></td>
+         </tr>
+       </table></td>
+     </tr>
+   </table>
+  </div>
+ </body>
 </template>

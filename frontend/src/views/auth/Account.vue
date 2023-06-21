@@ -219,6 +219,45 @@ export default {
   mounted() {
     this.checkuser();
 
+    const url = this.$route.fullPath
+    // check if ? is in url if so, check if it says ?plan and if so, set plan to that value
+    if (url.includes('?')) {
+      if (url.includes('?plan')) {
+        // set this.subNavigation[3].current = true; and all other subnavs to false
+        this.subNavigation.forEach((element, index) => {
+          if (index == 3) {
+            element.current = true;
+          } else {
+            element.current = false;
+          }
+        });
+
+      } else if (url.includes('?account')) {
+        this.subNavigation.forEach((element, index) => {
+          if (index == 1) {
+            element.current = true;
+          } else {
+            element.current = false;
+          }
+        });
+      } else if (url.includes('?password')) {
+        this.subNavigation.forEach((element, index) => {
+          if (index == 2) {
+            element.current = true;
+          } else {
+            element.current = false;
+          }
+        });
+      }  else if (url.includes('?integrations')) {
+        this.subNavigation.forEach((element, index) => {
+          if (index == 4) {
+            element.current = true;
+          } else {
+            element.current = false;
+          }
+        });
+      } 
+    }
     // setInterval(() => {
     //   console.log(this.$store.state.metadata.location.state);
     // }, 500);

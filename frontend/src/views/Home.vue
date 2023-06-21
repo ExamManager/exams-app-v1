@@ -990,11 +990,11 @@ export default {
                 </p>
                 <div class="mt-6">
                   <div class="rounded-md shadow">
-                    <a
+                    <button
                       href="#"
-                      class="flex items-center justify-center rounded-md border border-transparent bg-orange-500 px-5 py-3 text-base font-medium text-white hover:bg-gray-900"
-                      >Subscribe</a
-                    >
+                      class="flex items-center w-full justify-center rounded-md border border-transparent bg-orange-500 px-5 py-3 text-base font-medium text-white hover:bg-gray-900"
+                      @click="loggedin ? $router.push('/account?plan') : $router.push('/login')"
+                      >Subscribe</button>
                   </div>
                 </div>
                 <div class="mt-4 text-sm">
