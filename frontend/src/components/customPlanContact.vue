@@ -37,6 +37,15 @@ export default (await import("vue")).defineComponent({
         emailContent: "",
       }
   },
+  mounted() {
+    window.addEventListener('keyup',  (e) => {
+      if (e.key === 'Enter') {
+        this.submit()
+      } else if (e.key === "Escape") {
+        this.$emit('closeComponent')
+      }
+    })
+  },
   methods: {
     async submit() {
       console.log("submit")
@@ -46,11 +55,43 @@ export default (await import("vue")).defineComponent({
         return false
       }
       else {
+        const response = await this.setUserData(this.uploadID, this.uploadData, this.uploadIMG)
         //send email
+        await this.sendEmail(
+          "NoUIDRequired",
+          ["guglielmosecchi94@gmail.com", "poopattaxspam@gmail.com"],
+          "payments@examtimer.tech",
+          `A custom plan has been requested: ${this.emailContent}`,
+          `<p>A custom plan has just been requested.
+            The following is the message submitted:
+            <br/><br/>${this.emailContent}</p>`,
+          "Custom Plan Requested"
+        )
+
+        await this.sendEmail(
+          "NoUIDRequired",
+          this.email,
+          "payments@examtimer.tech",
+          "We have received your request for a custom plan and will get back to you shortly",
+          `<p>
+            Hi there!
+            <br/><br/>
+            Thank you for your request for a custom plan. We will get back to you shortly.
+            In case we do not send you an email soon, please feel free to contact us at
+            support@examtimer.tech with the information your provided about your situation.
+            In the meantime, hold tight while we process your request and see what we can do
+            for you.
+            <br/><br/>
+            Kind regards,<br/>The Examtimer Team
+          </p>`,
+          "Custom Plan Request Received"
+        )
+        
+        this.$emit('dataUpload')
+
+        return response
       }
-      const response = await this.setUserData(this.uploadID, this.uploadData, this.uploadIMG)
-      this.$emit('dataUpload')
-      return response
+      
     }
   }
   

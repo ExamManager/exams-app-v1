@@ -29,6 +29,13 @@ const plans = [
     disabled: true
   }
 ];
+
+const cards = [
+  { name: 'Next Payment', href: '#', icon: CalendarDaysIcon, amount: 'In 24 days' },
+  { name: 'Account balance', href: '#', icon: ScaleIcon, amount: '$30,659.45' },
+  // More items...
+]
+
 const payments = [
   {
     id: 1,
@@ -41,15 +48,7 @@ const payments = [
   // More payments...
 ];
 
-const paymentMethods = [
-  {
-    cardType: "Visa",
-    lastFour: "1234",
-    expiration: "12/22",
-    lastUpdated: "2021-08-01",
-    status: "Active"
-  }
-];
+const paymentMethods = [];
 
 const selectedPlan = plans[0];
 const annualBillingEnabled = true;
@@ -60,7 +59,7 @@ import {
   MagnifyingGlassIcon,
   QuestionMarkCircleIcon
 } from "@heroicons/vue/20/solid";
-import { TrashIcon } from "@heroicons/vue/24/outline";
+import { TrashIcon, ScaleIcon, CalendarDaysIcon } from "@heroicons/vue/24/outline";
 import {
   Disclosure,
   DisclosureButton,
@@ -111,7 +110,9 @@ export default (await import("vue")).defineComponent({
     DialogTitle,
     TransitionChild,
     TransitionRoot,
-    ExclamationTriangleIcon
+    ExclamationTriangleIcon,
+    ScaleIcon,
+    CalendarDaysIcon
   },
   data() {
     return {
@@ -120,9 +121,65 @@ export default (await import("vue")).defineComponent({
       selectedPlan,
       annualBillingEnabled,
       paymentMethods,
+      cards,
       selectedMethod: 0,
-      editpayment: false
+      editpayment: false,
+      test: "",
+      loading: true,
+      addCard: {
+        firstName: "",
+        lastName: "",
+        cardNumber: "",
+        cardExpiry: "",
+        cardCvc: "",
+        country: "",
+        postalCode: ""
+      }
+
     };
+  },
+  methods: {
+    async openModal() {
+      this.loading = true;
+      this.editpayment = true;
+      const response = await this.getPaymentMethods();
+      this.paymentMethods = [];
+      for (let i = 0; i < response.paymentMethods.length; i++) {
+        this.paymentMethods.push({
+          cardType: response.paymentMethods[i].card.brand,
+          lastFour: response.paymentMethods[i].card.last4,
+          expiration: `${response.paymentMethods[i].card.exp_month
+            .toString()
+            .padStart(2, "0")}/${response.paymentMethods[i].card.exp_year
+            .toString()
+            .substr(-2)}`,
+          lastUpdated: new Date(response.paymentMethods[i].created * 1000)
+            .toISOString()
+            .substr(0, 10)
+        });
+      }
+      this.loading = false;
+    },
+    async createPaymentMethod2() {
+      const name = this.addCard.firstName + " " + this.addCard.lastName;
+      const cardNumber = this.addCard.cardNumber.replace(/\s/g, "");
+      const expMonth =  this.addCard.cardExpiry.substr(0, 2);
+      const expYear =  this.addCard.cardExpiry.substr(5, 3);
+      const cvc = this.addCard.cardCvc;
+      const country = this.addCard.country;
+      const zip = this.addCard.postalCode;
+      const response = await this.createPaymentMethod(
+        name,
+        cardNumber,
+        expMonth,
+        expYear,
+        cvc,
+        country,
+        zip
+      );
+      console.log(response);
+      
+    },
   }
 });
 </script>
@@ -167,61 +224,103 @@ export default (await import("vue")).defineComponent({
                       Payment Methods
                     </h3>
                     <div class="mt-2">
-                      <div
-                        v-for="(method, index) in paymentMethods"
-                        :key="index"
-                      >
+                      <div v-if="this.loading === true">
+                        <!-- Loading Page -->
                         <div
-                          @click.native="selectedMethod = index"
-                          class="rounded-md px-6 py-5 mt-4 sm:flex sm:items-start sm:justify-between bg-gray-50 border border-gray-200"
+                          class="flex flex-col items-center justify-center h-40"
                         >
-                          <h4 class="sr-only">{{ method.cardType }}</h4>
-                          <div class="sm:flex sm:items-start">
+                          <div
+                            class="flex items-center space-x-2 text-gray-600"
+                          >
                             <svg
-                              class="h-8 w-auto sm:h-6 sm:flex-shrink-0"
-                              viewBox="0 0 36 24"
-                              aria-hidden="true"
+                              class="w-5 h-5 animate-spin text-orange-500"
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="none"
+                              viewBox="0 0 24 24"
                             >
-                              <rect
-                                width="36"
-                                height="24"
-                                fill="#224DBA"
-                                rx="4"
+                              <circle
+                                class="opacity-25"
+                                cx="12"
+                                cy="12"
+                                r="10"
+                                stroke="currentColor"
+                                stroke-width="4"
                               />
                               <path
-                                fill="#fff"
-                                d="M10.925 15.673H8.874l-1.538-6c-.073-.276-.228-.52-.456-.635A6.575 6.575 0 005 8.403v-.231h3.304c.456 0 .798.347.855.75l.798 4.328 2.05-5.078h1.994l-3.076 7.5zm4.216 0h-1.937L14.8 8.172h1.937l-1.595 7.5zm4.101-5.422c.057-.404.399-.635.798-.635a3.54 3.54 0 011.88.346l.342-1.615A4.808 4.808 0 0020.496 8c-1.88 0-3.248 1.039-3.248 2.481 0 1.097.969 1.673 1.653 2.02.74.346 1.025.577.968.923 0 .519-.57.75-1.139.75a4.795 4.795 0 01-1.994-.462l-.342 1.616a5.48 5.48 0 002.108.404c2.108.057 3.418-.981 3.418-2.539 0-1.962-2.678-2.077-2.678-2.942zm9.457 5.422L27.16 8.172h-1.652a.858.858 0 00-.798.577l-2.848 6.924h1.994l.398-1.096h2.45l.228 1.096h1.766zm-2.905-5.482l.57 2.827h-1.596l1.026-2.827z"
+                                class="opacity-75"
+                                fill="currentColor"
+                                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
                               />
                             </svg>
-                            <div class="mt-3 sm:mt-0 sm:ml-4">
-                              <div class="text-sm font-medium text-gray-900">
-                                Ending with {{ method.lastFour }}
-                              </div>
-                              <div
-                                class="mt-1 text-sm text-gray-600 sm:flex sm:items-center"
-                              >
-                                <div>Expires {{ method.expiration }}</div>
-                                <span
-                                  class="hidden sm:mx-2 sm:inline"
-                                  aria-hidden="true"
-                                  >&middot;</span
-                                >
-                                <div class="mt-1 sm:mt-0">
-                                  Last updated on {{ method.lastUpdated }}
-                                </div>
-                              </div>
-                            </div>
+                            <span>Loading...</span>
                           </div>
-                          <button
-                            class="m-1 p-2 flex-shrink-0 flex border-0 bg-white rounded-md"
-                          >
-                            <TrashIcon
-                              class="h-6 w-6 text-gray-400 hover:text-gray-700"
-                              aria-hidden="true"
-                            />
-                          </button>
                         </div>
                       </div>
+                      <transition
+                        enter-active-class="transform ease-in-out duration-500 transition"
+                        enter-from-class="opacity-0"
+                        enter-to-class=" opacity-100"
+                      >
+                        <div v-if="this.loading === false">
+                          <div
+                            v-for="(method, index) in paymentMethods"
+                            :key="index"
+                          >
+                            <div
+                              @click.native="selectedMethod = index"
+                              class="rounded-md px-6 py-5 mt-4 sm:flex sm:items-start sm:justify-between bg-gray-50 border border-gray-200"
+                            >
+                              <h4 class="sr-only">{{ method.cardType }}</h4>
+                              <div class="sm:flex sm:items-start">
+                                <svg
+                                  class="h-8 w-auto sm:h-6 sm:flex-shrink-0"
+                                  viewBox="0 0 36 24"
+                                  aria-hidden="true"
+                                >
+                                  <rect
+                                    width="36"
+                                    height="24"
+                                    fill="#224DBA"
+                                    rx="4"
+                                  />
+                                  <path
+                                    fill="#fff"
+                                    d="M10.925 15.673H8.874l-1.538-6c-.073-.276-.228-.52-.456-.635A6.575 6.575 0 005 8.403v-.231h3.304c.456 0 .798.347.855.75l.798 4.328 2.05-5.078h1.994l-3.076 7.5zm4.216 0h-1.937L14.8 8.172h1.937l-1.595 7.5zm4.101-5.422c.057-.404.399-.635.798-.635a3.54 3.54 0 011.88.346l.342-1.615A4.808 4.808 0 0020.496 8c-1.88 0-3.248 1.039-3.248 2.481 0 1.097.969 1.673 1.653 2.02.74.346 1.025.577.968.923 0 .519-.57.75-1.139.75a4.795 4.795 0 01-1.994-.462l-.342 1.616a5.48 5.48 0 002.108.404c2.108.057 3.418-.981 3.418-2.539 0-1.962-2.678-2.077-2.678-2.942zm9.457 5.422L27.16 8.172h-1.652a.858.858 0 00-.798.577l-2.848 6.924h1.994l.398-1.096h2.45l.228 1.096h1.766zm-2.905-5.482l.57 2.827h-1.596l1.026-2.827z"
+                                  />
+                                </svg>
+                                <div class="mt-3 sm:mt-0 sm:ml-4">
+                                  <div
+                                    class="text-sm font-medium text-gray-900"
+                                  >
+                                    Ending with {{ method.lastFour }}
+                                  </div>
+                                  <div
+                                    class="mt-1 text-sm text-gray-600 sm:flex sm:items-center"
+                                  >
+                                    <div>Expires {{ method.expiration }}</div>
+                                    <span
+                                      class="hidden sm:mx-2 sm:inline"
+                                      aria-hidden="true"
+                                      >&middot;</span
+                                    >
+                                    <div class="mt-1 sm:mt-0">
+                                      Last updated on {{ method.lastUpdated }}
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                              <button
+                                class="m-1 p-2 flex-shrink-0 flex border-0 bg-white rounded-md"
+                              >
+                                <TrashIcon
+                                  class="h-6 w-6 text-gray-400 hover:text-gray-700"
+                                  aria-hidden="true"
+                                />
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </transition>
                     </div>
                   </div>
                   <div class="bg-gray-50 px-4 py-3 text-right sm:px-6">
@@ -260,7 +359,7 @@ export default (await import("vue")).defineComponent({
                           <input
                             type="text"
                             name="first-name"
-                            id="first-name"
+                            v-model="addCard.firstName"
                             autocomplete="cc-given-name"
                             class="mt-1 block w-full rounded-md border border-gray-300 py-2 px-3 shadow-sm focus:border-gray-900 focus:outline-none focus:ring-gray-900 sm:text-sm"
                           />
@@ -275,7 +374,7 @@ export default (await import("vue")).defineComponent({
                           <input
                             type="text"
                             name="last-name"
-                            id="last-name"
+                            v-model="addCard.lastName"
                             autocomplete="cc-family-name"
                             class="mt-1 block w-full rounded-md border border-gray-300 py-2 px-3 shadow-sm focus:border-gray-900 focus:outline-none focus:ring-gray-900 sm:text-sm"
                           />
@@ -291,7 +390,7 @@ export default (await import("vue")).defineComponent({
                             v-mask="'#### #### #### ####'"
                             type="creditcard"
                             name="card-number"
-                            id="card-number"
+                            v-model="addCard.cardNumber"
                             autocomplete="card"
                             class="mt-1 block w-full rounded-md border border-gray-300 py-2 px-3 shadow-sm focus:border-gray-900 focus:outline-none focus:ring-gray-900 sm:text-sm"
                           />
@@ -307,7 +406,7 @@ export default (await import("vue")).defineComponent({
                             v-mask="'## / ##'"
                             type="text"
                             name="expiration-date"
-                            id="expiration-date"
+                            v-model="addCard.cardExpiry"
                             autocomplete="cc-exp"
                             class="mt-1 block w-full rounded-md border border-gray-300 py-2 px-3 shadow-sm focus:border-gray-900 focus:outline-none focus:ring-gray-900 sm:text-sm"
                             placeholder="MM / YY"
@@ -329,7 +428,7 @@ export default (await import("vue")).defineComponent({
                             v-mask="'####'"
                             type="text"
                             name="security-code"
-                            id="security-code"
+                            v-model="addCard.cardCvc"
                             autocomplete="cc-csc"
                             class="mt-1 block w-full rounded-md border border-gray-300 py-2 px-3 shadow-sm focus:border-gray-900 focus:outline-none focus:ring-gray-900 sm:text-sm"
                           />
@@ -342,17 +441,266 @@ export default (await import("vue")).defineComponent({
                             >Country</label
                           >
                           <select
-                            id="country"
+                            v-model="addCard.country"
                             name="country"
                             autocomplete="country-name"
                             class="mt-1 block w-full rounded-md border border-gray-300 bg-white py-2 px-3 shadow-sm focus:border-gray-900 focus:outline-none focus:ring-gray-900 sm:text-sm"
                           >
-                            <option>United States</option>
-                            <option>Canada</option>
-                            <option>Mexico</option>
+                          <option value="">Please select</option>
+                          <option value="AF">Afghanistan</option>
+                          <option value="AX">Aland Islands</option>
+                          <option value="AL">Albania</option>
+                          <option value="DZ">Algeria</option>
+                          <option value="AS">American Samoa</option>
+                          <option value="AD">Andorra</option>
+                          <option value="AO">Angola</option>
+                          <option value="AI">Anguilla</option>
+                          <option value="AQ">Antarctica</option>
+                          <option value="AG">Antigua and Barbuda</option>
+                          <option value="AR">Argentina</option>
+                          <option value="AM">Armenia</option>
+                          <option value="AW">Aruba</option>
+                          <option value="AU">Australia</option>
+                          <option value="AT">Austria</option>
+                          <option value="AZ">Azerbaijan</option>
+                          <option value="BS">Bahamas</option>
+                          <option value="BH">Bahrain</option>
+                          <option value="BD">Bangladesh</option>
+                          <option value="BB">Barbados</option>
+                          <option value="BY">Belarus</option>
+                          <option value="BE">Belgium</option>
+                          <option value="BZ">Belize</option>
+                          <option value="BJ">Benin</option>
+                          <option value="BM">Bermuda</option>
+                          <option value="BT">Bhutan</option>
+                          <option value="BO">Bolivia</option>
+                          <option value="BQ">Bonaire, Sint Eustatius and Saba</option>
+                          <option value="BA">Bosnia and Herzegovina</option>
+                          <option value="BW">Botswana</option>
+                          <option value="BV">Bouvet Island</option>
+                          <option value="BR">Brazil</option>
+                          <option value="IO">British Indian Ocean Territory</option>
+                          <option value="BN">Brunei Darussalam</option>
+                          <option value="BG">Bulgaria</option>
+                          <option value="BF">Burkina Faso</option>
+                          <option value="BI">Burundi</option>
+                          <option value="KH">Cambodia</option>
+                          <option value="CM">Cameroon</option>
+                          <option value="CA">Canada</option>
+                          <option value="CV">Cape Verde</option>
+                          <option value="KY">Cayman Islands</option>
+                          <option value="CF">Central African Republic</option>
+                          <option value="TD">Chad</option>
+                          <option value="CL">Chile</option>
+                          <option value="CN">China</option>
+                          <option value="CX">Christmas Island</option>
+                          <option value="CC">Cocos (Keeling) Islands</option>
+                          <option value="CO">Colombia</option>
+                          <option value="KM">Comoros</option>
+                          <option value="CG">Congo</option>
+                          <option value="CD">Congo, Democratic Republic of the Congo</option>
+                          <option value="CK">Cook Islands</option>
+                          <option value="CR">Costa Rica</option>
+                          <option value="CI">Cote D'Ivoire</option>
+                          <option value="HR">Croatia</option>
+                          <option value="CU">Cuba</option>
+                          <option value="CW">Curacao</option>
+                          <option value="CY">Cyprus</option>
+                          <option value="CZ">Czech Republic</option>
+                          <option value="DK">Denmark</option>
+                          <option value="DJ">Djibouti</option>
+                          <option value="DM">Dominica</option>
+                          <option value="DO">Dominican Republic</option>
+                          <option value="EC">Ecuador</option>
+                          <option value="EG">Egypt</option>
+                          <option value="SV">El Salvador</option>
+                          <option value="GQ">Equatorial Guinea</option>
+                          <option value="ER">Eritrea</option>
+                          <option value="EE">Estonia</option>
+                          <option value="ET">Ethiopia</option>
+                          <option value="FK">Falkland Islands (Malvinas)</option>
+                          <option value="FO">Faroe Islands</option>
+                          <option value="FJ">Fiji</option>
+                          <option value="FI">Finland</option>
+                          <option value="FR">France</option>
+                          <option value="GF">French Guiana</option>
+                          <option value="PF">French Polynesia</option>
+                          <option value="TF">French Southern Territories</option>
+                          <option value="GA">Gabon</option>
+                          <option value="GM">Gambia</option>
+                          <option value="GE">Georgia</option>
+                          <option value="DE">Germany</option>
+                          <option value="GH">Ghana</option>
+                          <option value="GI">Gibraltar</option>
+                          <option value="GR">Greece</option>
+                          <option value="GL">Greenland</option>
+                          <option value="GD">Grenada</option>
+                          <option value="GP">Guadeloupe</option>
+                          <option value="GU">Guam</option>
+                          <option value="GT">Guatemala</option>
+                          <option value="GG">Guernsey</option>
+                          <option value="GN">Guinea</option>
+                          <option value="GW">Guinea-Bissau</option>
+                          <option value="GY">Guyana</option>
+                          <option value="HT">Haiti</option>
+                          <option value="HM">Heard Island and Mcdonald Islands</option>
+                          <option value="VA">Holy See (Vatican City State)</option>
+                          <option value="HN">Honduras</option>
+                          <option value="HK">Hong Kong</option>
+                          <option value="HU">Hungary</option>
+                          <option value="IS">Iceland</option>
+                          <option value="IN">India</option>
+                          <option value="ID">Indonesia</option>
+                          <option value="IR">Iran, Islamic Republic of</option>
+                          <option value="IQ">Iraq</option>
+                          <option value="IE">Ireland</option>
+                          <option value="IM">Isle of Man</option>
+                          <option value="IL">Israel</option>
+                          <option value="IT">Italy</option>
+                          <option value="JM">Jamaica</option>
+                          <option value="JP">Japan</option>
+                          <option value="JE">Jersey</option>
+                          <option value="JO">Jordan</option>
+                          <option value="KZ">Kazakhstan</option>
+                          <option value="KE">Kenya</option>
+                          <option value="KI">Kiribati</option>
+                          <option value="KP">Korea, Democratic People's Republic of</option>
+                          <option value="KR">Korea, Republic of</option>
+                          <option value="XK">Kosovo</option>
+                          <option value="KW">Kuwait</option>
+                          <option value="KG">Kyrgyzstan</option>
+                          <option value="LA">Lao People's Democratic Republic</option>
+                          <option value="LV">Latvia</option>
+                          <option value="LB">Lebanon</option>
+                          <option value="LS">Lesotho</option>
+                          <option value="LR">Liberia</option>
+                          <option value="LY">Libyan Arab Jamahiriya</option>
+                          <option value="LI">Liechtenstein</option>
+                          <option value="LT">Lithuania</option>
+                          <option value="LU">Luxembourg</option>
+                          <option value="MO">Macao</option>
+                          <option value="MK">Macedonia, the Former Yugoslav Republic of</option>
+                          <option value="MG">Madagascar</option>
+                          <option value="MW">Malawi</option>
+                          <option value="MY">Malaysia</option>
+                          <option value="MV">Maldives</option>
+                          <option value="ML">Mali</option>
+                          <option value="MT">Malta</option>
+                          <option value="MH">Marshall Islands</option>
+                          <option value="MQ">Martinique</option>
+                          <option value="MR">Mauritania</option>
+                          <option value="MU">Mauritius</option>
+                          <option value="YT">Mayotte</option>
+                          <option value="MX">Mexico</option>
+                          <option value="FM">Micronesia, Federated States of</option>
+                          <option value="MD">Moldova, Republic of</option>
+                          <option value="MC">Monaco</option>
+                          <option value="MN">Mongolia</option>
+                          <option value="ME">Montenegro</option>
+                          <option value="MS">Montserrat</option>
+                          <option value="MA">Morocco</option>
+                          <option value="MZ">Mozambique</option>
+                          <option value="MM">Myanmar</option>
+                          <option value="NA">Namibia</option>
+                          <option value="NR">Nauru</option>
+                          <option value="NP">Nepal</option>
+                          <option value="NL">Netherlands</option>
+                          <option value="AN">Netherlands Antilles</option>
+                          <option value="NC">New Caledonia</option>
+                          <option value="NZ">New Zealand</option>
+                          <option value="NI">Nicaragua</option>
+                          <option value="NE">Niger</option>
+                          <option value="NG">Nigeria</option>
+                          <option value="NU">Niue</option>
+                          <option value="NF">Norfolk Island</option>
+                          <option value="MP">Northern Mariana Islands</option>
+                          <option value="NO">Norway</option>
+                          <option value="OM">Oman</option>
+                          <option value="PK">Pakistan</option>
+                          <option value="PW">Palau</option>
+                          <option value="PS">Palestinian Territory, Occupied</option>
+                          <option value="PA">Panama</option>
+                          <option value="PG">Papua New Guinea</option>
+                          <option value="PY">Paraguay</option>
+                          <option value="PE">Peru</option>
+                          <option value="PH">Philippines</option>
+                          <option value="PN">Pitcairn</option>
+                          <option value="PL">Poland</option>
+                          <option value="PT">Portugal</option>
+                          <option value="PR">Puerto Rico</option>
+                          <option value="QA">Qatar</option>
+                          <option value="RE">Reunion</option>
+                          <option value="RO">Romania</option>
+                          <option value="RU">Russian Federation</option>
+                          <option value="RW">Rwanda</option>
+                          <option value="BL">Saint Barthelemy</option>
+                          <option value="SH">Saint Helena</option>
+                          <option value="KN">Saint Kitts and Nevis</option>
+                          <option value="LC">Saint Lucia</option>
+                          <option value="MF">Saint Martin</option>
+                          <option value="PM">Saint Pierre and Miquelon</option>
+                          <option value="VC">Saint Vincent and the Grenadines</option>
+                          <option value="WS">Samoa</option>
+                          <option value="SM">San Marino</option>
+                          <option value="ST">Sao Tome and Principe</option>
+                          <option value="SA">Saudi Arabia</option>
+                          <option value="SN">Senegal</option>
+                          <option value="RS">Serbia</option>
+                          <option value="CS">Serbia and Montenegro</option>
+                          <option value="SC">Seychelles</option>
+                          <option value="SL">Sierra Leone</option>
+                          <option value="SG">Singapore</option>
+                          <option value="SX">Sint Maarten</option>
+                          <option value="SK">Slovakia</option>
+                          <option value="SI">Slovenia</option>
+                          <option value="SB">Solomon Islands</option>
+                          <option value="SO">Somalia</option>
+                          <option value="ZA">South Africa</option>
+                          <option value="GS">South Georgia and the South Sandwich Islands</option>
+                          <option value="SS">South Sudan</option>
+                          <option value="ES">Spain</option>
+                          <option value="LK">Sri Lanka</option>
+                          <option value="SD">Sudan</option>
+                          <option value="SR">Suriname</option>
+                          <option value="SJ">Svalbard and Jan Mayen</option>
+                          <option value="SZ">Swaziland</option>
+                          <option value="SE">Sweden</option>
+                          <option value="CH">Switzerland</option>
+                          <option value="SY">Syrian Arab Republic</option>
+                          <option value="TW">Taiwan, Province of China</option>
+                          <option value="TJ">Tajikistan</option>
+                          <option value="TZ">Tanzania, United Republic of</option>
+                          <option value="TH">Thailand</option>
+                          <option value="TL">Timor-Leste</option>
+                          <option value="TG">Togo</option>
+                          <option value="TK">Tokelau</option>
+                          <option value="TO">Tonga</option>
+                          <option value="TT">Trinidad and Tobago</option>
+                          <option value="TN">Tunisia</option>
+                          <option value="TR">Turkey</option>
+                          <option value="TM">Turkmenistan</option>
+                          <option value="TC">Turks and Caicos Islands</option>
+                          <option value="TV">Tuvalu</option>
+                          <option value="UG">Uganda</option>
+                          <option value="UA">Ukraine</option>
+                          <option value="AE">United Arab Emirates</option>
+                          <option value="GB">United Kingdom</option>
+                          <option value="US">United States</option>
+                          <option value="UM">United States Minor Outlying Islands</option>
+                          <option value="UY">Uruguay</option>
+                          <option value="UZ">Uzbekistan</option>
+                          <option value="VU">Vanuatu</option>
+                          <option value="VE">Venezuela</option>
+                          <option value="VN">Viet Nam</option>
+                          <option value="VG">Virgin Islands, British</option>
+                          <option value="VI">Virgin Islands, U.s.</option>
+                          <option value="WF">Wallis and Futuna</option>
+                          <option value="EH">Western Sahara</option>
+                          <option value="YE">Yemen</option>
+                          <option value="ZM">Zambia</option>
+                          <option value="ZW">Zimbabwe</option>
                           </select>
                         </div>
-
                         <div class="col-span-4 sm:col-span-2">
                           <label
                             for="postal-code"
@@ -362,7 +710,7 @@ export default (await import("vue")).defineComponent({
                           <input
                             type="text"
                             name="postal-code"
-                            id="postal-code"
+                            v-model="addCard.postalCode"
                             autocomplete="postal-code"
                             class="mt-1 block w-full rounded-md border border-gray-300 py-2 px-3 shadow-sm focus:border-gray-900 focus:outline-none focus:ring-gray-900 sm:text-sm"
                           />
@@ -371,7 +719,7 @@ export default (await import("vue")).defineComponent({
                     </div>
                     <div class="bg-gray-50 px-4 py-3 text-right sm:px-6">
                       <button
-                        type="submit"
+                        @click="createPaymentMethod2()"
                         class="inline-flex justify-center rounded-md border border-transparent bg-gray-800 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2"
                       >
                         Add Payment Method
@@ -386,6 +734,46 @@ export default (await import("vue")).defineComponent({
       </div>
     </Dialog>
   </TransitionRoot>
+
+  <div aria-labelledby="plan-heading">
+    <div class="shadow sm:overflow-hidden sm:rounded-md">
+      <div class="space-y-6 bg-white py-6 px-4 sm:p-6">
+        <div>
+          <h2
+            id="plan-heading"
+            class="text-lg font-medium leading-6 text-gray-900"
+          >
+            Payment Overview
+          </h2>
+        </div>
+          <div class="mt-2 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            <!-- Card -->
+            <div v-for="card in cards" :key="card.name" class="overflow-hidden rounded-lg bg-white shadow">
+              <div class="p-5">
+                <div class="flex items-center">
+                  <div class="flex-shrink-0">
+                    <component :is="card.icon" class="h-6 w-6 text-gray-400" aria-hidden="true" />
+                  </div>
+                  <div class="ml-5 w-0 flex-1">
+                    <dl>
+                      <dt class="truncate text-sm font-medium text-gray-500">{{ card.name }}</dt>
+                      <dd>
+                        <div class="text-lg font-medium text-gray-900">{{ card.amount }}</div>
+                      </dd>
+                    </dl>
+                  </div>
+                </div>
+              </div>
+              <div class="bg-gray-50 px-5 py-3">
+                <div class="text-sm">
+                  <a :href="card.href" class="font-medium text-orange-500 hover:text-orange-700">View all</a>
+                </div>
+              </div>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- Plan -->
   <div aria-labelledby="plan-heading">
@@ -419,9 +807,7 @@ export default (await import("vue")).defineComponent({
                   checked
                     ? 'bg-orange-50 border-orange-200'
                     : 'border-gray-200',
-                  plan.disabled
-                    ? 'cursor-not-allowed disabled opacity-50'
-                    : '',
+                  plan.disabled ? 'cursor-not-allowed disabled opacity-50' : '',
                   'relative border p-4 flex flex-col cursor-pointer md:pl-4 md:pr-6 md:grid md:grid-cols-3 focus:outline-none'
                 ]"
                 :disabled="plan.disabled"
@@ -579,11 +965,12 @@ export default (await import("vue")).defineComponent({
               Recusandae voluptatibus corrupti atque repudiandae nam.
             </p>
           </div>
+          
         </div>
       </div>
       <div class="bg-gray-50 px-4 py-3 text-right sm:px-6">
         <button
-          @click="editpayment = true; createCustomer()"
+          @click="openModal()"
           class="inline-flex justify-center rounded-md border border-transparent bg-gray-800 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2"
         >
           Change Payment Method

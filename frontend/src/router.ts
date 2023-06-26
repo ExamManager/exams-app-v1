@@ -6,6 +6,11 @@ const router = createRouter({
   history: createWebHistory(),
   routes: [
     {
+      path: '/test',
+      publicPath: '/test',
+      component: () => import('./components/testing.vue'),
+    },
+    {
       path: '/',
       publicPath: '/',
       component: () => import('./views/Home.vue'),
@@ -118,14 +123,39 @@ const router = createRouter({
       component: () => import('./views/auth/SetNewPassword.vue'),
     },
     {
-      path: '/emailTemplate',
+      path: '/passwordResetTemplate',
       publicPath: '/emailTemplate',
-      component: () => import('./views/auth/passwordResetEmail.vue'),
+      component: () => import('./components/email/passwordResetEmail.vue'),
     },
     {
-      path: '/emailTemplate2',
-      publicPath: '/emailTemplate2',
-      component: () => import('./views/auth/passwordResetEmail2.vue'),
+      path: '/inviteNewUserTemplate',
+      publicPath: '/inviteNewUserTemplate',
+    component: () => import('./components/email/inviteNewUser.vue'),
+    },
+    {
+      path: '/accountDeletedTemplate',
+      publicPath: '/accountDeletedTemplate',
+      component: () => import('./components/email/accountDeleted.vue'),
+    },
+    {
+      path: '/accountCreatedTemplate',
+      publicPath: '/accountCreatedTemplate',
+      component: () => import('./components/email/accountCreated.vue'),
+    },
+    {
+      path: '/accountEditedTemplate',
+      publicPath: '/accountEditedTemplate',
+      component: () => import('./components/email/accountEdited.vue'),
+    },
+    {
+      path: '/passwordChangedTemplate',
+      publicPath: '/passwordChangedTemplate',
+      component: () => import('./components/email/passwordChanged.vue'),
+    },
+    {
+      path: '/newLoginTemplate',
+      publicPath: '/newLoginTemplate',
+      component: () => import('./components/email/newLogin.vue'),
     },
   ],
   scrollBehavior(to, from, savedPosition) {

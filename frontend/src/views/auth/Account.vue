@@ -1,4 +1,7 @@
 <script lang="ts">
+
+import { passwordResetTemplate } from '../../components/email/emailTemplates.js';
+
 import authenticate from "../../functions/authenticate";
 import payment_component from "../../components/payment/accountpayment.vue";
 import { toRaw }  from "vue";
@@ -22,7 +25,7 @@ import {
   DialogTitle,
   TransitionChild,
   TransitionRoot
-} from "@headlessui/vue";
+} from "@headlessui/vue"; 
 import {
   MagnifyingGlassIcon,
   QuestionMarkCircleIcon
@@ -41,7 +44,7 @@ import {
 import { ExclamationTriangleIcon } from "@heroicons/vue/24/outline";
 import ComponentOverlay from "../../components/completeAccount.vue";
 import DataUpdatingPopup from "../../components/dataUpdatingPopup.vue";
-import notification from "../../components/Notifications.vue";
+import Notification from "../../components/Notification.vue";
 
 const users = {
   name: "Lisa Marie",
@@ -109,7 +112,7 @@ const subNavigation = [
 
 export default {
   name: "Payment",
-  mixins: [authenticate, notification],
+  mixins: [authenticate, Notification, passwordResetTemplate],
   components: {
     Disclosure,
     DisclosureButton,
@@ -266,13 +269,33 @@ export default {
     editUser: {
       // compare this.editUser to this.user 
       handler: function (val, oldVal) {
-        if (JSON.stringify(val) !== JSON.stringify(this.user)) {
+        if (JSON.stringify(val) !== JSON.stringify(this.user) || this.password != '') {
           this.unsavedChanges = true;
         } else {
           this.unsavedChanges = false;
         }
       },
       deep: true,
+    },
+    newimg: {
+      handler: function() {
+        this.unsavedChanges = true;
+      }
+    },
+    hasimg: {
+      handler: function() {
+        this.unsavedChanges = true
+      }
+    },
+    password: {
+      handler: function(newval) {
+        if (newval != '') {
+          this.unsavedChanges = true;
+        }
+        else if (JSON.stringify(this.editUser) == JSON.stringify(this.user)) {
+          this.unsavedChanges = false;
+        }
+      }
     },
     "editUser.avatarurl": function (val, oldVal) {
       if (val === "") {
@@ -376,6 +399,8 @@ export default {
           location: { ...this.editUser.metadata.location }
         }
       };
+      this.password = "";
+
       this.unsavedChanges = false;
       this.savingdata = false;
     },
@@ -395,13 +420,18 @@ export default {
       if (this.editUser.username != this.user.username) {
         await this.updateUserData(this.user.userid, {username: this.editUser.username})
       }
+
+      this.password = "";
+
       this.editingAccount = false;
       this.savingAvatar = false;
       this.savingdata = false;
+      this.unsavedChanges = false;
     },
     async updatePassword() {
       this.savingData = true;
-      if (this.password != '') {
+      if (this.password != '') {    
+          this.password = "";
           await this.updateUserAuth(this.user.userid, {password: this.password})
       }
       this.editingAccount = false;
@@ -412,6 +442,7 @@ export default {
         this.resetProfilePic();
       }
       this.editingAccount = false;
+      this.password = ""
       this.editUser = {
         ...this.$store.state,
         metadata: {
@@ -419,6 +450,7 @@ export default {
           location: { ...this.$store.state.metadata.location }
         }
       };
+      this.unsavedChanges = false;
     },
     async deleteAccount() {
       this.deletePopup = false;
@@ -431,18 +463,24 @@ export default {
 
       notification.methods.showNotification("simple", "test", "IconHome", 10000)
     },
-    async sendEmail() {
-      const response = await fetch("http://localhost:3001/email/accountverified", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ userid: this.user.userid })
-      })
-      const error = await response.json()
+    // async sendEmail() {
+    //   const response = await fetch("http://localhost:3001/email/accountverified", {
+    //     method: "POST",
+    //     headers: {
+    //       "Content-Type": "application/json"
+    //     },
+    //     body: JSON.stringify({ 
+    //       userid: this.user.userid,
+    //       from: "testing@examtimer.tech",
+    //       plain: "this is a testing email",
+    //       html: passwordResetTemplate ( this.$store.state.fullname, "https://google.com" ),
+    //       subject: "testing email"
+    //     })
+    //   })
+    //   const error = await response.json()
 
-      console.log(error)
-    }
+    //   console.log(error)
+    // }
   }
 };
 </script>
@@ -596,7 +634,7 @@ export default {
       </transition>
     </Menu>
   </transition>
-  <div class="h-full pt-20" v-if="this.loading === false"></div>
+  <div class="h-full pt-20" v-if="loading === false"></div>
   <transition
     enter-active-class="transform ease-in-out duration-700 transition"
     enter-from-class="opacity-0 "
@@ -604,7 +642,7 @@ export default {
   >
     <main
       class="mx-auto max-w-7xl pb-10 lg:py-12 lg:px-8"
-      v-if="this.loading === false"
+      v-if="loading === false"
     >
       <div class="lg:grid lg:grid-cols-12 lg:gap-x-5 ">
         <aside class="py-6 px-2 sm:px-6 lg:col-span-3 lg:py-0 lg:px-0">
@@ -732,7 +770,7 @@ export default {
               </div>
             </div>
 
-            <div class="flex md:flex-row sm:flex-col w-full bg-gray-50 md:justify-end sm:justify-center">
+            <!-- <div class="flex md:flex-row sm:flex-col w-full bg-gray-50 md:justify-end sm:justify-center">
               <div class="bg-gray-50 pr-2  py-3 text-right s" v-if="editingAccount">
                 <button
                   type="button"
@@ -752,8 +790,37 @@ export default {
                   {{editingAccount ? "Save" : "Edit"}}
                 </button>
               </div>
+            </div> -->
+            <div  class="bg-gray-50 flex px-4 py-3 sm:px-6 space-x-2 items-center">
+              <span v-if="unsavedChanges && !savingdata" class="text-red-500 w-36 text-center px-2 py-0.5 rounded text-xs font-medium bg-red-100 flex-grow">
+                Unsaved Changes
+              </span>
+                <!-- <button @click="sendEmail()" class="inline-flex justify-center rounded-md border border-transparent  bg-gray-800 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2" > test sending email </button> -->
+
+              <div v-if="!savingdata" class="text-right w-full justify-end space-x-2 flex-shrink">
+                <button v-if="editingAccount" 
+                  @click="discardChanges()"
+                  class="inline-flex justify-center rounded-md border border-transparent  bg-red-500 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2"
+                >
+                  Discard Changes
+                </button>
+                <button
+                  @click="editingAccount ? updateProfile() : editingAccount = true"
+                  class="inline-flex justify-center rounded-md border border-transparent  bg-gray-800 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2"
+                >
+                  {{ editingAccount ? "Save Changes" : "Edit Account Data" }}
+                </button>
+              </div>
+              <div v-if="savingdata" class="text-right w-full justify-end space-x-2 flex-shrink">
+                <button disabled class="inline-flex justify-center rounded-md border border-transparent  bg-red-500 py-2 px-4 text-sm font-medium text-white shadow-sm ">
+                  <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  Saving...
+                </button>
+              </div>
             </div>
-            
           </div>
           <div class="bg-white shadow sm:rounded-lg">
             <div class="px-4 py-5 sm:p-6">
@@ -781,6 +848,8 @@ export default {
               </div>
             </div>
           </div>
+
+
         </div>
 
         <!-- Account -->
@@ -1298,7 +1367,7 @@ export default {
                   <span v-if="unsavedChanges && !savingdata" class="text-red-500 w-36 text-center px-2 py-0.5 rounded text-xs font-medium bg-red-100 flex-grow">
                     Unsaved Changes
                   </span>
-                    <button @click="sendEmail()" class="inline-flex justify-center rounded-md border border-transparent  bg-gray-800 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2" > test sending email </button>
+                    <!-- <button @click="sendEmail()" class="inline-flex justify-center rounded-md border border-transparent  bg-gray-800 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2" > test sending email </button> -->
 
                   <div v-if="!savingdata" class="text-right w-full justify-end space-x-2 flex-shrink">
                     <button v-if="editingAccount" 
@@ -1379,33 +1448,42 @@ export default {
                         :disabled="!editingAccount"
                         class="mt-1 block peer w-full rounded-md border border-gray-300 py-2 px-3 shadow-sm focus:border-gray-900 focus:outline-none focus:ring-gray-900 sm:text-sm"
                       />
-                      <p v-if="password" class="mt-2 text-pink-600 text-sm">Please remember to save your password...</p>
                     </div>
                   </div>
                 </div>
-                <div class="flex md:flex-row sm:flex-col w-full bg-gray-50 md:justify-end sm:justify-center">
-                  <div v-if="user.provider!='google' && editingAccount" class="bg-gray-50 pr-2 py-3 text-right ">
-                    <button
-                      type="button"
-                      @click="editingAccount = false; discardChanges(); this.password = ''"
-                      class="inline-flex justify-center rounded-md border border-transparent bg-red-500 py-2 px-4 text-sm font-medium text-white shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2"
+                <div  class="bg-gray-50 flex px-4 py-3 sm:px-6 space-x-2 items-center">
+                  <span v-if="unsavedChanges && !savingdata" class="text-red-500 w-36 text-center px-2 py-0.5 rounded text-xs font-medium bg-red-100 flex-grow">
+                    Unsaved Changes
+                  </span>
+                    <!-- <button @click="sendEmail()" class="inline-flex justify-center rounded-md border border-transparent  bg-gray-800 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2" > test sending email </button> -->
+
+                  <div v-if="!savingdata" class="text-right w-full justify-end space-x-2 flex-shrink">
+                    <button v-if="editingAccount" 
+                      @click="discardChanges()"
+                      class="inline-flex justify-center rounded-md border border-transparent  bg-red-500 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2"
                     >
-                      Cancel
+                      Discard Changes
+                    </button>
+                    <button
+                      @click="editingAccount ? updatePassword() : editingAccount = true"
+                      class="inline-flex justify-center rounded-md border border-transparent  bg-gray-800 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2"
+                    >
+                      {{ editingAccount ? "Save Changes" : "Edit Account Data" }}
                     </button>
                   </div>
-
-                  <div v-if="user.provider!='google'" class="bg-gray-50 pr-6  py-3 text-right ">
-                    <button
-                      type="button"
-                      @click="editingAccount ? updatePassword() : editingAccount = true"
-                      class="inline-flex justify-center rounded-md border border-transparent bg-gray-800 py-2 px-4 text-sm font-medium text-white shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-800 focus:ring-offset-2"
-                    >
-                      {{editingAccount ? "Save" : "Edit"}}
+                  <div v-if="savingdata" class="text-right w-full justify-end space-x-2 flex-shrink">
+                    <button disabled class="inline-flex justify-center rounded-md border border-transparent  bg-red-500 py-2 px-4 text-sm font-medium text-white shadow-sm ">
+                      <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                      </svg>
+                      Saving...
                     </button>
                   </div>
                 </div>
               </div>
             </form>
+            
           </section>
         </div>
         <!-- Notifications -->
@@ -1611,4 +1689,6 @@ export default {
       </div>
     </div>
   </transition>
+
+  <Notifaction />
 </template>

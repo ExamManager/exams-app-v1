@@ -1,5 +1,6 @@
 import { supabase } from '../supabase'
 import { supabaseServiceRole } from '../supabase'
+import * as templates from '../components/email/emailTemplates.js'
 
 export default {
   data() {
@@ -7,6 +8,7 @@ export default {
       userid: "null",
     }
   },
+  mixins: [templates],
   methods: {
     // Authentication Functions
     // only run when called by a method
@@ -18,6 +20,21 @@ export default {
         email: reqemail,
         password: reqpassword,
       })
+
+      const newUserID = response.data.user.id
+      const newUserEmail = response.data?.user.email
+      const username = (response.data.user.email.split('@')[0]).split('\s')[0];;
+
+      await this.sendEmail(
+        newUserID,
+        newUserEmail,
+        "no-reply@examtimer.tech",
+        "Welcome to our platform!",
+        templates.accountCreatedTemplate(username),
+        "Welcome to our platform!"
+      )
+
+
       return response;
     },
     async checkSession() { // there is already one you can call
@@ -41,7 +58,21 @@ export default {
         password: reqpassword,
       })
 
-      console.log("signin response: ", response)
+      if (response.error == null) {
+
+        const userID = response.data.user.id
+        const userEmail = response.data.user.email
+        const username = (response.data.user.email.split('@')[0]).split('.')[0];
+
+        await this.sendEmail(
+          userID,
+          userEmail,
+          "no-reply@examtimer.tech",
+          "New login detected",
+          templates.newLoginTemplate(username),
+          "New login detected"
+        )
+      }
 
       return response;
     },
@@ -50,6 +81,22 @@ export default {
       const response = await supabase.auth.signInWithOAuth({
         provider: 'google',
       })
+
+      const sbData = localStorage.getItem("sb-vhnpyawfzfrcezeljwfm-auth-token")
+
+      const userID = sbData.user.id
+      const userEmail = sbData.user.email
+      const username = (sbData.user.email.split('@')[0]).split('\s')[0];
+
+      await this.sendEmail(
+        userID,
+        userEmail,
+        "no-reply@examtimer.tech",
+        "New login detected",
+        templates.newLoginTemplate(username),
+        "New login detected"
+      )
+
       return response;
     },
     async signout() {
@@ -107,6 +154,19 @@ export default {
         .from('profiles')
         .update(toUpdate)
         .eq('userid', userid)
+
+      const name = this.$store.state.fullname;
+      const email = this.$store.state.email;
+
+      await this.sendEmail(
+        userid,
+        email,
+        "no-reply@examtimer.tech",
+        "Account updated",
+        templates.accountEditedTemplate(name),
+        "Account updated"
+      )
+
       return response;
     },
     async setUserData(
@@ -267,10 +327,34 @@ export default {
         .auth
         .updateUser({...update })
 
+      if (update.password) {
+        await this.sendEmail(
+          userid, 
+          this.$store.state.email,
+          'no-reply@examtimer.tech', 
+          'Your password was changed!', 
+          templates.passwordChangedTemplate(this.$store.state.fullname), 
+          'Password changed'
+        )
+      } else {
+        await this.sendEmail(
+          userid,
+          this.$store.state.email,
+          'no-reply@examtimer.tech',
+          'Your email was changed',
+          templates.accountEditedTemplate(this.$store.state.fullname),
+          'Email changed'
+        )
+      }
+
       return response;
     },
     async deleteUser(userid: string) {
       // Your method logic here
+      const name = this.$store.state.fullname
+      const email = this.$store.state.email
+      const user = userid
+
       const getUserAvatar = await supabase
         .from('profiles')
         .select("avatar_filename")
@@ -301,6 +385,16 @@ export default {
 
       localStorage.clear()
       window.location.href = '/'
+
+      await this.sendEmail(
+        user,
+        email,
+        'no-reply@examtimer.tech',
+        'Your account was deleted',
+        templates.accountDeletedTemplate(name),
+        'Account deleted'
+      )
+
       return response;
     },    
     async checkUserExists(data: { col: string, val: string }) {
@@ -319,6 +413,33 @@ export default {
 
       console.log(response)
       return response;
-    }
+    },
+    async sendEmail(userid: string, to: any, from: string, plain: string, html: string, subject: string) {
+      const response = await fetch("http://localhost:3001/email/accountverified", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ 
+          userid: userid,
+          to: to,
+          from: from,
+          plain: plain,
+          html: html,
+          subject: subject
+        })
+      })
+      const error = await response.json()
+
+      console.log(error)
+    },
+    // async getCustomPlan(userid: string) {
+    //   const response = await supabase
+    //     .from('custom_plans')
+    //     .select()
+    //     .eq('id', userid)
+
+    //   return response.data[0]
+    // },
   },
 }

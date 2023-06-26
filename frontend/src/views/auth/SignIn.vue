@@ -1,7 +1,7 @@
 <script lang="ts">
 import { HomeIcon, ChevronRightIcon } from '@heroicons/vue/20/solid'
 import authenticate from '../../functions/authenticate';
-import Notification from '../../components/Notifications.vue'
+import Notification from '../../components/Notification.vue'
 
 export default {
   mixins: [authenticate, Notification],

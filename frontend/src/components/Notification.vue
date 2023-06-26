@@ -7,16 +7,32 @@
     },
     name: "Notification",
     methods: {
+     close() {
+      this.$emit("close")
+     }
     },
     props: {
-      type: String, 
-      text: String, 
-      description: String || "",
-      icon: String || "",
-      colour: String || "gray",
-      duration: String || 3000,
-      href: String || "",
-    }
+      // type: String, 
+      // text: String, 
+      // description: String || "",
+      // icon: String || "",
+      // colour: String || "gray-700",
+      // duration: Number || 3000,
+      // href: String || "",
+      // showNotif: Boolean
+    },
+    data() {
+       return {
+        type:"simple",
+        text:"testing",
+        description:"testing",
+        icon:"XCircleIcon",
+        colour:"gray-700",
+        duration:3000,
+        href:"",
+        showNotif:true
+       }
+    },
   };
 </script>
 <template>
@@ -29,7 +45,7 @@
     leave-to-class="opacity-0"
   >
     <div
-      v-if="this.type === 'simple' && showNotif"
+      v-if="type === 'simple' && showNotif"
       class="z-50 pointer-events-none fixed inset-0 flex items-end px-4 py-5 sm:items-start sm:p-4"
     >
       <div class="flex w-full flex-col items-center space-y-4 sm:items-end">
@@ -49,14 +65,14 @@
               <div class="flex items-start">
                 <div class="flex-shrink-0">
                   <!-- Icon set by this.icon -->
-                  <component :is="this.icon" :class="['h-6', 'w-6', this.colour]" aria-hidden="true" />
+                  <!-- <component :is="icon" :class="['h-6', 'w-6', colour]" aria-hidden="true" /> -->
                 </div>
                 <div class="ml-3 w-0 flex-1 pt-0.5">
                   <p class="text-sm font-medium text-gray-900">
-                    {{this.text}}
+                    {{text}}
                   </p>
                   <p class="mt-1 text-sm text-gray-500">
-                    {{this.description}}
+                    {{description}}
                   </p>
                 </div>
                 <div class="ml-4 flex flex-shrink-0">
@@ -86,7 +102,7 @@
     leave-to-class="opacity-0"
   >
     <div
-      v-if="this.type === 'loading' && showNotif"
+      v-if="type === 'loading' && showNotif"
       class=" pointer-events-none fixed inset-0 flex items-end px-4 py-5 sm:items-start sm:p-4"
     >
       <div class="flex w-full flex-col items-center space-y-4 sm:items-end">
@@ -106,14 +122,14 @@
               <div class="flex items-start">
                 <div class="flex-shrink-0">
                   <!-- Icon set by this.icon -->
-                  <component :is="this.icon" :class="['h-6', 'w-6', 'animate-spin', this.colour]" aria-hidden="true" />
+                  <!-- <component :is="icon" :class="['h-6', 'w-6', 'animate-spin', colour]" aria-hidden="true" /> -->
                 </div>
                 <div class="ml-3 w-0 flex-1 pt-0.5">
                   <p class="text-sm font-medium text-gray-900">
-                    {{this.text}}
+                    {{text}}
                   </p>
                   <p class="mt-1 text-sm text-gray-500">
-                    {{this.description}}
+                    {{description}}
                   </p>
                 </div>
                 <div class="ml-4 flex flex-shrink-0">

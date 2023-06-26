@@ -1,6 +1,7 @@
 <script lang="ts">
 //import {FormKit} from '@formkit/vue'
 import authenticate from "../../functions/authenticate";
+import stripe from "../../functions/stripe";
 import { toRaw } from "vue";
 import CustomPlanContact from '../../components/customPlanContact.vue'
 import DataUpdatingPopup from '../../components/dataUpdatingPopup.vue'
@@ -47,7 +48,7 @@ const entSize = schoolSize[0].id;
 
 export default (await import("vue")).defineComponent({
   name: "completeAccountSetup",
-  mixins: [authenticate],
+  mixins: [authenticate, stripe],
   components: {
     schoolSize,
     selectedschoolSize,
@@ -145,9 +146,10 @@ export default (await import("vue")).defineComponent({
       this.savingData = false
       this.showingCustomPlanContact = false
     },
-    successfullComponent() {
+    async successfullComponent() {
       this.showingCustomPlanContact = false
       this.onPageLoad()
+      this.updateAccountData()
       window.location.href="/account"
       this.savingData = false
     },
@@ -164,7 +166,7 @@ export default (await import("vue")).defineComponent({
               country: this.user.metadata.location.country,
               state: this.user.metadata.location.state,
               zip: this.user.metadata.location.zip,
-              city: this.user.metadata.location.city,
+              city: this.user.metadata.location.city || "",
               address1: this.user.metadata.location.address1,
               address2: this.user.metadata.location.address2,
               address3: this.user.metadata.location.address3,
@@ -179,6 +181,7 @@ export default (await import("vue")).defineComponent({
       }
       else {
         await this.setUserData(this.user.userid, uploadData.data, this.avatarfile) // that works, as all the data that is there overwrites and the rest stays the same on the database
+        await this.createCustomer()
         window.location.href="/account"
         this.savingdata = false
       }
@@ -196,6 +199,12 @@ export default (await import("vue")).defineComponent({
     },
   },
   async mounted() {
+    window.addEventListener('keyup',  (e) => {
+      if (e.key === 'Enter' && !this.showingCustomPlanContact){
+        this.updateAccountData()
+      }
+    })
+
     this.checkuser()
 
     document.getElementById("image")
