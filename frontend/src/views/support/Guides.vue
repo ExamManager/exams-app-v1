@@ -18,7 +18,7 @@ import {
 } from '@heroicons/vue/24/outline'
 import { ChevronDownIcon } from '@heroicons/vue/20/solid'
 
-export default ({
+export default {
   name: 'Pricing',
   components: {
     Popover,
@@ -129,7 +129,7 @@ export default ({
 
     }
   }
-})
+}
 
 const hobbyFeatures = ['Pariatur quod similique', 'Sapiente libero doloribus', 'Vel ipsa esse repudiandae']
 const scaleFeatures = ['Pariatur quod similique', 'Sapiente libero doloribus', 'Vel ipsa esse repudiandae']

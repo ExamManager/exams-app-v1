@@ -94,7 +94,7 @@ export default {
       if (response.status == 200) {
         return true
       } else {
-        return false
+        return error
       }
     }
   },
