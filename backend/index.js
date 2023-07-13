@@ -145,6 +145,32 @@ app.post("/stripe/createpaymentmethod", async (req, res) => { // creates payment
   }
 });
 
+app.post("/stripe/updatedefaultpaymentmethod", async (req, res) => { // updates default payment method in stripe | runs on updating default payment method
+  try {
+    const userid = req.body.userid;
+    const paymentMethodId = req.body.paymentMethodId;
+    const { data, error } = await supabase
+      .from("profiles")
+      .select("customerid")
+      .eq("userid", userid);
+    if (error) {
+      throw new Error(error.message);
+    }
+    const customer_id = data[0].customerid;
+    await stripe.customers.update(customer_id, {
+      invoice_settings: {
+        default_payment_method: paymentMethodId,
+      },
+    });
+    res.status(200).json({ message: "success" });
+  } catch (err) {
+    if (!res.headersSent) {
+      res.status(500).json({ error: err.message });
+    }
+  }
+});
+
+
 
 app.post("/stripe/getpaymentmethods", async (req, res) => { // gets payment methods for a user | run on opening payment methods page
   try {
@@ -157,11 +183,33 @@ app.post("/stripe/getpaymentmethods", async (req, res) => { // gets payment meth
       throw new Error(error.message);
     }
     const customer_id = data[0].customerid;
+    const customer = await stripe.customers.retrieve(customer_id);
     const paymentMethods = await stripe.paymentMethods.list({
       customer: customer_id,
       type: "card",
     });
-    res.status(200).json({ paymentMethods: paymentMethods.data });
+    res.status(200).json({ paymentMethods: paymentMethods.data, default: customer.invoice_settings.default_payment_method });
+  } catch (err) {
+    if (!res.headersSent) {
+      res.status(500).json({ error: err.message });
+    }
+  }
+});
+
+app.post("/stripe/deletepaymentmethod", async (req, res) => { // deletes payment method in stripe | runs on deleting payment method
+  try {
+    const userid = req.body.userid;
+    const paymentMethodId = req.body.paymentMethodId;
+    const { data, error } = await supabase
+      .from("profiles")
+      .select("customerid")
+      .eq("userid", userid);
+    if (error) {
+      throw new Error(error.message);
+    }
+    const customer_id = data[0].customerid;
+    await stripe.paymentMethods.detach(paymentMethodId);
+    res.status(200).json({ message: "success" });
   } catch (err) {
     if (!res.headersSent) {
       res.status(500).json({ error: err.message });

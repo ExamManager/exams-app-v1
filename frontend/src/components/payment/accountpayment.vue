@@ -124,9 +124,10 @@ export default (await import("vue")).defineComponent({
       cards,
       selectedMethod: 0,
       editpayment: false,
-      test: "",
+      editdefaultpayment: false,
       loading: true, // getting payment methods
       loading2: false, // creating payment method
+      loading3: false, // updateing default payment method
       addCard: {
         firstName: "",
         lastName: "",
@@ -146,7 +147,14 @@ export default (await import("vue")).defineComponent({
       const response = await this.getPaymentMethods();
       this.paymentMethods = [];
       for (let i = 0; i < response.paymentMethods.length; i++) {
+        // check if default payment method = paymentMethods[i].id and if so set var isDefault to true
+        if (response.default === response.paymentMethods[i].id) {
+          var isDefault = true;
+        } else {
+          var isDefault = false;
+        }
         this.paymentMethods.push({
+          paymentId: response.paymentMethods[i].id,
           cardType: response.paymentMethods[i].card.brand,
           lastFour: response.paymentMethods[i].card.last4,
           expiration: `${response.paymentMethods[i].card.exp_month
@@ -156,7 +164,8 @@ export default (await import("vue")).defineComponent({
             .substr(-2)}`,
           lastUpdated: new Date(response.paymentMethods[i].created * 1000)
             .toISOString()
-            .substr(0, 10)
+            .substr(0, 10),
+          default: isDefault
         });
       }
       this.loading = false;
@@ -190,6 +199,32 @@ export default (await import("vue")).defineComponent({
       this.addCard.postalCode = "";
       await this.openModal();
       this.loading2 = false
+    },
+    async updateDefaultPaymentMethod2(paymentId) {
+      this.loading3 = true
+      await this.setDefaultPaymentMethod(paymentId);
+      // set all default to false
+      for (let i = 0; i < this.paymentMethods.length; i++) {
+        this.paymentMethods[i].default = false;
+      }
+      // set default to true
+      for (let i = 0; i < this.paymentMethods.length; i++) {
+        if (this.paymentMethods[i].paymentId === paymentId) {
+          this.paymentMethods[i].default = true;
+        }
+      }
+      this.loading3 = false
+    },
+    async deletePaymentMethod2(paymentId) {
+      console.log(paymentId);
+      await this.deletePaymentMethod(paymentId);
+      // remove from array
+      for (let i = 0; i < this.paymentMethods.length; i++) {
+        if (this.paymentMethods[i].paymentId === paymentId) {
+          this.paymentMethods.splice(i, 1);
+        }
+      }
+      console.log("deleted");
     },
   }
 });
@@ -229,12 +264,17 @@ export default (await import("vue")).defineComponent({
               class="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-3xl"
             >
               <div class="space-y-6 p-4">
-                <div class="bg-white shadow sm:rounded-lg">
+                <transition
+                        enter-active-class="transform ease-in-out duration-500 transition"
+                        enter-from-class="opacity-0"
+                        enter-to-class=" opacity-100"
+                      >
+                <div class="bg-white shadow sm:rounded-lg" v-if="this.paymentMethods.length > 0">
                   <div class="px-4 py-5 sm:p-6">
                     <h3 class="text-lg font-medium leading-6 text-gray-900">
                       Payment Methods
                     </h3>
-                    <div class="mt-2">
+                    <div class="mt-2" >
                       <div v-if="this.loading === true">
                         <!-- Loading Page -->
                         <div
@@ -279,7 +319,7 @@ export default (await import("vue")).defineComponent({
                           >
                             <div
                               @click.native="selectedMethod = index"
-                              class="rounded-md px-6 py-5 mt-4 sm:flex sm:items-start sm:justify-between bg-gray-50 border border-gray-200"
+                              :class='[method.default && !editdefaultpayment ? "border-2 border-orange-500" : "border border-gray-200", "rounded-md px-6 py-5 mt-4 sm:flex sm:items-start sm:justify-between bg-gray-50"]'
                             >
                               <h4 class="sr-only">{{ method.cardType }}</h4>
                               <div class="sm:flex sm:items-start">
@@ -352,13 +392,15 @@ export default (await import("vue")).defineComponent({
                                   </div>
                                 </div>
                               </div>
-                              <button
-                                class="m-1 p-2 flex-shrink-0 flex border-0 bg-white rounded-md"
+                              <button @click="deletePaymentMethod2(method.paymentId)" v-if="editdefaultpayment"
+                                class=" space-x-2 p-2 flex flex-shrink-0 border-0 bg-white rounded-md"
                               >
                                 <TrashIcon
-                                  class="h-6 w-6 text-gray-400 hover:text-gray-700"
+                                  class="h-6 w-6 text-gray-700"
                                   aria-hidden="true"
                                 />
+                                <a class="pt-0.5 text-sm  text-gray-700 ">Delete</a>
+                                
                               </button>
                             </div>
                           </div>
@@ -366,15 +408,23 @@ export default (await import("vue")).defineComponent({
                       </transition>
                     </div>
                   </div>
-                  <div class="bg-gray-50 px-4 py-3 text-right sm:px-6">
+                  <div class="bg-gray-50 px-4 py-3 space-x-2 text-right sm:px-6">
+
+                    <button v-if="this.editdefaultpayment"
+                      @click="this.editdefaultpayment = false"
+                      class="inline-flex w-full justify-center rounded-md border border-transparent bg-red-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm"
+                    >
+                      Discard Changes
+                    </button>
                     <button
-                      @click="editpayment = true"
+                      @click="this.editdefaultpayment ? updateDefaultPaymentMethod2(method.paymentId) : this.editdefaultpayment = true"
                       class="inline-flex justify-center rounded-md border border-transparent bg-gray-800 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2"
                     >
-                      Change Payment Method
+                      {{ this.editdefaultpayment ? this.loading3 ? 'Saving' : 'Update Default Payment' : 'Edit Default Payment' }}
                     </button>
                   </div>
                 </div>
+                </transition>
 
                 <div aria-labelledby="payment-details-heading">
                   <div class="shadow sm:overflow-hidden sm:rounded-md">

@@ -96,6 +96,40 @@ export default {
       } else {
         return error
       }
-    }
+    },
+    async updateDefaultPaymentMethod(paymentMethodId: string) {
+      const user_id = await authenticate.methods.checkOnRoute()
+      console.log(user_id)
+      console.log("update default payment method")
+      const response = await fetch(this.website + "/stripe/updatedefaultpaymentmethod", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ userid: user_id, paymentMethodId: paymentMethodId })
+      })
+      if (response.status == 200) {
+        return paymentMethodId
+      } else {
+        return false
+      }
+    },
+    async deletePaymentMethod(paymentMethodId: string) {
+      const user_id = await authenticate.methods.checkOnRoute()
+      console.log(user_id)
+      console.log("delete payment method")
+      const response = await fetch(this.website + "/stripe/deletepaymentmethod", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ userid: user_id, paymentMethodId: paymentMethodId })
+      })
+      if (response.status == 200) {
+        return true
+      } else {
+        return false
+      }
+    },
   },
 }
