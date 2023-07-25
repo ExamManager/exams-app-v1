@@ -30,11 +30,7 @@ const plans = [
   }
 ];
 
-const cards = [
-  { name: 'Next Payment', href: '#', icon: CalendarDaysIcon, amount: 'In 24 days' },
-  { name: 'Account balance', href: '#', icon: ScaleIcon, amount: '$30,659.45' },
-  // More items...
-]
+
 
 const payments = [
   {
@@ -59,7 +55,7 @@ import {
   MagnifyingGlassIcon,
   QuestionMarkCircleIcon
 } from "@heroicons/vue/20/solid";
-import { TrashIcon, ScaleIcon, CalendarDaysIcon } from "@heroicons/vue/24/outline";
+import { TrashIcon, ScaleIcon, CalendarDaysIcon, CurrencyDollarIcon } from "@heroicons/vue/24/outline";
 import {
   Disclosure,
   DisclosureButton,
@@ -90,6 +86,7 @@ export default (await import("vue")).defineComponent({
   components: {
     QuestionMarkCircleIcon,
     MagnifyingGlassIcon,
+    CurrencyDollarIcon,
     Disclosure,
     DisclosureButton,
     DisclosurePanel,
@@ -121,13 +118,15 @@ export default (await import("vue")).defineComponent({
       selectedPlan,
       annualBillingEnabled,
       paymentMethods,
-      cards,
       selectedMethod: 0,
       editpayment: false,
       editdefaultpayment: false,
       loading: true, // getting payment methods
       loading2: false, // creating payment method
       loading3: false, // updateing default payment method
+      subscribtion: {},
+      nextbilling: 0,
+      currentPlan: "",
       addCard: {
         firstName: "",
         lastName: "",
@@ -136,9 +135,43 @@ export default (await import("vue")).defineComponent({
         cardCvc: "",
         country: "",
         postalCode: ""
-      }
-
+      },
     };
+  },
+  async mounted() {
+    const response = await this.getSubscription();
+    console.log(response);
+    // need to save the whole response to a variable
+    this.subscribtion = response;
+    // convert timestamp to in ... days
+    console.log(response.subscription.current_period_end);
+    const date = new Date(response.subscription.current_period_end * 1000);
+    const today = new Date();
+    const diffTime = date.getTime() - today.getTime();
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    this.nextbilling = diffDays;
+    // current plan set currentplan to free, basic, professional or enterprise
+    if (response.subscription.plan.id === "REDACTED") {
+      this.currentPlan = "Free";
+      this.selectedPlan = this.plans[0];
+    } else if (
+      response.subscription.plan.id === "REDACTED"
+    ) {
+      this.currentPlan = "Basic";
+      this.selectedPlan = this.plans[1];
+    } else if (
+      response.subscription.plan.id === "REDACTED"
+    ) {
+      this.currentPlan = "Professional";
+      this.selectedPlan = this.plans[2];
+    } else if (
+      response.subscription.plan.id === "price_1JQZ2nJZ6ZQZQX0X2QZQZQZS"
+    ) {
+      this.currentPlan = "Enterprise";
+      this.selectedPlan = this.plans[3];
+    }
+    
+
   },
   methods: {
     async openModal() {
@@ -852,17 +885,17 @@ export default (await import("vue")).defineComponent({
         </div>
           <div class="mt-2 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
             <!-- Card -->
-            <div v-for="card in cards" :key="card.name" class="overflow-hidden rounded-lg bg-white shadow">
+            <div class="overflow-hidden rounded-lg bg-white shadow">
               <div class="p-5">
                 <div class="flex items-center">
                   <div class="flex-shrink-0">
-                    <component :is="card.icon" class="h-6 w-6 text-gray-400" aria-hidden="true" />
+                    <CalendarDaysIcon class="h-6 w-6 text-gray-400" aria-hidden="true" />
                   </div>
                   <div class="ml-5 w-0 flex-1">
                     <dl>
-                      <dt class="truncate text-sm font-medium text-gray-500">{{ card.name }}</dt>
+                      <dt class="truncate text-sm font-medium text-gray-500">Next Payment</dt>
                       <dd>
-                        <div class="text-lg font-medium text-gray-900">{{ card.amount }}</div>
+                        <div class="text-lg font-medium text-gray-900">In {{ this.nextbilling }} days</div>
                       </dd>
                     </dl>
                   </div>
@@ -870,7 +903,51 @@ export default (await import("vue")).defineComponent({
               </div>
               <div class="bg-gray-50 px-5 py-3">
                 <div class="text-sm">
-                  <a :href="card.href" class="font-medium text-orange-500 hover:text-orange-700">View all</a>
+                  <a  class="font-medium text-orange-500 hover:text-orange-700">View all</a>
+                </div>
+              </div>
+            </div>
+            <div class="overflow-hidden rounded-lg bg-white shadow">
+              <div class="p-5">
+                <div class="flex items-center">
+                  <div class="flex-shrink-0">
+                    <ScaleIcon class="h-6 w-6 text-gray-400" aria-hidden="true" />
+                  </div>
+                  <div class="ml-5 w-0 flex-1">
+                    <dl>
+                      <dt class="truncate text-sm font-medium text-gray-500">Account Balance</dt>
+                      <dd>
+                        <div class="text-lg font-medium text-gray-900">Nothing yet</div>
+                      </dd>
+                    </dl>
+                  </div>
+                </div>
+              </div>
+              <div class="bg-gray-50 px-5 py-3">
+                <div class="text-sm">
+                  <a  class="font-medium text-orange-500 hover:text-orange-700">View all</a>
+                </div>
+              </div>
+            </div>
+            <div class="overflow-hidden rounded-lg bg-white shadow">
+              <div class="p-5">
+                <div class="flex items-center">
+                  <div class="flex-shrink-0">
+                    <CurrencyDollarIcon class="h-6 w-6 text-gray-400" aria-hidden="true" />
+                  </div>
+                  <div class="ml-5 w-0 flex-1">
+                    <dl>
+                      <dt class="truncate text-sm font-medium text-gray-500">Current Plan</dt>
+                      <dd>
+                        <div class="text-lg font-medium text-gray-900">{{ this.currentPlan }}</div>
+                      </dd>
+                    </dl>
+                  </div>
+                </div>
+              </div>
+              <div class="bg-gray-50 px-5 py-3">
+                <div class="text-sm">
+                  <a  class="font-medium text-orange-500 hover:text-orange-700">View all</a>
                 </div>
               </div>
             </div>

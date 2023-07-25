@@ -24,7 +24,7 @@ export default {
   methods: {
     // Authentication Functions
     // only run when called by a method
-    async createCustomer() {
+    async createCustomer(subscription: string) {
       // grab user id with this.checkOnRoute()
       const user_id = await authenticate.methods.checkOnRoute()
       console.log(user_id)
@@ -34,7 +34,7 @@ export default {
         headers: {
           "Content-Type": "application/json"
         },
-        body: JSON.stringify({ userid: user_id })
+        body: JSON.stringify({ userid: user_id, subscription_level: subscription })
       })
       // either return true or false
       if (response.status == 200) {
@@ -66,6 +66,23 @@ export default {
       console.log(user_id)
       console.log("get payment methods")
       const response = await fetch(this.website + "/stripe/getpaymentmethods", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ userid: user_id })
+      })
+      if (response.status == 200) {
+        return response.json()
+      } else {
+        return false
+      }
+    },
+    async getSubscription() {
+      const user_id = await authenticate.methods.checkOnRoute()
+      console.log(user_id)
+      console.log("get subscription")
+      const response = await fetch(this.website + "/stripe/getsubscription", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"

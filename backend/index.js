@@ -47,6 +47,20 @@ app.post("/email/accountverified", async (req, res) => {
 app.post("/stripe/createcustomer", async (req, res) => { // createates custmer in stripe | runs onaccount setup submit
   try {
     const userid = req.body.userid;
+    console.log(userid);
+    const subscription_level = req.body.subscription_level;
+    console.log(subscription_level);
+    if (subscription_level === "0") {
+      var subscription_price = process.env.VITE_SUBSCRIPTION_PRICE_1;
+    } else if (subscription_level === "1") {
+      var subscription_price = process.env.VITE_SUBSCRIPTION_PRICE_2;
+    } else if (subscription_level === "2") {
+      var subscription_price = process.env.VITE_SUBSCRIPTION_PRICE_3;
+    } else if (subscription_level === "3") {
+      var subscription_price = process.env.VITE_SUBSCRIPTION_PRICE_4;
+    } else {
+      throw new Error("Invalid subscription level");
+    }
     const { data, error } = await supabase
       .from("profiles")
       .select("email, metadata, fullname")
@@ -68,11 +82,17 @@ app.post("/stripe/createcustomer", async (req, res) => { // createates custmer i
       },
     });
     const customer_id = String(customer.id);
+    const subscription =  await stripe.subscriptions.create({
+      customer: customer_id,
+      items: [{ price: subscription_price }],
+    });
+    console.log("subscription");
     await supabase
       .from("profiles")
-      .update({ customerid: customer_id })
+      .update({ customerid: customer_id, subscriptionid: subscription.id })
       .eq("userid", userid);
     console.log("updated");
+    
     res.status(200).json({ message: "success" });
   } catch (err) {
     if (!res.headersSent) {
@@ -195,6 +215,27 @@ app.post("/stripe/getpaymentmethods", async (req, res) => { // gets payment meth
     }
   }
 });
+
+app.post("/stripe/getsubscription", async (req, res) => { // gets subscription for a user | run on opening subscription page
+  try {
+    const userid = req.body.userid;
+    const { data, error } = await supabase
+      .from("profiles")
+      .select("subscriptionid")
+      .eq("userid", userid);
+    if (error) {
+      throw new Error(error.message);
+    }
+    const subscription_id = data[0].subscriptionid;
+    const subscription = await stripe.subscriptions.retrieve(subscription_id);
+    res.status(200).json({ subscription: subscription });
+  } catch (err) {
+    if (!res.headersSent) {
+      res.status(500).json({ error: err.message });
+    }
+  }
+});
+
 
 app.post("/stripe/deletepaymentmethod", async (req, res) => { // deletes payment method in stripe | runs on deleting payment method
   try {

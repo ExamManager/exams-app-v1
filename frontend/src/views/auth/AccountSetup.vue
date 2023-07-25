@@ -181,7 +181,7 @@ export default (await import("vue")).defineComponent({
       }
       else {
         await this.setUserData(this.user.userid, uploadData.data, this.avatarfile) // that works, as all the data that is there overwrites and the rest stays the same on the database
-        await this.createCustomer()
+        await this.createCustomer(String(this.user.plan))
         window.location.href="/account"
         this.savingdata = false
       }
