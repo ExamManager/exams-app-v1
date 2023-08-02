@@ -112,7 +112,7 @@ export default {
       } else {
         this.notification("simple", "Account created Succesfully", "You will be redirected to the Setup Page", "CheckIcon", "green-400" , 3000)
         setTimeout(() => {
-          window.location.href='/setup';
+          window.location.href='/account';
         }, 2000);
       }
 

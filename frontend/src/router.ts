@@ -157,6 +157,16 @@ const router = createRouter({
       publicPath: '/newLoginTemplate',
       component: () => import('./components/email/newLogin.vue'),
     },
+    {
+      path: '/dashboard',
+      publicPath: '/dashboard',
+      component: () => import('./views/dashboard/dashboard.vue'),
+    },
+    {
+      path: '/dashboard/planner',
+      publicPath: '/dashboard/planner',
+      component: () => import('./views/dashboard/planner.vue'),
+    },
   ],
   scrollBehavior(to, from, savedPosition) {
     return { top: 0 };
