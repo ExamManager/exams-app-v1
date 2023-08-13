@@ -42,13 +42,12 @@ app.post("/email/accountverified", async (req, res) => {
   }
 });
 
-
-
-app.post("/stripe/createcustomer", async (req, res) => { // createates custmer in stripe | runs onaccount setup submit
+app.post("/stripe/createsubscription", async (req, res) => { // creates subscription in stripe | runs on account setup submit
+  console.log("createsubscription");
   try {
     const userid = req.body.userid;
     console.log(userid);
-    const subscription_level = req.body.subscription_level;
+    const subscription_level = String(body.subscription_level);
     console.log(subscription_level);
     if (subscription_level === "0") {
       var subscription_price = process.env.VITE_SUBSCRIPTION_PRICE_1;
@@ -61,6 +60,40 @@ app.post("/stripe/createcustomer", async (req, res) => { // createates custmer i
     } else {
       throw new Error("Invalid subscription level");
     }
+    console.log(subscription_price);
+    const { data, error } = await supabase
+      .from("profiles")
+      .select("customerid")
+      .eq("userid", userid);
+    if (error) {
+      throw new Error(error.message);
+    }
+    const customer_id = data[0].customerid;
+    const subscription = await stripe.subscriptions.create({
+      customer: customer_id,
+      items: [{ price: subscription_price }],
+    });
+    console.log(subscription);
+    await supabase
+      .from("profiles")
+      .update({ subscriptionid: subscription.id })
+      .eq("userid", userid);
+    res.status(200).json({ message: "success" });
+  } catch (err) {
+    if (!res.headersSent) {
+      res.status(500).json({ error: err.message });
+    }
+  }
+});
+
+
+
+
+app.post("/stripe/createcustomer", async (req, res) => { // createates custmer in stripe | runs onaccount setup submit
+  console.log("createcustomer");
+  try {
+    const userid = req.body.userid;
+    console.log(userid);
     const { data, error } = await supabase
       .from("profiles")
       .select("email, metadata, fullname")
@@ -82,16 +115,11 @@ app.post("/stripe/createcustomer", async (req, res) => { // createates custmer i
       },
     });
     const customer_id = String(customer.id);
-    const subscription =  await stripe.subscriptions.create({
-      customer: customer_id,
-      items: [{ price: subscription_price }],
-    });
     console.log("subscription");
     await supabase
       .from("profiles")
-      .update({ customerid: customer_id, subscriptionid: subscription.id })
+      .update({ customerid: customer_id})
       .eq("userid", userid);
-    console.log("updated");
     
     res.status(200).json({ message: "success" });
   } catch (err) {

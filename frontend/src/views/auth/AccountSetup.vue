@@ -114,8 +114,8 @@ export default (await import("vue")).defineComponent({
       this.avatarfile = imgObject
     },
     removeImg(){
-      if (this.img != null) { 
-        this.img = null
+      if (this.avatarfile != null) { 
+        this.avatarfile = null
         document.getElementById("image")
           .src = this.defaultImgURL
         document.getElementById("file-upload")
@@ -181,8 +181,14 @@ export default (await import("vue")).defineComponent({
       }
       else {
         await this.setUserData(this.user.userid, uploadData.data, this.avatarfile) // that works, as all the data that is there overwrites and the rest stays the same on the database
-        await this.createCustomer(String(this.user.plan))
-        window.location.href="/account"
+        await this.createCustomer()
+        // if user.plan != 0, then we need to ask for a payment method and the add the correct subscription
+        // if the user.plan == 0, then we just need to append the subscription to the user
+        if (this.user.plan != 0) {
+          await this.createPaymentMethod() // add arguments passed to the function
+        }
+        await this.createSubscription(this.user.plan)
+        window.location.href="/account" 
         this.savingdata = false
       }
       //
@@ -220,7 +226,7 @@ export default (await import("vue")).defineComponent({
         <div>
           <div>
           <h3 class="text-lg font-medium leading-6 text-gray-900">Profile</h3>
-          <p class="mt-1 text-sm text-gray-500">This information will be displayed publicly so be careful what you share.</p>
+          <p class="mt-1 text-sm text-gray-500">This information may be displayed publicly so be careful what you share.</p>
           </div>
           <div class="lg:flex flex-none w-full">
             <div class="mt-6 grid grid-cols-1 gap-y-6 gap-x-12 lg:grid-cols-6 w-full">
@@ -286,7 +292,7 @@ export default (await import("vue")).defineComponent({
                   stroke-width="1.5"
                   stroke="currentColor"
                   class="w-8 h-8 p-1.5 text-gray-400 rounded-md hover:text-gray-300 hover:bg-gray-200"
-                  v-if="img != null"
+                  v-if="avatarfile != null"
                   @click="removeImg()"
                 >
                   <path

@@ -124,6 +124,7 @@ export default (await import("vue")).defineComponent({
       loading: true, // getting payment methods
       loading2: false, // creating payment method
       loading3: false, // updateing default payment method
+      loading4: false, // fetching subscription
       subscribtion: {},
       nextbilling: 0,
       currentPlan: "",
@@ -139,6 +140,7 @@ export default (await import("vue")).defineComponent({
     };
   },
   async mounted() {
+    this.loading4 = true
     const response = await this.getSubscription();
     console.log(response);
     // need to save the whole response to a variable
@@ -170,8 +172,7 @@ export default (await import("vue")).defineComponent({
       this.currentPlan = "Enterprise";
       this.selectedPlan = this.plans[3];
     }
-    
-
+    this.loading4 = false
   },
   methods: {
     async openModal() {
@@ -233,7 +234,7 @@ export default (await import("vue")).defineComponent({
       await this.openModal();
       this.loading2 = false
     },
-    async updateDefaultPaymentMethod2(paymentId) {
+    async updateDefaultPaymentMethod2(paymentId: string) {
       this.loading3 = true
       await this.setDefaultPaymentMethod(paymentId);
       // set all default to false
@@ -248,7 +249,7 @@ export default (await import("vue")).defineComponent({
       }
       this.loading3 = false
     },
-    async deletePaymentMethod2(paymentId) {
+    async deletePaymentMethod2(paymentId: string) {
       console.log(paymentId);
       await this.deletePaymentMethod(paymentId);
       // remove from array
@@ -895,7 +896,15 @@ export default (await import("vue")).defineComponent({
                     <dl>
                       <dt class="truncate text-sm font-medium text-gray-500">Next Payment</dt>
                       <dd>
-                        <div class="text-lg font-medium text-gray-900">In {{ this.nextbilling }} days</div>
+                        <transition
+                        enter-active-class="transform ease-in-out duration-500 transition"
+                        enter-from-class="opacity-0"
+                        enter-to-class=" opacity-100"
+                        mode="out-in"
+                      >
+                        <div v-if="loading4" class="h-7 animate-pulse bg-gray-50 rounded"/>
+                        <div v-else class="text-lg font-medium text-gray-900 ">In {{ this.nextbilling }} days</div>
+                      </transition>
                       </dd>
                     </dl>
                   </div>
@@ -916,8 +925,16 @@ export default (await import("vue")).defineComponent({
                   <div class="ml-5 w-0 flex-1">
                     <dl>
                       <dt class="truncate text-sm font-medium text-gray-500">Account Balance</dt>
-                      <dd>
-                        <div class="text-lg font-medium text-gray-900">Nothing yet</div>
+                      <dd class="">
+                        <transition
+                        enter-active-class="transform ease-in-out duration-500 transition"
+                        enter-from-class="opacity-0"
+                        enter-to-class=" opacity-100"
+                        mode="out-in"
+                      >
+                          <div v-if="!loading4" class="text-lg font-medium text-gray-900 ">0.00$</div>
+                          <div v-else class="h-7 animate-pulse bg-gray-50 rounded"/>
+                        </transition>
                       </dd>
                     </dl>
                   </div>
@@ -939,7 +956,15 @@ export default (await import("vue")).defineComponent({
                     <dl>
                       <dt class="truncate text-sm font-medium text-gray-500">Current Plan</dt>
                       <dd>
-                        <div class="text-lg font-medium text-gray-900">{{ this.currentPlan }}</div>
+                        <transition
+                        enter-active-class="transform ease-in-out duration-500 transition"
+                        enter-from-class="opacity-0"
+                        enter-to-class=" opacity-100"
+                        mode="out-in"
+                      >
+                        <div v-if="loading4" class="h-7 animate-pulse bg-gray-50 rounded"/>
+                        <div v-else class="text-lg font-medium text-gray-900">{{ this.currentPlan }}</div>
+                      </transition>
                       </dd>
                     </dl>
                   </div>
