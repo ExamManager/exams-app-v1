@@ -204,7 +204,7 @@ export default (await import("vue")).defineComponent({
       deep: true,
     },
   },
-  async mounted() {
+  async mounted() { 	
     window.addEventListener('keyup',  (e) => {
       if (e.key === 'Enter' && !this.showingCustomPlanContact){
         this.updateAccountData()

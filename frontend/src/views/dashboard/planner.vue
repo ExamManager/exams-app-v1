@@ -393,6 +393,15 @@ export default {
   },
   methods:
   {
+    splitDate(date: string) {
+      return date.split("-").reverse()
+    },
+    checkRange(day: Date, start: Date, end: Date) {
+      // // console.log("checkRange called with day: ", day, "start: ", start, "end: ", end)
+      // // console.log("checkRange called with day: ", day.getTime(), "start: ", start.getTime(), "end: ", end.getTime())
+      // // console.log("checkRange called with day: ", day.getTime() >= start.getTime() && day.getTime() <= end.getTime())
+      return day.getTime() >= start.getTime() && day.getTime() <= end.getTime();
+    },
     dayOffset(day: dateTime, offset: number) {
       const tmp = new Date(day);
       // // console.log("dayOffset: ", tmp.getDay() + offset)
@@ -450,17 +459,82 @@ export default {
     genDates(startMonth: number, startYear: number, endMonth: number, endYear: number) {
       var returnDates = new Array();
 
+      const includesToday = this.checkRange(new Date(), new Date(startYear, startMonth-1, 1), new Date(endYear, endMonth-1, 31));
+
+
       for (let y = startYear; y <= endYear; y++) {
         const monthMax = y === endYear ? endMonth : 12;
         const monthMin = y === startYear ? startMonth : 1;
         for (let m = monthMin; m <= monthMax; m++) {
-          returnDates.push(this.genMonth(m, y));
+          returnDates.push(this.genMonth(m, y, false));
         }
+      }
+
+      if (!includesToday) {
+        let firstDay = {month: 0, day: 0};
+        for (let i = 0; i < returnDates.length; i++) {
+          for (let j = 0; j < 8; j++) {
+            if (returnDates[i].days[j].isCurrentMonth) {
+              firstDay.month = i;
+              firstDay.day = j;
+              break;
+            }
+          }
+        }
+        returnDates[firstDay.month].days[firstDay.day].isSelected = true;
+        this.selectedDay = returnDates[firstDay.month].days[firstDay.day];
+      }
+      else {
+        // calculate which index month today will be in 
+
+        const today = new Date();
+        const todayMonth = today.getMonth() + 1;
+        const todayYear = today.getFullYear();
+
+        let monthIndex = (todayYear - startYear) * 12 + (todayMonth - startMonth); 
+
+        let foundToday = false;
+        for (let i = 0; i < 42; i++) {
+          if (returnDates[monthIndex].days[i].isToday) {
+            foundToday = true;
+            returnDates[monthIndex].days[i].isSelected = true;
+            this.selectedDay = returnDates[monthIndex].days[i];
+            break;
+          }
+        }
+
+
+
+        // let foundToday = false;
+        // for (let i = 0; i < returnDates.length; i++) {
+        //   for (let j = 0; j < 8; j++) {
+        //     if (returnDates[i].days[j].isToday) {
+        //       foundToday = true;
+        //       returnDates[i].days[j].isSelected = true;
+        //       this.selectedDay = returnDates[i].days[j];
+        //       break;
+        //     }
+        //   }
+        // }
+        // if (!foundToday) {
+        //   let firstDay = {month: 0, day: 0};
+        //   for (let i = 0; i < returnDates.length; i++) {
+        //     for (let j = 0; j < 8; j++) {
+        //       if (returnDates[i].days[j].isCurrentMonth) {
+        //         firstDay.month = i;
+        //         firstDay.day = j;
+        //         break;
+        //       }
+        //     }
+        //   }
+        //   returnDates[firstDay.month].days[firstDay.day].isSelected = true;
+        //   this.selectedDay = returnDates[firstDay.month].days[firstDay.day];
+        // }
       }
 
       return returnDates;      
     },
-    genMonth(month: number, year: number) {
+    genMonth(month: number, year: number, onlyMonth: boolean = true) {
       month--;
 
       const today = new Date();
@@ -521,32 +595,28 @@ export default {
         newMonth.days.push(newDay)
       }
 
-      let foundToday = false;
-      for (let i = 0; i < 42; i++) {
-        if (newMonth.days[i].isToday) {
-          foundToday = true;
-          newMonth.days[i].isSelected = true;
-          this.selectedDay = newMonth.days[i];
+      if (onlyMonth) {      
+        let foundToday = false;
+        for (let i = 0; i < 42; i++) {
+          if (newMonth.days[i].isToday) {
+            foundToday = true;
+            newMonth.days[i].isSelected = true;
+            this.selectedDay = newMonth.days[i];
 
-          // console.log("found today and selected it")
-          break;
-        }
-      }
-
-
-      if (!foundToday) {
-        let firstDay = 0;
-        for (let i = 0; i < 8; i++) {
-          if (newMonth.days[i].isCurrentMonth) {
-            firstDay = i;
+            // console.log("found today and selected it")
             break;
           }
         }
 
-        newMonth.days[firstDay].isSelected = true;
-        this.selectedDay = newMonth.days[firstDay];
-        // console.log("did not find today so selected first day")
+        if (!foundToday) {
+          newMonth.days[0].isSelected = true;
+          this.selectedDay = newMonth.days[0];
+          // console.log("did not find today so selected first day")
+        }
       }
+
+
+      
 
       // console.log("genned new month", newMonth)
       
@@ -1069,7 +1139,9 @@ export default {
     specYear(day: any) {
       // console.log("specYear day", day)
       this.setSelected(day);
-      this.months = this.genDates(day.date.split("-")[1], day.date.split("-")[0], day.date.split("-")[1], day.date.split("-")[0]).days;
+      this.months = this.genDates(parseInt(day.date.split("-")[1]), parseInt(day.date.split("-")[0]), parseInt(day.date.split("-")[1]), parseInt(day.date.split("-")[0]) + 1);
+      
+      console.log("specYear genned this.months as: ", this.months, "using: ", parseInt(day.date.split("-")[1]), parseInt(day.date.split("-")[0]), parseInt(day.date.split("-")[1]), parseInt(day.date.split("-")[0]) + 1, "as args");
       // console.log("specYear genned this.months as: ", this.months)
       
       this.view = 0;
@@ -1764,8 +1836,14 @@ export default {
     <div class="flex flex-col h-screen" v-if="view == 2">
       <header class="flex flex-none items-center justify-between border-b border-gray-200 py-4 px-6">
         <h1 class="text-lg font-semibold text-gray-900">
-          <!-- <time>{{new Date(selectedDay?.date).toLocaleString('default', { month: 'long', year: 'numeric' })}}</time> -->
-          <time>{{ new Date(week[0].date).toLocaleString('default', {month: 'short', year: 'numeric', day: 'numeric'}) }} - {{ new Date(week[6].date).toLocaleString('default', {month: 'short', year: 'numeric', day: 'numeric'}) }}</time>
+          <time>{{new Date(selectedDay?.date).toLocaleString('default', { month: 'long', year: 'numeric' })}}</time>
+          <time>
+          <!-- {{ new Date(week[0].date).toLocaleString('default', {month: 'short', year: 'numeric', day: 'numeric'}) }} - {{ new Date(week[6].date).toLocaleString('default', {month: 'short', year: 'numeric', day: 'numeric'}) }} -->
+            <!-- <span>{{ new Date(week[0].date).toLocaleString('default', {month: 'short', year: 'numeric', day: 'numeric'})}}</span> -->
+            <!-- <span @click="specMonth(genDay(...splitDate(week[0].date)))">{{ new Date(week[0].date).toLocaleString('default', {month: 'short'})}}</span> <span @click="specDay(genDay(...splitDate(week[0].date)))">{{ new Date(week[0].date).toLocaleString('default', {day: 'numeric'}) }},</span> <span @click="specYear(genDay(...splitDate(week[0].date)))">{{ new Date(week[0].date).toLocaleString('default', {year: 'numeric'}).slice(2)}}</span> -->
+            <!-- <span> - </span>  -->
+            <span @click="specMonth(genDay(...splitDate(week[6].date)))">{{ new Date(week[6].date).toLocaleString('default', {month: 'short'})}}</span> <span @click="specDay(genDay(...splitDate(week[6].date)))">{{ new Date(week[6].date).toLocaleString('default', {day: 'numeric'}) }}</span>, <span @click="specYear(genDay(...splitDate(week[6].date)))">{{ new Date(week[6].date).toLocaleString('default', {year: 'numeric'}).slice(2)}}</span>
+          </time>
           
         </h1>
         <div class="flex items-center">
@@ -2065,11 +2143,11 @@ export default {
           <h1 class="text-lg font-semibold leading-6 text-gray-900">
             <time class="sm:hidden">
               <span @click="specMonth(genDay(selectedDay.date.split('-')[2], selectedDay.date.split('-')[1], selectedDay.date.split('-')[0]))">{{ new Date(selectedDay?.date).toLocaleString('default', { month: 'long', day: 'numeric' })}}</span>
-              <span>{{new Date(selectedDay?.date).toLocaleString('default', { year: 'numeric' })}}</span>
+               <span @click="specYear(genDay(selectedDay.date.split('-')[2], selectedDay.date.split('-')[1], selectedDay.date.split('-')[0]))">{{new Date(selectedDay?.date).toLocaleString('default', { year: 'numeric' })}}</span>
             </time>
             <time class="hidden sm:inline">
-              <span @click="specMonth(genDay(selectedDay.date.split('-')[2], selectedDay.date.split('-')[1], selectedDay.date.split('-'])[0]))">{{new Date(selectedDay?.date).toLocaleString('default', { month: 'long', day: 'numeric' })}}</span>
-              <span>{{new Date(selectedDay?.date).toLocaleString('default', { year: 'numeric' })}}</span>
+              <span @click="specMonth(genDay(selectedDay.date.split('-')[2], selectedDay.date.split('-')[1], selectedDay.date.split('-')[0]))">{{new Date(selectedDay?.date).toLocaleString('default', { month: 'long', day: 'numeric' })}}</span>
+               <span @click="specYear(genDay(selectedDay.date.split('-')[2], selectedDay.date.split('-')[1], selectedDay.date.split('-')[0]))">{{new Date(selectedDay?.date).toLocaleString('default', { year: 'numeric' })}}</span>
             </time>
           </h1>
           <!-- add the full name of the day in selectedDay -->
@@ -2399,4 +2477,4 @@ export default {
       </div>
     </div>
     
-</template> 
+</template>
