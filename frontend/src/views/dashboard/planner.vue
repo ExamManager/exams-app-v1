@@ -2,6 +2,7 @@
 <script lang="ts">
 import { ChevronDownIcon, ChevronLeftIcon, ChevronRightIcon, EllipsisHorizontalIcon, ClockIcon } from '@heroicons/vue/20/solid'
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
+// import newExam from '../../components/events/newExam.vue'
 // import { ref, onMounted, provide, inject } from 'vue'
 
 
@@ -1405,6 +1406,8 @@ export default {
 </style>
 <template>
     <!-- YEAR VIEW -->
+    <!-- <newExam /> -->
+
     <div v-if="!view">
       <header class="flex items-center justify-between border-b border-gray-200 py-4 px-6">
         <h1 class="text-lg font-semibold text-gray-900">

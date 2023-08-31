@@ -8,7 +8,7 @@ const router = createRouter({
     {
       path: '/test',
       publicPath: '/test',
-      component: () => import('./components/testing.vue'),
+      component: () => import('./components/events/newExam.vue'),
     },
     {
       path: '/',
