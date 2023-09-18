@@ -108,11 +108,12 @@ export default {
       })
       if (response.status == 200) {
         return response.json()
+        console.log("Success: "+response.json())
       } else {
         return false
       }
     },
-    async createPaymentMethod(name: string, cardNumber: string, expMonth: string, expYear: string, cvc: string, country: string, zip: string) {
+    async createPaymentMethod(name: string, cardNumber: string, expMonth: string, expYear: string, cvc: string, country: string, zip: string, default_payment?: boolean) {
       const user_id = await authenticate.methods.checkOnRoute()
       console.log(user_id)
       console.log("create payment method")
@@ -121,7 +122,7 @@ export default {
         headers: {
           "Content-Type": "application/json"
         },
-        body: JSON.stringify({ userid: user_id, name: name, cardNumber: cardNumber, expMonth: expMonth, expYear: expYear, cvc: cvc, country: country, zip: zip })
+        body: JSON.stringify({ userid: user_id, name: name, cardNumber: cardNumber, expMonth: expMonth, expYear: expYear, cvc: cvc, country: country, zip: zip, default_payment: default_payment || false })
       });
       const error = await response.json()
       console.log(error)

@@ -9,7 +9,7 @@ import {
   MenuButton,
   MenuItem,
   MenuItems
-} from "@headlessui/vue";
+} from "@headlessui/vue"; 
 import { HomeIcon, ChevronRightIcon } from "@heroicons/vue/20/solid";
 import Classes from './classes.ts';
 export default {
@@ -35,10 +35,31 @@ export default {
       // data relevant to setup
       yearGroups: [],
       currentExams: [],
+      constExam: {
+        start: new Date(),
+        end: new Date(),
+        yeargroup: "", 
+        subject: "",
+        title: "",
+        description: "",
+        notes: "",
+        room: "",
+        invigilators: [],
+        files: [],
+        id: "",
+        color: "",
+        options: {
+          extraTime: 0,
+          readingTime: 0,
+          min5Warning: false,
+          min15Warning: false,
+          min30Warning: false,
+        }
+      },
 
       newExam: {
-        start: "",
-        end: "",
+        start: new Date(),
+        end: new Date(),
         duration: "",
         yeargroup: "", 
         subject: "",
@@ -97,22 +118,40 @@ export default {
       // test: "test"
     };
   },
+  watch: {
+    newExam: { 
+      handler(val) {
+        var reg = new RegExp("^[0-9][0-9]:[0-9][0-9]$")
+        if (reg.test(val.duration)) {
+          const duration = { h: parseInt(val.duration.slice(0,2)), m: parseInt(val.duration.slice(3,5)) }
+          const start = { h: parseInt(val.start.slice(0,2)), m: parseInt(val.start.slice(3,5)) }
+          const baseline = new Date()
+
+          this.constExam.start = new Date(baseline.setHours(start.h, start.m, 0, 0))
+          this.constExam.end = new Date(baseline.setHours(start.h + duration.h, start.m + duration.m, 0, 0))
+
+          console.log("new constExam: ", this.constExam)
+        }
+
+      }, deep: true 
+    }
+  },
   mounted() {
     this.updateDate();
     this.updateTime();
     // set time left to duration
-    for (var i = 0; i < this.people.length; i++) {
-      this.people[i].timeleft = this.people[i].duration;
-    }
-    //check if there is a list of people in local storage
-    if (localStorage.getItem("people")) {
-      // if there is, then load it into the people array
-      this.people = JSON.parse(localStorage.getItem("people") || "{}");
-    }
-    setInterval(() => {
-      this.updateTime();
-      this.updateDate();
-    }, 100);
+    // for (var i = 0; i < this.people.length; i++) {
+    //   this.people[i].timeleft = this.people[i].duration;
+    // }
+    // //check if there is a list of people in local storage
+    // if (localStorage.getItem("people")) {
+    //   // if there is, then load it into the people array
+    //   this.people = JSON.parse(localStorage.getItem("people") || "{}");
+    // }
+    // setInterval(() => {
+    //   this.updateTime();
+    //   this.updateDate();
+    // }, 100);
 
     // fetch and set currentExamIndex
 
@@ -1150,10 +1189,8 @@ export default {
                         <div class="mt-1">
                           <input
                             type="time"
-                            name="starttime"
                             placeholder="9:37"
-                            v-model="newexamplannedstart"
-                            id="starttime"
+                            v-model="newExam.start"
                             autocomplete="given-name"
                             class="block w-full rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 sm:text-sm"
                           />
@@ -1161,7 +1198,7 @@ export default {
                       </div>
 
                       <div class="sm:col-span-2">
-                        <label
+                        <label  
                           for="last-name"
                           class="block text-sm font-medium text-gray-700"
                           >Duration</label
@@ -1169,15 +1206,38 @@ export default {
                         <div class="mt-1">
                           <input
                             type="text"
-                            name="Duration"
-                            id="duration"
-                            v-mask="'#:##'"
-                            v-model="newexamduration"
-                            placeholder="2:00"
+                            v-mask="`##:##`"
+                            v-model="newExam.duration"
                             class="block w-full rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 sm:text-sm"
                           />
                         </div>
                       </div>
+
+                      <div class="sm:col-span-2">
+                        <label
+                          for="first-name"
+                          class="block text-sm font-medium text-gray-700"
+                          >End Time</label
+                        >
+                        <div class="mt-1">
+                          <input
+                            type="text"
+                            name="endtime"
+                            :placeholder="constExam.end.toLocaleDateString("en-US", {'hour': 'numeric'})"
+                            
+                            id="endtime"
+                            autocomplete="given-name"
+                            class="block w-full rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 sm:text-sm"
+                          />
+                        </div>
+                        <p>
+                          {{
+                            newExam.end
+                          }}
+                        </p>
+                      </div>
+
+                      
                     </div>
                   </div>
 

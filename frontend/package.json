@@ -13,7 +13,7 @@
     "@headlessui/vue": "^1.7.13",
     "@heroicons/vue": "^2.0.17",
     "@ssibrahimbas/v-mask": "^1.0.0",
-    "@supabase/supabase-js": "^2.22.0",
+    "@supabase/supabase-js": "^2.33.1",
     "@tailwindcss/forms": "^0.5.3",
     "@vue-hero-icons/outline": "^1.7.2",
     "@vue-hero-icons/solid": "^1.7.2",

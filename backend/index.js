@@ -47,7 +47,7 @@ app.post("/stripe/createsubscription", async (req, res) => { // creates subscrip
   try {
     const userid = req.body.userid;
     console.log(userid);
-    const subscription_level = String(body.subscription_level);
+    const subscription_level = String(req.body.subscription_level);
     console.log(subscription_level);
     if (subscription_level === "0") {
       var subscription_price = process.env.VITE_SUBSCRIPTION_PRICE_1;
@@ -153,6 +153,8 @@ app.post("/stripe/createpaymentmethod", async (req, res) => { // creates payment
   try { // requires userid, cardNumber, expMonth, expYear, cvc, name, country, zip
     console.log(req.body);
     const userid = req.body.userid;
+    // set to false if not default
+    const default_payment = req.body.default_payment || false
     const { data, error } = await supabase
       .from("profiles")
       .select("customerid")
@@ -185,6 +187,13 @@ app.post("/stripe/createpaymentmethod", async (req, res) => { // creates payment
     await stripe.paymentMethods.attach(paymentMethod.id, {
       customer: customer_id,
     });
+    if (default_payment) {
+      await stripe.customers.update(customer_id, {
+        invoice_settings: {
+          default_payment_method: paymentMethod.id,
+        },
+      });
+    }
     res.status(200).json({ message: "success" });
 
   } catch (error) {
@@ -245,12 +254,15 @@ app.post("/stripe/getpaymentmethods", async (req, res) => { // gets payment meth
 });
 
 app.post("/stripe/getsubscription", async (req, res) => { // gets subscription for a user | run on opening subscription page
+  console.log("getsubscription");
   try {
     const userid = req.body.userid;
+    console.log(userid);
     const { data, error } = await supabase
       .from("profiles")
       .select("subscriptionid")
       .eq("userid", userid);
+    console.log(data[0].subscriptionid);
     if (error) {
       throw new Error(error.message);
     }
@@ -260,6 +272,7 @@ app.post("/stripe/getsubscription", async (req, res) => { // gets subscription f
   } catch (err) {
     if (!res.headersSent) {
       res.status(500).json({ error: err.message });
+      console.log(err.message);
     }
   }
 });

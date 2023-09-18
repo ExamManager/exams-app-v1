@@ -135,7 +135,8 @@ export default (await import("vue")).defineComponent({
         cardExpiry: "",
         cardCvc: "",
         country: "",
-        postalCode: ""
+        postalCode: "",
+        defaultPayment: false
       },
     };
   },
@@ -213,16 +214,29 @@ export default (await import("vue")).defineComponent({
       const cvc = this.addCard.cardCvc;
       const country = this.addCard.country;
       const zip = this.addCard.postalCode;
-      const response = await this.createPaymentMethod(
-        name,
-        cardNumber,
-        expMonth,
-        expYear,
-        cvc,
-        country,
-        zip
-      );
-      console.log(response);
+      const default_payment = this.addCard.defaultPayment;
+      if (default_payment === true) {
+        // set all default to false
+        for (let i = 0; i < this.paymentMethods.length; i++) {
+          this.paymentMethods[i].default = false;
+        }
+      }
+      try {
+        const response = await this.createPaymentMethod(
+          name,
+          cardNumber,
+          expMonth,
+          expYear,
+          cvc,
+          country,
+          zip,
+          default_payment
+        );
+        console.log(response);
+      } catch (error) {
+        console.error(error);
+        // Handle the error here
+      }
       // make all fields empty
       this.addCard.firstName = "";
       this.addCard.lastName = "";
@@ -353,7 +367,7 @@ export default (await import("vue")).defineComponent({
                           >
                             <div
                               @click.native="selectedMethod = index"
-                              :class='[method.default && !editdefaultpayment ? "border-2 border-orange-500" : "border border-gray-200", "rounded-md px-6 py-5 mt-4 sm:flex sm:items-start sm:justify-between bg-gray-50"]'
+                              class="rounded-md px-6 py-5 mt-4 sm:flex sm:items-start sm:justify-between bg-gray-50"
                             >
                               <h4 class="sr-only">{{ method.cardType }}</h4>
                               <div class="sm:flex sm:items-start">
@@ -426,8 +440,16 @@ export default (await import("vue")).defineComponent({
                                   </div>
                                 </div>
                               </div>
+                              <!-- make a label which shows the default payment method -->
+                              <div class="mt-4 flex sm:pt-2 sm:mt-0 sm:ml-6 sm:flex-shrink-0" v-if="method.default"> 
+                                <span
+                                  class="inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium bg-green-100 text-green-800"
+                                >
+                                  Default
+                                </span>
+                              </div>
                               <button @click="deletePaymentMethod2(method.paymentId)" v-if="editdefaultpayment"
-                                class=" space-x-2 p-2 flex flex-shrink-0 border-0 bg-white rounded-md"
+                                class=" space-x-2 p-2 flex flex-shrink-0 border-0 bg-white rounded-full"
                               >
                                 <TrashIcon
                                   class="h-6 w-6 text-gray-700"
@@ -454,7 +476,7 @@ export default (await import("vue")).defineComponent({
                       @click="this.editdefaultpayment ? updateDefaultPaymentMethod2(method.paymentId) : this.editdefaultpayment = true"
                       class="inline-flex justify-center rounded-md border border-transparent bg-gray-800 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2"
                     >
-                      {{ this.editdefaultpayment ? this.loading3 ? 'Saving' : 'Update Default Payment' : 'Edit Default Payment' }}
+                      {{ this.editdefaultpayment ? this.loading3 ? 'Saving' : 'Update Default Payment' : 'Edit Payment Methods' }}
                     </button>
                   </div>
                 </div>
@@ -841,6 +863,13 @@ export default (await import("vue")).defineComponent({
                             autocomplete="postal-code"
                             class="mt-1 block w-full rounded-md border border-gray-300 py-2 px-3 shadow-sm focus:border-gray-900 focus:outline-none focus:ring-gray-900 sm:text-sm"
                           />
+                        </div>
+                        <!-- Make a tickbox to set it as the new active payment method -->
+                        <div class="flex justify-end">
+                          <div class="inline-flex items-center">
+                            <label for="default-payment" class="block text-sm font-medium text-gray-700 mr-4 flex-shrink-0">Set as default payment method</label>
+                            <input type="checkbox" name="default-payment" v-model="addCard.defaultPayment" autocomplete="default-payment" class="mt-1 block mb-1 rounded-md border border-gray-300 py-2 px-3 shadow-sm focus:border-gray-900 focus:outline-none focus:ring-gray-900 sm:text-sm" />
+                          </div>
                         </div>
                       </div>
                     </div>
