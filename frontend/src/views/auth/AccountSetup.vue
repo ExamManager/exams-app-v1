@@ -3,8 +3,8 @@
 import authenticate from "../../functions/authenticate";
 import stripe from "../../functions/stripe";
 import { toRaw } from "vue";
-import CustomPlanContact from '../../components/customPlanContact.vue'
-import DataUpdatingPopup from '../../components/dataUpdatingPopup.vue'
+import CustomPlanContact from '../../components/account/customPlanContact.vue'
+import DataUpdatingPopup from '../../components/account/dataUpdatingPopup.vue'
 
 //import store from '../../osamaStore.ts' 
 

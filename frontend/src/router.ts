@@ -6,11 +6,6 @@ const router = createRouter({
   history: createWebHistory(),
   routes: [
     {
-      path: '/test',
-      publicPath: '/test',
-      component: () => import('./components/events/newExam.vue'),
-    },
-    {
       path: '/',
       publicPath: '/',
       component: () => import('./views/Home.vue'),
@@ -60,6 +55,11 @@ const router = createRouter({
       publicPath: '/docs',
       component: () => import('./views/documentation/Home.vue'),
       
+    },
+    {
+      path: '/new',
+      publicPath: '/new',
+      component: () => import('./views/new-version/Home.vue'),
     },
     {
       path: '/login',

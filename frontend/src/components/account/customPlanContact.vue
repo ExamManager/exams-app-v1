@@ -7,7 +7,7 @@ import {
   TransitionRoot,
 } from "@headlessui/vue";
 import { CheckIcon, HomeIcon, AdjustmentsHorizontalIcon, CogIcon, PaperAirplaneIcon, PencilIcon } from "@heroicons/vue/24/outline";
-import authenticate from "../functions/authenticate.ts"
+import authenticate from "../../functions/authenticate";
 
 
 export default (await import("vue")).defineComponent({

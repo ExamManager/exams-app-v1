@@ -12,7 +12,7 @@ import {
 } from "@headlessui/vue";
 import { HomeIcon, ChevronRightIcon } from "@heroicons/vue/20/solid";
 export default {
-  name: "Free",
+  name: "Premium",
   components: {
     Dialog,
     DialogPanel,

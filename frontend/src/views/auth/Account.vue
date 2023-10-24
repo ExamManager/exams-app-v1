@@ -42,9 +42,9 @@ import {
   TrashIcon
 } from "@heroicons/vue/24/outline";
 import { ExclamationTriangleIcon } from "@heroicons/vue/24/outline";
-import ComponentOverlay from "../../components/completeAccount.vue";
-import DataUpdatingPopup from "../../components/dataUpdatingPopup.vue";
-import Notification from "../../components/Notification.vue";
+import ComponentOverlay from "../../components/account/completeAccount.vue";
+import DataUpdatingPopup from "../../components/account/dataUpdatingPopup.vue";
+// import Notification from "../../components/Notification.vue";
 
 const users = {
   name: "Lisa Marie",
@@ -112,7 +112,7 @@ const subNavigation = [
 
 export default {
   name: "Payment",
-  mixins: [authenticate, Notification, passwordResetTemplate],
+  mixins: [authenticate, passwordResetTemplate],
   components: {
     Disclosure,
     DisclosureButton,
@@ -458,10 +458,6 @@ export default {
       const response = await this.deleteUser(this.user.userid);
       console.log(response);
       this.deletingAccount = false;
-    },
-    test() {
-
-      notification.methods.showNotification("simple", "test", "IconHome", 10000)
     },
     // async sendEmail() {
     //   const response = await fetch("http://localhost:3001/email/accountverified", {
