@@ -10,87 +10,53 @@ export default {
     TransitionRoot,
     TransitionChild
   },
-  props: {
-    exam: Object,
-  },
   data() {
     return {
-      exam: this.exam,
+      newexam: [] as NewExam[],
       newexamextratimeenabled: false,
       newexamreadingtimeenabled: false,
       newexam5min: false,
       newexam15min: false,
       newexam30min: false,
-      newexam: {}
     }
   },
   methods: {
     closeModal() {
       this.$emit('close')
     },
-    updateExam() {
-      
-      // convert the newexam5min, newexam15min, newexam30min to an array of numbers
-      let reminders = []
-      if (this.newexam5min) {
-        reminders.push(5)
-      }
-      if (this.newexam15min) {
-        reminders.push(15)
-      }
-      if (this.newexam30min) {
-        reminders.push(30)
-      }
+    addExam() {
+      // change newexam.start to a date object give a time like HH:MM and add today as the date
       const newstart = new Date()
       const starttime = this.newexam.start.split(':')
       newstart.setHours(parseInt(starttime[0]))
       newstart.setMinutes(parseInt(starttime[1]))
       newstart.setSeconds(0)
-      const updatedexam: NewExam = {
-        name: this.newexam.name,
-        about: this.newexam.about,
-        start: newstart,
-        duration: this.newexam.duration,
-        readingtime: this.newexam.readingtime,
-        extratime: this.newexam.extratime,
-        reminders: reminders,
+      this.newexam.start = newstart
+      console.log(this.newexam.duration)
+      const newend = new Date(newstart)
+      // duration given minutes
+      newend.setMinutes(newend.getMinutes() + this.newexam.duration)
+      this.newexam.end = newend
+      // duration given as HH:MM
+      console.log(this.newexam)
+      // set the reminder times in the number array
+      const reminderTimes = []
+      if (this.newexam5min) {
+        reminderTimes.push(5)
       }
-      this.$emit('update', updatedexam)
+      if (this.newexam15min) {
+        reminderTimes.push(15)
+      }
+      if (this.newexam30min) {
+        reminderTimes.push(30)
+      }
+      this.newexam.reminders = reminderTimes
+    
+
+      this.$emit('add', this.newexam)
       this.closeModal()
-    }
+    },
   },
-  mounted(){
-    // store the exam in a NewExam object
-    console.log(new Date(this.exam?.start).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),)
-    this.newexam = {
-      name: this.exam?.name,
-      about: this.exam?.about,
-      // start needs to be converted back into HH:MM format from a Date object in 24 hour time without PM or AM
-      start: new Date(this.exam?.start).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', hour12: false}),
-      // duration needs to be converted back into minutes from seconds
-      duration: this.exam?.duration / 60,
-      readingtime: this.exam?.readingtime / 60,
-      extratime: this.exam?.extratimepercentage,
-    }
-    // set the vars newexam5min, newexam15min, newexam30min to true depending on which numbers are in the exam.reminders array
-    if (this.exam?.reminders.includes(5)) {
-      this.newexam5min = true
-    }
-    if (this.exam?.reminders.includes(15)) {
-      this.newexam15min = true
-    }
-    if (this.exam?.reminders.includes(30)) {
-      this.newexam30min = true
-    }
-    // if the exam has a reading time, enable the checkbox
-    if (this.exam?.readingtime > 0) {
-      this.newexamreadingtimeenabled = true
-    }
-    // if the exam has extra time, enable the checkbox
-    if (this.exam?.extratimepercentage > 0) {
-      this.newexamextratimeenabled = true
-    }
-  }
 }
 </script>
 
@@ -120,7 +86,6 @@ export default {
                       </h3>
                       <p class="mt-1 text-sm text-gray-500">
                         Please enter all the details for the new exam.
-                        {{ this.exam }}
                       </p>
                     </div>
 
@@ -215,7 +180,7 @@ export default {
                                   leave-to-class="opacity-0">
                                   <div v-if="newexamextratimeenabled" class="flex-auto items-center space-x-2">
                                     <div class="mt-1 flex rounded-md shadow-sm">
-                                      <input v-model="newexam.extratime" placeholder="15 %" type="text" v-mask="'##'"
+                                      <input v-model="newexam.extratime" placeholder="15" type="text" v-mask="'##'"
                                         name="examname" id="examname" autocomplete="examname"
                                         class="block w-full min-w-0 flex-1 rounded-none rounded-l-md border-gray-300 focus:border-orange-500 focus:ring-orange-500 sm:text-sm" />
                                       <span
@@ -244,7 +209,7 @@ export default {
                                     leave-active-class="transition ease-in duration-100" leave-from-class="opacity-100"
                                     leave-to-class="opacity-0">
                                     <div v-if="newexamreadingtimeenabled === true" class="mt-1 flex rounded-md shadow-sm">
-                                      <input v-model="newexam.readingtime" placeholder="15 min" type="text" v-mask="'##'"
+                                      <input v-model="newexam.readingtime" placeholder="15" type="text" v-mask="'##'"
                                         name="examname" id="examname" autocomplete="examname"
                                         class="block w-full min-w-0 flex-1 rounded-none rounded-l-md border-gray-300 focus:border-orange-500 focus:ring-orange-500 sm:text-sm" />
                                       <span
@@ -312,9 +277,9 @@ export default {
                       class="rounded-md border border-gray-300 bg-white py-2 px-4 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2">
                       Cancel
                     </button>
-                    <button @click="updateExam()"
+                    <button @click="addExam()"
                       class="ml-3 inline-flex justify-center rounded-md border border-transparent bg-orange-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2">
-                      Update Exam
+                      {{ "Add Exam" }}
                     </button>
                   </div>
                 </div>

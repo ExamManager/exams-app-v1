@@ -10,22 +10,12 @@ import {
   MenuItem,
   MenuItems
 } from "@headlessui/vue";
-import { HomeIcon, ChevronRightIcon, ChevronDownIcon } from "@heroicons/vue/20/solid";
+import { HomeIcon, ChevronRightIcon, ChevronDownIcon, CogIcon, StarIcon, EllipsisHorizontalIcon } from "@heroicons/vue/20/solid";
 import { ref } from "vue";
-import { Exam } from "../../components/classes";
-import NewExam from "./NewExam.vue"
+import { Exam, NewExam } from "../../components/classes";
+import CreateExam from "./CreateExam.vue"
 import UpdateExam from "./UpdateExam.vue"
-
-
-interface NewExam {
-  name: string; // string
-  about: string; // optional
-  start: Date; // as a timestamp
-  end?: Date; // as a timestamp
-  duration?: number; // as a number in minutes
-  readingtime?: number; // as a number in minutes
-  extratime?: number; // as a percentage
-}
+import Favourites from "./Favourites.vue"
 
 export default {
   name: "Free",
@@ -38,13 +28,17 @@ export default {
     HomeIcon,
     ChevronRightIcon,
     ChevronDownIcon,
+    CogIcon,
+    StarIcon,
+    EllipsisHorizontalIcon,
     Menu,
     MenuButton,
     MenuItem,
     MenuItems,
-    NewExam,
+    CreateExam,
     UpdateExam,
-},
+    Favourites,
+  },
   data() {
     return {
       test: "test",
@@ -54,11 +48,13 @@ export default {
       detailedExam: 2, // stores the id of which exam is showing the details
       setup: {
         autostart: false, // automatically start the exam when the start time is reached
-        synctimers: true, // makes timers wait and sync with the clock on start
+        synctimers: false, // makes timers wait and sync with the clock on start
       },
       modals: {
         newExam: false,
         editExam: false,
+        settings: false,
+        favourites: false,
       },
       editexam: 0,
     };
@@ -76,29 +72,29 @@ export default {
   },
   mounted() {
     this.addExam({
-        name: "Physics Paper 4",
-        about: "Each student recieves one Formula Booklet...",
-        start: new Date("2021-10-10T12:37:00"),
-        extratime: 15,
-        // end: new Date("2021-10-10T14:37:00"),
-        duration: 180,
-      });
-      this.addExam({
-        name: "Physics Paper 3",
-        about: "Each student recieves one Formula Booklet...",
-        start: new Date("2021-10-10T12:37:00"),
-        extratime: 15,
-        // end: new Date("2021-10-10T14:37:00"),
-        duration: 180,
-      });
-      this.addExam({
-        name: "Physics Paper 7",
-        about: "Each student recieves one Formula Booklet...",
-        start: new Date("2021-10-10T12:37:00"),
-        extratime: 15,
-        // end: new Date("2021-10-10T14:37:00"),
-        duration: 180,
-      });
+      name: "Physics Paper 4",
+      about: "Each student recieves one Formula Booklet...",
+      start: new Date("2021-10-10T12:37:00"),
+      extratime: 15,
+      // end: new Date("2021-10-10T14:37:00"),
+      duration: 180,
+    });
+    this.addExam({
+      name: "Physics Paper 3",
+      about: "Each student recieves one Formula Booklet...",
+      start: new Date("2021-10-10T12:37:00"),
+      extratime: 15,
+      // end: new Date("2021-10-10T14:37:00"),
+      duration: 180,
+    });
+    this.addExam({
+      name: "Physics Paper 7",
+      about: "Each student recieves one Formula Booklet...",
+      start: new Date("2021-10-10T12:37:00"),
+      extratime: 15,
+      // end: new Date("2021-10-10T14:37:00"),
+      duration: 180,
+    });
     // add an example exam
     setTimeout(() => {
       this.addExam({
@@ -118,6 +114,7 @@ export default {
         extratime: 15,
         // end: new Date("2021-10-10T14:37:00"),
         duration: 180,
+        reminders: [5, 30]
       });
     }, 300);
 
@@ -158,6 +155,7 @@ export default {
         timeleft,
         status,
         started: false,
+        reminders: exam.reminders || [],
       };
 
       this.exams.push(newexam);
@@ -165,6 +163,7 @@ export default {
       console.log(this.exams.map(exam => exam.id))
     },
     async startExam(id: number) {
+      console.log(this.setup)
       const exam = this.exams.find((exam) => exam.id === id);
       if (!exam) return;
       exam.started = true;
@@ -174,7 +173,8 @@ export default {
       exam.end = new Date(exam.start.getTime() + totalDuration * 1000);
       const readingtimeends = new Date(exam.start.getTime() + exam.readingtime * 1000);
       exam.readingtimeends = readingtimeends;
-      const extratimeends = new Date(exam.start.getTime() + totalDuration * 1000 + exam.extratime * 1000);
+      const extratime = exam.extratime || 0;
+      const extratimeends = new Date(exam.start.getTime() + totalDuration * 1000 + extratime * 1000);
       exam.extratimeends = extratimeends;
 
       if (exam.readingtime > 0) {
@@ -187,7 +187,7 @@ export default {
         await this.countdown(exam, exam.end);
       }
 
-      if (exam.extratime > 0) {
+      if (extratime > 0) {
         exam.status = "Extra Time";
         await this.countdown(exam, extratimeends);
       }
@@ -195,14 +195,14 @@ export default {
       exam.status = "Finished";
       exam.started = false;
     },
-    countdown(exam, endTime) {
-      if (!this.synctimers) {
+    countdown(exam: any, endTime: Date) {
+      if (!this.setup.synctimers) {
         return this.countdown1(exam, endTime);
       } else {
         return this.countdown2(exam, endTime);
       }
     },
-    countdown1(exam, endTime) {
+    countdown1(exam: any, endTime: Date) {
       return new Promise<void>(resolve => {
         const intervalId = setInterval(() => {
           const now = new Date();
@@ -222,7 +222,7 @@ export default {
         exam.intervalId = intervalId; // Store the interval ID
       });
     },
-    countdown2(exam, endTime) {
+    countdown2(exam: any, endTime: Date) {
       return new Promise<void>(resolve => {
         // Calculate the time until the next full second
         const now = new Date();
@@ -287,13 +287,30 @@ export default {
       this.editexam = id;
       this.modals.editExam = true;
     },
+    duplicateExam(id: number) {
+      const exam = this.exams.find((exam) => exam.id === id);
+      if (!exam) return;
+      const newexam: NewExam = {
+        name: exam.name + " (Copy)",
+        about: exam.about,
+        start: exam.plannedstart,
+        end: exam.plannedend,
+        duration: exam.duration,
+        readingtime: exam.readingtime,
+        extratime: exam.extratimepercentage,
+        reminders: exam.reminders,
+      };
+      this.addExam(newexam);
+    },
   },
 };
 </script>
 
 <template>
-  <NewExam v-if="modals.newExam" @close="modals.newExam = false" @add="addExam" />
-  <UpdateExam v-if="modals.editExam" @close="modals.editExam = false" :exam="exams.find(exam => exam.id === editexam)" />
+  <CreateExam v-if="modals.newExam" @close="modals.newExam = false" @add="addExam" />
+  <UpdateExam v-if="modals.editExam" @close="modals.editExam = false" :exam="exams.find(exam => exam.id === editexam)"
+    @update="removeExam(editexam); addExam($event)" />
+  <Favourites v-if="modals.favourites" @close="modals.favourites = false" />
   <div class="px-4 sm:px-6 lg:px-8 lg:pt-8">
     <div class="flex justify-end">
       <div class="flex flex-col items-end">
@@ -316,20 +333,32 @@ export default {
               stroke="currentColor" class="-ml-1 mr-2 h-5 w-5 text-gray-400">
               <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
-
             Add Exam
           </button>
           <button type="button"
-            class="relative -ml-px inline-flex items-center rounded-r-md border border-gray-300 bg-white px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:z-10 focus:border-orange-500 focus:outline-none focus:ring-1 focus:ring-orange-500"
-            @click="toggleFullScreen">
-            <span class="sr-only">Sort</span>
-            <!-- Heroicon name: solid/sort-ascending -->
-
-            <svg class="h-4 w-4 text-gray-700" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512">
-              <!--! Font Awesome Pro 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. -->
-              <path fill="currentColor"
-                d="M496 304h-416v-224H32v240c0 17.6 14.4 32 32 32L264 352v47.02l-72 72c-9.354 9.352-9.354 24.52 0 33.88c9.348 9.348 24.51 9.359 33.87 .0195L288 442.9l62.09 62.09c9.391 9.391 24.63 9.348 33.97-.0938c9.301-9.406 9.258-24.55-.0938-33.91L312 399V352L512 352c17.6 0 32-14.4 32-32V80h-48V304zM552 0H23.96C10.72 0 0 10.73 0 23.95S10.72 48 23.96 48h528.1C565.3 48 576 37.27 576 24.05S565.3 0 552 0z" />
-            </svg>
+            class="hover-button relative -ml-px inline-flex items-center rounded-r-md border border-gray-300 bg-white px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:z-10 focus:border-orange-500 focus:outline-none focus:ring-1 focus:ring-orange-500">
+            <EllipsisHorizontalIcon class=" h-5 w-5 text-gray-400 visible-button " aria-hidden="true" />
+            <div class="hidden-buttons -my-4 -mr-4 -ml-3 ">
+              <!-- Your buttons go here -->
+              <button type="button" @click="$router.push('/account?timer')"
+                class="relative -ml-px inline-flex items-center border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:z-10 focus:border-orange-500 focus:outline-none focus:ring-1 focus:ring-orange-500">
+                <CogIcon class="-ml-1 -mr-1 h-5 w-5 text-gray-400" aria-hidden="true" />
+              </button>
+              <button type="button" @click="modals.favourites = true"
+                class="relative -ml-px inline-flex items-center border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:z-10 focus:border-orange-500 focus:outline-none focus:ring-1 focus:ring-orange-500">
+                <StarIcon class="-ml-1 -mr-1 h-5 w-5 text-gray-400" aria-hidden="true" />
+              </button>
+              <button type="button" @click="toggleFullScreen"
+                class="relative -ml-px inline-flex items-center rounded-r-md border border-gray-300 bg-white px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:z-10 focus:border-orange-500 focus:outline-none focus:ring-1 focus:ring-orange-500">
+                <span class="sr-only">Sort</span>
+                <!-- Heroicon name: solid/sort-ascending -->
+                <svg class="h-5 w-5  text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512">
+                  <!--! Font Awesome Pro 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. -->
+                  <path fill="currentColor"
+                    d="M496 304h-416v-224H32v240c0 17.6 14.4 32 32 32L264 352v47.02l-72 72c-9.354 9.352-9.354 24.52 0 33.88c9.348 9.348 24.51 9.359 33.87 .0195L288 442.9l62.09 62.09c9.391 9.391 24.63 9.348 33.97-.0938c9.301-9.406 9.258-24.55-.0938-33.91L312 399V352L512 352c17.6 0 32-14.4 32-32V80h-48V304zM552 0H23.96C10.72 0 0 10.73 0 23.95S10.72 48 23.96 48h528.1C565.3 48 576 37.27 576 24.05S565.3 0 552 0z" />
+                </svg>
+              </button>
+            </div>
           </button>
         </span>
       </div>
@@ -357,8 +386,9 @@ export default {
                   <th scope="col" class="relative w-12 px-6 sm:w-16 sm:px-8">
                     <input type="checkbox" class="absolute left-4 top-1/2 -mt-2
                     h-4 w-4 rounded border-gray-300 text-orange-600
-                    focus:ring-orange-500 sm:left-6" select all: @click="selectedExams.length === exams.length ? selectedExams = [] : selectedExams = exams.map(exam => exam.id)"
-                    :checked="selectedExams.length === exams.length">
+                    focus:ring-orange-500 sm:left-6" select all:
+                      @click="selectedExams.length === exams.length ? selectedExams = [] : selectedExams = exams.map(exam => exam.id)"
+                      :checked="selectedExams.length === exams.length">
                   </th>
                   <th scope="col" class="min-w-[12rem] py-3.5 pr-3 text-left text-md font-semibold text-gray-900">
                     Subject Name
@@ -460,7 +490,7 @@ export default {
                                 :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'block px-4 py-2 text-sm']">Edit</a>
                               </MenuItem>
                               <MenuItem v-slot="{ active }">
-                              <a href="#"
+                              <a @click="duplicateExam(exam.id)"
                                 :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'block px-4 py-2 text-sm']">Duplicate</a>
                               </MenuItem>
                             </div>
@@ -496,7 +526,7 @@ export default {
                       </Menu>
                     </div>
                   </td>
-                  
+
                 </tr>
               </tbody>
             </table>
@@ -566,4 +596,18 @@ export default {
       </transition>
     </div>
   </div> -->
-</template>../../components/classes
+</template>
+
+<style scoped>
+.hover-button:hover .hidden-buttons {
+  display: block;
+}
+
+.hover-button:hover .visible-button {
+  display: none;
+}
+
+.hidden-buttons {
+  display: none;
+}
+</style>

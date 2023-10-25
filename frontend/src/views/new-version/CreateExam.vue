@@ -39,6 +39,20 @@ export default {
       this.newexam.end = newend
       // duration given as HH:MM
       console.log(this.newexam)
+      // set the reminder times in the number array
+      const reminderTimes = []
+      if (this.newexam5min) {
+        reminderTimes.push(5)
+      }
+      if (this.newexam15min) {
+        reminderTimes.push(15)
+      }
+      if (this.newexam30min) {
+        reminderTimes.push(30)
+      }
+      this.newexam.reminders = reminderTimes
+    
+
       this.$emit('add', this.newexam)
       this.closeModal()
     },
@@ -218,7 +232,7 @@ export default {
                         </p>
                         <div class="relative flex items-start mt-4">
                           <div class="flex h-5 items-center">
-                            <input id="candidates" name="candidates" v-model="newexam5min" disabled type="checkbox"
+                            <input id="candidates" name="candidates" v-model="newexam5min"  type="checkbox"
                               class="h-4 w-4 rounded border-gray-300 text-orange-600 focus:ring-orange-500" />
                           </div>
                           <div class="ml-3 text-sm">
@@ -230,7 +244,7 @@ export default {
                         </div>
                         <div class="relative flex items-start mt-4">
                           <div class="flex h-5 items-center">
-                            <input id="candidates" name="candidates" v-model="newexam15min" disabled type="checkbox"
+                            <input id="candidates" name="candidates" v-model="newexam15min"  type="checkbox"
                               class="h-4 w-4 rounded border-gray-300 text-orange-600 focus:ring-orange-500" />
                           </div>
                           <div class="ml-3 text-sm">
@@ -242,7 +256,7 @@ export default {
                         </div>
                         <div class="relative flex items-start mt-4">
                           <div class="flex h-5 items-center">
-                            <input id="candidates" name="candidates" v-model="newexam30min" disabled type="checkbox"
+                            <input id="candidates" name="candidates" v-model="newexam30min"  type="checkbox"
                               class="h-4 w-4 rounded border-gray-300 text-orange-600 focus:ring-orange-500" />
                           </div>
                           <div class="ml-3 text-sm">
@@ -265,7 +279,7 @@ export default {
                     </button>
                     <button @click="addExam()"
                       class="ml-3 inline-flex justify-center rounded-md border border-transparent bg-orange-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2">
-                      {{ "Add Exam" }}
+                      Add Exam
                     </button>
                   </div>
                 </div>
@@ -276,4 +290,4 @@ export default {
       </div>
     </Dialog>
   </TransitionRoot>
-</template>./classes
+</template>

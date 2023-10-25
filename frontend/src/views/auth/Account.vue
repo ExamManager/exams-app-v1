@@ -4,6 +4,7 @@ import { passwordResetTemplate } from '../../components/email/emailTemplates.js'
 
 import authenticate from "../../functions/authenticate";
 import payment_component from "../../components/payment/accountpayment.vue";
+import timersettings from "../../components/account/timersettings.vue";
 import { toRaw }  from "vue";
 import {
   Disclosure,
@@ -44,6 +45,7 @@ import {
 import { ExclamationTriangleIcon } from "@heroicons/vue/24/outline";
 import ComponentOverlay from "../../components/account/completeAccount.vue";
 import DataUpdatingPopup from "../../components/account/dataUpdatingPopup.vue";
+import Timersettings from '../../components/account/timersettings.vue';
 // import Notification from "../../components/Notification.vue";
 
 const users = {
@@ -87,13 +89,13 @@ const subNavigation = [
     current: initActiveSubnav == 2,
     idx: 2
   },
-  // {
-  //   name: "Notifications",
-  //   href: "#",
-  //   icon: BellIcon,
-  //   current: initActiveSubnav == 3,
-  //   idx: 3
-  // },
+  {
+    name: "Timer Settings",
+    href: "#",
+    icon: BellIcon,
+    current: initActiveSubnav == 3,
+    idx: 3
+  },
   {
     name: "Plan & Billing",
     href: "#",
@@ -147,8 +149,9 @@ export default {
     DialogTitle,
     TransitionChild,
     TransitionRoot,
-    ExclamationTriangleIcon
-  },
+    ExclamationTriangleIcon,
+    timersettings,
+},
   data() {
     return {
       users,
@@ -228,13 +231,20 @@ export default {
       if (url.includes('?plan')) {
         // set this.subNavigation[3].current = true; and all other subnavs to false
         this.subNavigation.forEach((element, index) => {
+          if (index == 4) {
+            element.current = true;
+          } else {
+            element.current = false;
+          }
+        });
+      } else if (url.includes('?timer')) {
+        this.subNavigation.forEach((element, index) => {
           if (index == 3) {
             element.current = true;
           } else {
             element.current = false;
           }
         });
-
       } else if (url.includes('?account')) {
         this.subNavigation.forEach((element, index) => {
           if (index == 1) {
@@ -253,7 +263,7 @@ export default {
         });
       }  else if (url.includes('?integrations')) {
         this.subNavigation.forEach((element, index) => {
-          if (index == 4) {
+          if (index == 5) {
             element.current = true;
           } else {
             element.current = false;
@@ -1629,16 +1639,22 @@ export default {
         </div> -->
         <div
           class="space-y-6 sm:px-6 lg:col-span-9 lg:px-0"
-          v-if="subNavigation[3].current"
+          v-if="subNavigation[4].current"
         >
           <payment_component />
         </div>
 
         <div
           class="space-y-6 sm:px-6 lg:col-span-9 lg:px-0"
-          v-if="subNavigation[4].current"
+          v-if="subNavigation[3].current"
         >
-          <h2>There's nothing here yet, but we're working on more add-ons and integrations to make youro exam management experience flawless!</h2>
+          <timersettings />
+        </div>
+        <div
+          class="space-y-6 sm:px-6 lg:col-span-9 lg:px-0"
+          v-if="subNavigation[5].current"
+        >
+          <h2> Nothing yet will be here soon...</h2>
         </div>
       </div>
     </main>

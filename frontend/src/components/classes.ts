@@ -40,7 +40,7 @@ export class YearGroup {
     duration?: number; // as a number in minutes
     readingtime?: number; // as a number in minutes
     extratime?: number; // as a percentage
-    reminders?: number[];
+    reminders?: number[]; 
   constructor(
     name: string,
     about: string,
