@@ -487,11 +487,11 @@ export default {
                             <div class="py-1">
                               <MenuItem v-slot="{ active }">
                               <a @click="editExam(exam.id)"
-                                :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'block px-4 py-2 text-sm']">Edit</a>
+                                :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'block px-4 py-2 text-sm cursor-pointer']">Edit</a>
                               </MenuItem>
                               <MenuItem v-slot="{ active }">
                               <a @click="duplicateExam(exam.id)"
-                                :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'block px-4 py-2 text-sm']">Duplicate</a>
+                                :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'block px-4 py-2 text-sm cursor-pointer']">Duplicate</a>
                               </MenuItem>
                             </div>
                             <!-- <div class="py-1">
@@ -510,15 +510,15 @@ export default {
                                 :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'block px-4 py-2 text-sm']">Share</a>
                               </MenuItem> -->
                               <MenuItem v-slot="{ active }">
-                              <a href="#"
-                                :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'block px-4 py-2 text-sm']">Add
+                              <a @click="modals.favourites = true"
+                                :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'block px-4 py-2 text-sm cursor-pointer']">Add
                                 to favorites</a>
                               </MenuItem>
                             </div>
                             <div class="py-1">
                               <MenuItem v-slot="{ active }">
                               <a @click="removeExam(exam.id)"
-                                :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'block px-4 py-2 text-sm']">Delete</a>
+                                :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'block px-4 py-2 text-sm cursor-not-allowed ']">Delete</a>
                               </MenuItem>
                             </div>
                           </MenuItems>
