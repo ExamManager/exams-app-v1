@@ -1,6 +1,32 @@
 <script lang="ts">
 import { Dialog, DialogPanel, TransitionRoot, TransitionChild } from '@headlessui/vue'
-import { NewExam } from "../../components/classes";
+import { Favourite, NewExam } from "../../components/classes";
+
+import { EnvelopeIcon, PhoneIcon } from '@heroicons/vue/20/solid'
+
+const favourites = [
+  {
+    exam:
+    {
+      name: 'Physics',
+      about: 'Each student recives a frmula booklet and is allowed a calculator...',
+      start: new Date,
+      duration: 120,
+      readingtime: 5
+    },
+  },
+  {
+    exam:
+    {
+      name: 'Chemistry',
+      about: 'Each student recives a periodic table and is allowed a calculator...',
+      start: new Date,
+      duration: 75,
+      readingtime: 5
+    },
+  },
+  // More people...
+] as Favourite[]
 
 export default {
   name: 'ExamPopup',
@@ -8,7 +34,8 @@ export default {
     Dialog,
     DialogPanel,
     TransitionRoot,
-    TransitionChild
+    TransitionChild,
+    favourites,
   },
   data() {
     return {
@@ -18,6 +45,7 @@ export default {
       newexam5min: false,
       newexam15min: false,
       newexam30min: false,
+      favourites,
     }
   },
   methods: {
@@ -51,11 +79,15 @@ export default {
         reminderTimes.push(30)
       }
       this.newexam.reminders = reminderTimes
-    
+
 
       this.$emit('add', this.newexam)
       this.closeModal()
     },
+    toggleFavourite(favorite: Favourite){
+      
+    }
+
   },
 }
 </script>
@@ -80,195 +112,48 @@ export default {
               <div class="space-y-8 divide-y divide-gray-200">
                 <div class="space-y-8 divide-y divide-gray-200">
                   <div>
-                    <div>
-                      <h3 class="text-xl font-medium leading-6 text-gray-900">
-                        New Exam
-                      </h3>
-                      <p class="mt-1 text-sm text-gray-500">
-                        Please enter all the details for the new exam.
-                      </p>
-                    </div>
-
-                    <div class="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
-                      <div class="sm:col-span-4">
-                        <label for="username" class="block text-sm font-medium text-gray-700">Exam<a class="text-red-600">
-                            *</a></label>
-                        <div class="mt-1 flex rounded-md shadow-sm">
-                          <span
-                            class="inline-flex items-center rounded-l-md border border-r-0 border-gray-300 bg-gray-50 px-3 text-gray-500 sm:text-sm">Subject</span>
-                          <input v-model="newexam.name" placeholder="Physics Paper 1" type="text" name="examname"
-                            id="examname" autocomplete="examname"
-                            class="block w-full min-w-0 flex-1 rounded-none rounded-r-md border-gray-300 focus:border-orange-500 focus:ring-orange-500 sm:text-sm" />
-                        </div>
-                      </div>
-
-                      <div class="sm:col-span-6">
-                        <label for="about" class="block text-sm font-medium text-gray-700">About</label>
-                        <div class="mt-1">
-                          <textarea id="about" name="about" v-model="newexam.about" rows="3"
-                            placeholder="Each student recieves one Formula Booklet..."
-                            class="block w-full rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 sm:text-sm" />
-                        </div>
-                      </div>
-                    </div>
+                    <h3 class="text-xl font-medium leading-6 text-gray-900">
+                      Favourites
+                    </h3>
+                    <p class="mt-1 text-sm text-gray-500">
+                      Add or edit your favourite exams...
+                    </p>
                   </div>
-
-                  <div class="pt-8">
-                    <div>
-                      <h3 class="text-lg font-medium leading-6 text-gray-900">
-                        Exam Information
-                      </h3>
-                      <p class="mt-1 text-sm text-gray-500">
-                        Please enter all the time and date information for the
-                        exam.
-                      </p>
-                    </div>
-                    <div class="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
-                      <div class="sm:col-span-2">
-                        <label for="first-name" class="block text-sm font-medium text-gray-700">Planned Start Time</label>
-                        <div class="mt-1">
-                          <input type="time" name="starttime" placeholder="9:37" v-model="newexam.start" id="starttime"
-                            autocomplete="given-name"
-                            class="block w-full rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 sm:text-sm" />
+                  <ul role="list" class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 pt-6">
+                    <li v-for="favourite in favourites" :key="favourite.exam.name"
+                      class="col-span-1 divide-y divide-gray-200 rounded-lg bg-white shadow">
+                      <div class="flex w-full items-center justify-between space-x-6 p-6">
+                        <div class="flex-1 truncate" @click="toggleFavourite(favourite)" >
+                          <div class="flex items-center space-x-3">
+                            <h3 class="truncate text-sm font-medium text-gray-900">{{ favourite.exam.name }}</h3>
+                            <span
+                              class="inline-block flex-shrink-0 rounded-full bg-green-100 px-2 py-0.5 text-xs font-medium text-green-800">{{
+                                favourite.exam.duration }} Minutes</span>
+                          </div>
+                          <p class="mt-1 truncate text-sm text-gray-500">{{ favourite.exam.about }}</p>
+                        </div>
+                        <!-- <img class="h-10 w-10 flex-shrink-0 rounded-full bg-gray-300" :src="favourite.exam." alt="" /> -->
+                      </div>
+                      <div>
+                        <div class="-mt-px flex divide-x divide-gray-200">
+                          <div class="flex w-0 flex-1">
+                            <a
+                              class="relative -mr-px inline-flex w-0 flex-1 items-center justify-center rounded-bl-lg border border-transparent py-4 text-sm font-medium text-gray-700 hover:text-gray-500">
+                              <EnvelopeIcon class="h-5 w-5 text-gray-400" aria-hidden="true" />
+                              <span class="ml-3">Edit</span>
+                            </a>
+                          </div>
+                          <div class="-ml-px flex w-0 flex-1">
+                            <a
+                              class="relative inline-flex w-0 flex-1 items-center justify-center rounded-br-lg border border-transparent py-4 text-sm font-medium text-gray-700 hover:text-gray-500">
+                              <PhoneIcon class="h-5 w-5 text-gray-400" aria-hidden="true" />
+                              <span class="ml-3">View</span>
+                            </a>
+                          </div>
                         </div>
                       </div>
-
-                      <div class="sm:col-span-2">
-                        <label for="last-name" class="block text-sm font-medium text-gray-700">Duration</label>
-                        <div class="mt-1">
-                          <input type="number" name="Duration" id="duration" v-mask="'###'" v-model="newexam.duration"
-                            placeholder="90 min"
-                            class="block w-full rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 sm:text-sm" />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="pt-8">
-                    <div>
-                      <h3 class="text-lg font-medium leading-6 text-gray-900">
-                        Additional Information
-                      </h3>
-                      <p class="mt-1 text-sm text-gray-500">
-                        Please enter all the additional information for the
-                        exam.
-                      </p>
-                    </div>
-                    <div class="mt-6">
-                      <fieldset>
-                        <legend class="sr-only">By Email</legend>
-                        <div class="text-base font-medium text-gray-900" aria-hidden="true">
-                          Timing Options
-                        </div>
-                        <div class="mt-4 space-y-4">
-                          <div class="relative flex items-start">
-                            <div class="flex h-5 items-center">
-                              <input id="comments" name="comments" type="checkbox" v-model="newexamextratimeenabled"
-                                class="h-4 w-4 rounded border-gray-300 text-orange-600 focus:ring-orange-500" />
-                            </div>
-                            <div class="ml-3 text-sm">
-                              <label for="comments" class="font-semibold text-gray-700">Extra Time</label>
-                              <p class="text-gray-500">
-                                Check to enable extra time and select the
-                                percentage.
-                              </p>
-                              <div class="mt-2">
-                                <transition enter-active-class="transform ease-out duration-400 transition"
-                                  enter-from-class="translate-y-4 opacity-0 sm:translate-y-0 sm:translate-x-2"
-                                  enter-to-class="translate-y-0 opacity-100 sm:translate-x-0"
-                                  leave-active-class="transition ease-in duration-100" leave-from-class="opacity-100"
-                                  leave-to-class="opacity-0">
-                                  <div v-if="newexamextratimeenabled" class="flex-auto items-center space-x-2">
-                                    <div class="mt-1 flex rounded-md shadow-sm">
-                                      <input v-model="newexam.extratime" placeholder="15" type="text" v-mask="'##'"
-                                        name="examname" id="examname" autocomplete="examname"
-                                        class="block w-full min-w-0 flex-1 rounded-none rounded-l-md border-gray-300 focus:border-orange-500 focus:ring-orange-500 sm:text-sm" />
-                                      <span
-                                        class="inline-flex items-center rounded-r-md border border-l-0 border-gray-300 bg-gray-50 px-3 text-gray-500 sm:text-sm">Percent</span>
-                                    </div>
-                                  </div>
-                                </transition>
-                              </div>
-                            </div>
-                          </div>
-                          <div class="relative flex items-start">
-                            <div class="flex h-5 items-center">
-                              <input id="candidates" name="candidates" v-model="newexamreadingtimeenabled" type="checkbox"
-                                class="h-4 w-4 rounded border-gray-300 text-orange-600 focus:ring-orange-500" />
-                            </div>
-                            <div class="ml-3 text-sm">
-                              <label for="candidates" class="font-medium text-gray-700">Reading Time</label>
-                              <p class="text-gray-500">
-                                Check to enable reading time and enter the time
-                              </p>
-                              <div class="sm:col-span-2">
-                                <div class="mt-2">
-                                  <transition enter-active-class="transform ease-out duration-400 transition"
-                                    enter-from-class="translate-y-4 opacity-0 sm:translate-y-0 sm:translate-x-2"
-                                    enter-to-class="translate-y-0 opacity-100 sm:translate-x-0"
-                                    leave-active-class="transition ease-in duration-100" leave-from-class="opacity-100"
-                                    leave-to-class="opacity-0">
-                                    <div v-if="newexamreadingtimeenabled === true" class="mt-1 flex rounded-md shadow-sm">
-                                      <input v-model="newexam.readingtime" placeholder="15" type="text" v-mask="'##'"
-                                        name="examname" id="examname" autocomplete="examname"
-                                        class="block w-full min-w-0 flex-1 rounded-none rounded-l-md border-gray-300 focus:border-orange-500 focus:ring-orange-500 sm:text-sm" />
-                                      <span
-                                        class="inline-flex items-center rounded-r-md border border-l-0 border-gray-300 bg-gray-50 px-3 text-gray-500 sm:text-sm">Minutes</span>
-                                    </div>
-                                  </transition>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </fieldset>
-                      <fieldset class="mt-6">
-                        <legend class="contents text-base font-medium text-gray-900">
-                          Reminder Options
-                          <a class="text-gray-300">(Not Implemented)</a>
-                        </legend>
-                        <p class="text-sm text-gray-500">
-                          These will show a notification and play a sound.
-                        </p>
-                        <div class="relative flex items-start mt-4">
-                          <div class="flex h-5 items-center">
-                            <input id="candidates" name="candidates" v-model="newexam5min"  type="checkbox"
-                              class="h-4 w-4 rounded border-gray-300 text-orange-600 focus:ring-orange-500" />
-                          </div>
-                          <div class="ml-3 text-sm">
-                            <label for="candidates" class="font-medium text-gray-700">5 Minutes</label>
-                            <p class="text-gray-500">
-                              Get a reminder 5 minutes before the exam ends.
-                            </p>
-                          </div>
-                        </div>
-                        <div class="relative flex items-start mt-4">
-                          <div class="flex h-5 items-center">
-                            <input id="candidates" name="candidates" v-model="newexam15min"  type="checkbox"
-                              class="h-4 w-4 rounded border-gray-300 text-orange-600 focus:ring-orange-500" />
-                          </div>
-                          <div class="ml-3 text-sm">
-                            <label for="candidates" class="font-medium text-gray-700">15 Minutes</label>
-                            <p class="text-gray-500">
-                              Get a reminder 15 minutes before the exam ends.
-                            </p>
-                          </div>
-                        </div>
-                        <div class="relative flex items-start mt-4">
-                          <div class="flex h-5 items-center">
-                            <input id="candidates" name="candidates" v-model="newexam30min"  type="checkbox"
-                              class="h-4 w-4 rounded border-gray-300 text-orange-600 focus:ring-orange-500" />
-                          </div>
-                          <div class="ml-3 text-sm">
-                            <label for="candidates" class="font-medium text-gray-700">30 Minutes</label>
-                            <p class="text-gray-500">
-                              Get a reminder 30 minutes before the exam ends.
-                            </p>
-                          </div>
-                        </div>
-                      </fieldset>
-                    </div>
-                  </div>
+                    </li>
+                  </ul>
                 </div>
 
                 <div class="pt-5">

@@ -170,10 +170,12 @@ export default {
 
                       <div class="sm:col-span-2">
                         <label for="last-name" class="block text-sm font-medium text-gray-700">Duration</label>
-                        <div class="mt-1">
-                          <input type="number" name="Duration" id="duration" v-mask="'###'" v-model="newexam.duration"
-                            placeholder="90 min"
-                            class="block w-full rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 sm:text-sm" />
+                        <div class="mt-1 flex rounded-md shadow-sm">
+                          <input v-model="newexam.duration" placeholder="90" type="number" v-mask="'###'" name="examname"
+                            id="examname" autocomplete="examname"
+                            class="block w-full min-w-0 flex-1 rounded-none rounded-l-md border-gray-300 focus:border-orange-500 focus:ring-orange-500 sm:text-sm" />
+                          <span
+                            class="inline-flex items-center rounded-r-md border border-l-0 border-gray-300 bg-gray-50 px-3 text-gray-500 sm:text-sm">Minutes</span>
                         </div>
                       </div>
                     </div>

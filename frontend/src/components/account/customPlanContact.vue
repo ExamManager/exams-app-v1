@@ -59,30 +59,32 @@ export default (await import("vue")).defineComponent({
         //send email
         await this.sendEmail(
           "NoUIDRequired",
-          ["guglielmosecchi94@gmail.com", "poopattaxspam@gmail.com"],
-          "payments@examtimer.tech",
+          ["contact@exammanager.dev"],
+          "noreply@exammanager.dev",
           `A custom plan has been requested: ${this.emailContent}`,
           `<p>A custom plan has just been requested.
             The following is the message submitted:
-            <br/><br/>${this.emailContent}</p>`,
+            <br/><br/>${this.emailContent}</p>
+            <p>Org contact: <a href="https://github.com/ExamManager">github.com/ExamManager</a></p>`,
           "Custom Plan Requested"
         )
 
         await this.sendEmail(
           "NoUIDRequired",
           this.email,
-          "payments@examtimer.tech",
+          "noreply@exammanager.dev",
           "We have received your request for a custom plan and will get back to you shortly",
           `<p>
             Hi there!
             <br/><br/>
             Thank you for your request for a custom plan. We will get back to you shortly.
-            In case we do not send you an email soon, please feel free to contact us at
-            support@examtimer.tech with the information your provided about your situation.
+            In case we do not reply soon, please reach out via
+            <a href="https://github.com/ExamManager">github.com/ExamManager</a>
+            with the information you provided about your situation.
             In the meantime, hold tight while we process your request and see what we can do
             for you.
             <br/><br/>
-            Kind regards,<br/>The Examtimer Team
+            Kind regards,<br/>The ExamManager Team
           </p>`,
           "Custom Plan Request Received"
         )

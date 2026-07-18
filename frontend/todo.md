@@ -1,2 +1,0 @@
-- when deleting payment method find way to set a another payment method as default
-- make popup on account completion for users to add a paymnet method when choosing a paid plan

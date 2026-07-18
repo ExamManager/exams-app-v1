@@ -32,7 +32,7 @@ export class YearGroup {
     }
   }
 
-  export class NewExam {
+export class NewExam {
     name: string; // string
     about: string; // optional
     start: Date; // as a timestamp
@@ -62,6 +62,15 @@ export class YearGroup {
   } 
 }
 
+export class Favourite {
+  
+  exam: NewExam;
+  constructor(
+    exam: NewExam,
+  ) {
+    this.exam = exam;
+  }
+}
 
 export class Exam {
     /*

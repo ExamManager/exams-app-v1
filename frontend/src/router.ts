@@ -9,11 +9,6 @@ const router = createRouter({
       path: '/',
       publicPath: '/',
       component: () => import('./views/Home.vue'),
-      // beforeEnter: (to, from, next) => {
-      //   authenticate.methods.updateData();
-      //   console.log('before each');
-      //   next();
-      // },
     },
     {
       path: '/free',
@@ -21,13 +16,13 @@ const router = createRouter({
       component: () => import('./views/free/Home.vue'),
     },
     {
-      path: '/premium',
-      publicPath: '/premium',
+      path: '/demo',
+      publicPath: '/demo',
       component: () => import('./views/premium/Home.vue'),
     },
     {
-      path: '/premium/studentview',
-      publicPath: '/premium/studentview',
+      path: '/demo/studentview',
+      publicPath: '/demo/studentview',
       component: () => import('./views/premium/Fullscreen.vue'),
     },
     {
@@ -57,8 +52,8 @@ const router = createRouter({
       
     },
     {
-      path: '/new',
-      publicPath: '/new',
+      path: '/testing',
+      publicPath: '/testing',
       component: () => import('./views/new-version/Home.vue'),
     },
     {
@@ -67,7 +62,6 @@ const router = createRouter({
       component: () => import('./views/auth/SignIn.vue'),
       beforeEnter: async (to, from, next) => {
         const isAuthenticated = await authenticate.methods.checkOnRoute();
-        console.log(isAuthenticated);
         if (isAuthenticated === false) {
           // do nothing
           next()
@@ -88,7 +82,6 @@ const router = createRouter({
       // check if user is authenticated
       beforeEnter: async (to, from, next) => {
         const isAuthenticated = await authenticate.methods.checkOnRoute();
-        console.log(isAuthenticated);
         if (isAuthenticated != false) {
           // do nothing
           next()
@@ -103,7 +96,6 @@ const router = createRouter({
       component: () => import('./views/auth/AccountSetup.vue'),
       beforeEnter: async (to, from, next) => {
         const isAuthenticated = await authenticate.methods.checkOnRoute();
-        console.log(isAuthenticated);
         // returns fals if user is not authenticated and returns the user id if user is authenticated
         if (isAuthenticated != false) {
           next()

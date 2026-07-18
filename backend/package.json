@@ -1,14 +1,14 @@
 {
-  "name": "backend",
+  "name": "exams-app-v1-backend",
   "type": "module",
   "version": "1.0.0",
-  "description": "",
+  "description": "ExamManager v1 API",
   "main": "index.js",
   "scripts": {
     "serve": "nodemon index.js"
   },
-  "author": "DaniDuese, GuglielmoSeccHi",
-  "license": "ISC",
+  "author": "ExamManager",
+  "license": "MIT",
   "dependencies": {
     "@supabase/supabase-js": "^2.25.0",
     "cloudmailin": "^0.0.3",

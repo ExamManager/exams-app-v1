@@ -123,7 +123,6 @@ export default {
       if (hours < 10) {
         var time = "0" + time;
       }
-      console.log("Time Created", time);
       return time;
     },
     accuratetime() {
@@ -212,8 +211,6 @@ export default {
         // split the times into hours and minutes
         var splitTime2 = time.split(":");
         var splitTime3 = sectime.split(":");
-        console.log(splitTime2);
-        console.log(splitTime3);
         // add the hours and minutes together
         var hours = Number(splitTime2[0]) + Number(splitTime3[0]);
         var minutes = Number(splitTime2[1]) + Number(splitTime3[1]);
@@ -246,9 +243,7 @@ export default {
         // check if string is only 4 characters long, if so add a 0 to the beginning
         var splitTime2 = time.split(":");
         var hours = Number(splitTime2[0]);
-        console.log("HOURS", hours);
         var minutes = Number(splitTime2[1]) + Number(sectime);
-        console.log("MINUTES", minutes);
         // substract 60 from minutes and add 1 to hours until minutes is less than 60
         while (minutes >= 60) {
           hours = hours + 1;
@@ -265,7 +260,6 @@ export default {
         if (time.length === 4) {
           var time = "0" + time;
         }
-        console.log("TIMMMMME", time);
         return time.toString();
       } else if (type === "addminutesexact") {
         // two times are given one in HH:MM and one in minutes, add them together and return the result in HH:MM:SS format
@@ -307,7 +301,6 @@ export default {
         if (time.length === 7) {
           var time = "0" + time;
         }
-        console.log("TIMMMMME", time);
         return time.toString();
       } else if (type === "addminutesexacter") {
         // one time is given in the format HH:MM:SS and the other one in minutes but can be a decimal like 1.5 minutes or 1.25 minutes
@@ -360,7 +353,6 @@ export default {
         if (time.length === 7) {
           var time = "0" + time;
         }
-        console.log("TIMMMMME", time);
         return time.toString();
       } else if (type === "sectoendtime") {
         // time will be given in seconds, you will also get the end time in HH:MM:SS format, add the seconds ontop of the end time and return the result in HH:MM:SS format
@@ -403,7 +395,6 @@ export default {
         if (time.length === 7) {
           var time = "0" + time;
         }
-        console.log("TIMMMMME", time);
         return time.toString();
       } else if (type === "timeleft") {
         // time one is given in HH:MM:SS the second one in HH:MM:SS, subtract the second from the first and return the result in HH:MM:SS format
@@ -450,7 +441,7 @@ export default {
     },
     toggleFullScreen() {
       // new page for fullscreen
-      window.open("/premium/studentview", "_blank");
+      window.open("/demo/studentview", "_blank");
     },
     updateTime() {
       var d = new Date();
@@ -484,7 +475,6 @@ export default {
       // open modal
       this.open = true;
       this.isOpen = "";
-      console.log(this.popupedit);
     },
     updateExam() {
       // check if any fields have changed
@@ -637,12 +627,8 @@ export default {
       // find person with id
       var personIdx = this.people.find((person) => person.id == personid);
       var personId = this.people.findIndex((person) => person.id == personid);
-      console.log("Person: ", personid);
-      console.log("PersonIdx: ", personIdx);
-      console.log("PersonId: ", personId);
       // duplicate person
       var newPerson = JSON.parse(JSON.stringify(personIdx));
-      console.log(newPerson);
       // add new person to people array
 
       // make the status of the new person inactive always when duplicating
@@ -715,7 +701,6 @@ export default {
     },
     deleteSelected() {
       // delete all selected people
-      console.log("this.selectedPeople");
       for (var i = 0; i < this.selectedPeople.length; i++) {
         // find the index of the person in the people array
         var personIdx = this.people.findIndex(
@@ -740,13 +725,9 @@ export default {
     },
     stopExam(personId: string) {
       // set timeleft to 0
-      console.log("stop exam");
       var personIdx = this.people.findIndex((person) => person.id == personId);
       this.clearinterval = Number(personIdx);
-      console.log(personIdx); // 1
-      console.log(personId); // jk23lirufh2l
       // find person with id
-      console.log(this.clearinterval);
       this.people[personIdx].timeleft = "0:00";
       // set status to inactive
       this.people[personIdx].status = "finished";
@@ -820,7 +801,6 @@ export default {
           String(duration),
           "addminutesexact"
         );
-        console.log("1");
 
         this.calculateTimeLeft(
           personId,
@@ -851,12 +831,8 @@ export default {
           String(durationinminutes),
           "addminutesexact"
         );
-        console.log("endtime", endtime);
-        console.log("endtime 2", this.people[personIdx].end);
-        console.log("starttime", this.people[personIdx].start);
         // set the status to active
         this.people[personIdx].status = "active";
-        console.log("2");
         this.calculateTimeLeft(
           personId,
           this.people[personIdx].start,
@@ -864,8 +840,6 @@ export default {
           "null"
         );
         // console log the sent variables
-        console.log("starttime", this.people[personIdx].start);
-        console.log("endtime", endtime);
       }
       // calculate the time left
     },
@@ -875,9 +849,7 @@ export default {
       end: string,
       readingtime: string
     ) {
-      console.log("calculate time left");
       var personIdx = this.people.findIndex((person) => person.id == personId);
-      console.log("personIdx", personIdx);
       const newperid = String(personIdx);
       var interval = setInterval(() => {
         var personIdx = this.people.findIndex(
@@ -896,18 +868,13 @@ export default {
         if (readingtime === "null") {
           var timeleft2 = this.converter(end, now, "timeleft");
           this.people[Number(personIdx)].timeleft = timeleft2;
-          console.log(this.people[Number(personIdx)].timeleft);
-          console.log(this.people[Number(personIdx)].extratimeenabled);
           if (this.people[Number(personIdx)].timeleft === "0:00:00") {
-            console.log("balis");
             if (this.people[Number(personIdx)].extratimeenabled === true) {
               clearInterval(interval);
               this.calculateExtratime(personIdx, start, end);
               // break interval
             } else {
               clearInterval(interval);
-              console.log("clear interval");
-              console.log("personIdx", personIdx);
               this.stopExam(personIdx);
             }
           }
@@ -918,10 +885,8 @@ export default {
             // timeleft is in HH:MM:SS but make another var that is only HH:MM
 
             this.people[Number(personIdx)].timeleft = timeleft;
-            console.log("Reading");
             if (start == now) {
               this.people[Number(personIdx)].status = "active";
-              console.log("Reading time is over");
               this.notification(
                 "success",
                 "Exam Started",
@@ -931,10 +896,7 @@ export default {
           } else {
             var timeleft2 = this.converter(end, now, "timeleft");
             this.people[Number(personIdx)].timeleft = timeleft2;
-            console.log(this.people[Number(personIdx)].timeleft);
-            console.log(this.people[Number(personIdx)].extratimeenabled);
             if (this.people[Number(personIdx)].timeleft === "0:00:00") {
-              console.log("balis");
               if (this.people[Number(personIdx)].extratimeenabled === true) {
                 clearInterval(interval);
                 this.calculateExtratime(personIdx, start, end);
@@ -949,9 +911,6 @@ export default {
       }, 200);
     },
     async calculateExtratime(personIdx: string, start: string, end: string) {
-      console.log("Start Time", start);
-      console.log("End Time", end);
-      console.log("Person Index", personIdx);
       // set the status to extratime
       this.people[Number(personIdx)].status = "extra";
       // send notification
@@ -978,7 +937,6 @@ export default {
         String(extratime4),
         "sectoendtime"
       );
-      console.log("This is messed up", extratimeend);
 
       var interval2 = setInterval(() => {
         // start and end are strings in the format of HH:MM
@@ -996,8 +954,6 @@ export default {
         // if the time left is 0:00:00, stop the exam
         if (this.people[Number(personIdx)].timeleft === "0:00:00") {
           clearInterval(interval2);
-          console.log("clear interval");
-          console.log("personIdx", personIdx);
           this.stopExam(personIdx);
         }
       }, 200);

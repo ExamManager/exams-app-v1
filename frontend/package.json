@@ -1,7 +1,10 @@
 {
-  "name": "examtimetable",
+  "name": "exams-app-v1",
   "private": true,
   "version": "0.0.0",
+  "description": "ExamManager v1 Vue exam timer",
+  "author": "ExamManager",
+  "license": "MIT",
   "type": "module",
   "scripts": {
     "dev": "vite",

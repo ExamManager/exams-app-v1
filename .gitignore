@@ -1,0 +1,40 @@
+# Dependencies
+node_modules/
+**/node_modules/
+
+# Environment
+.env
+.env.*
+!.env.example
+**/.env
+!**/.env.example
+
+# Build / output
+dist/
+build/
+.out/
+.next/
+.turbo/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+.idea/
+.vscode/
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Local notes
+frontend/todo.md
+todo.md
+
+# Coverage / cache
+coverage/
+.cache/
+*.tsbuildinfo

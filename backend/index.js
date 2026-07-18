@@ -2,14 +2,18 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import Stripe from "stripe";
-import { supabase } from "./supabaseClient.js";
 import { MessageClient } from "cloudmailin";
 import { passwordChangedTemplate } from './emailTemplates.js';
+import { supabase } from "./supabaseClient.js";
 
-const client = new MessageClient({ username: "710506dea731b2f9", apiKey: "i9b1YzNd7HHSvZuT5YtTZSjE"});
+dotenv.config();
+
+const client = new MessageClient({
+  username: process.env.MESSAGE_CLIENT_USERNAME,
+  apiKey: process.env.MESSAGE_CLIENT_API_KEY,
+});
 const app = express();
 app.use(cors());
-dotenv.config();
 const stripe = new Stripe(process.env.VITE_STRIPE_SECRET_KEY);
 const port = 3001;
 
@@ -291,6 +295,24 @@ app.post("/stripe/deletepaymentmethod", async (req, res) => { // deletes payment
     }
     const customer_id = data[0].customerid;
     await stripe.paymentMethods.detach(paymentMethodId);
+    res.status(200).json({ message: "success" });
+  } catch (err) {
+    if (!res.headersSent) {
+      res.status(500).json({ error: err.message });
+    }
+  }
+});
+
+app.post("/auth/deleteuser", async (req, res) => {
+  try {
+    const userid = req.body.userid;
+    if (!userid) {
+      throw new Error("userid is required");
+    }
+    const { error } = await supabase.auth.admin.deleteUser(userid);
+    if (error) {
+      throw new Error(error.message);
+    }
     res.status(200).json({ message: "success" });
   } catch (err) {
     if (!res.headersSent) {

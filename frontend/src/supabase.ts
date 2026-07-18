@@ -1,11 +1,10 @@
 import { createClient } from '@supabase/supabase-js'
 
-const supabaseUrl = "https://vhnpyawfzfrcezeljwfm.supabase.co"
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
 
-//const supabaseUrl = process.env.DATABASE_URL
-
-const supabaseAnonKey = "REDACTED"
-const serviceRoleKey = "REDACTED"
+if (!supabaseUrl || !supabaseAnonKey) {
+  throw new Error('Missing VITE_SUPABASE_URL or VITE_SUPABASE_ANON_KEY')
+}
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey)
-export const supabaseServiceRole = createClient(supabaseUrl, serviceRoleKey)

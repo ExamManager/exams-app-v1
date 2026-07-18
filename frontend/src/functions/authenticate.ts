@@ -1,5 +1,4 @@
 import { supabase } from '../supabase'
-import { supabaseServiceRole } from '../supabase'
 import * as templates from '../components/email/emailTemplates.js'
 
 export default {
@@ -323,7 +322,7 @@ export default {
       return 
     },
     async updateUserAuth(userid: string, update: object) {
-      const response = await supabaseServiceRole
+      const response = await supabase
         .auth
         .updateUser({...update })
 
@@ -373,14 +372,14 @@ export default {
         console.log('deleteAvatar Response: ', deleteAvatar)
       }
 
-      const response = await supabaseServiceRole
-        .auth
-        .admin
-        .deleteUser(userid)
+      const response = await fetch("http://localhost:3001/auth/deleteuser", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ userid })
+      })
 
-      console.log('response: ', response)
-
-      console.log(response)
       this.checkSession()
 
       localStorage.clear()
