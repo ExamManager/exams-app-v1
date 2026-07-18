@@ -339,6 +339,10 @@ app.get("/", (req, res) => {
   res.send("It somehow works well!");
 });
 
-app.listen(port, () => {
-  console.log("running on " + port);
-});
+export default app;
+
+if (!process.env.VERCEL) {
+  app.listen(port, () => {
+    console.log("running on " + port);
+  });
+}
