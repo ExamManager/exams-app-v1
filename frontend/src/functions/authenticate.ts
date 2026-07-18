@@ -372,7 +372,10 @@ export default {
         console.log('deleteAvatar Response: ', deleteAvatar)
       }
 
-      const response = await fetch("http://localhost:3001/auth/deleteuser", {
+      const apiBase =
+        import.meta.env.VITE_API_URL ||
+        (import.meta.env.DEV ? "http://localhost:3001" : "");
+      const response = await fetch(`${apiBase}/auth/deleteuser`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -414,7 +417,10 @@ export default {
       return response;
     },
     async sendEmail(userid: string, to: any, from: string, plain: string, html: string, subject: string) {
-      const response = await fetch("http://localhost:3001/email/accountverified", {
+      const apiBase =
+        import.meta.env.VITE_API_URL ||
+        (import.meta.env.DEV ? "http://localhost:3001" : "");
+      const response = await fetch(`${apiBase}/email/accountverified`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"

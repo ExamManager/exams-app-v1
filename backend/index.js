@@ -15,7 +15,7 @@ const client = new MessageClient({
 const app = express();
 app.use(cors());
 const stripe = new Stripe(process.env.VITE_STRIPE_SECRET_KEY);
-const port = 3001;
+const port = process.env.PORT || 3001;
 
 app.use(express.json());
 
