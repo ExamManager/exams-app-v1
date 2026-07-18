@@ -19,6 +19,15 @@ frontend/   Vue 3 client
 backend/    Express API (Stripe, email, Supabase)
 ```
 
+## Deploy (Vercel Services)
+
+This repo is set up as a multi-service Vercel project (`vercel.json`):
+
+- `frontend` — Vite / Vue at `/`
+- `backend` — Express at `/api/*`
+
+Production defaults `VITE_API_URL` to `/api` (rewritten to the Express service). Optionally set it explicitly on the frontend service. Backend secrets belong on the backend service only.
+
 ## Local development
 
 ```bash
@@ -28,7 +37,8 @@ cd backend && npm install && npm run serve
 
 # Frontend (separate terminal)
 cd frontend
-# set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY in frontend/.env
+cp .env.example .env
+# set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY
 npm install && npm run dev
 ```
 

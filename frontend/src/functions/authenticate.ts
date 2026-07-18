@@ -374,7 +374,7 @@ export default {
 
       const apiBase =
         import.meta.env.VITE_API_URL ||
-        (import.meta.env.DEV ? "http://localhost:3001" : "");
+        (import.meta.env.DEV ? "http://localhost:3001" : "/api");
       const response = await fetch(`${apiBase}/auth/deleteuser`, {
         method: "POST",
         headers: {
@@ -409,8 +409,12 @@ export default {
       return response.data;
     },
     async sendPasswordResetEmail(email: string) {
+      const origin =
+        typeof window !== "undefined"
+          ? window.location.origin
+          : "http://localhost:6969";
       const response = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: 'http://localhost:6969/setnewpassword',
+        redirectTo: `${origin}/setnewpassword`,
       })
 
       console.log(response)
@@ -419,7 +423,7 @@ export default {
     async sendEmail(userid: string, to: any, from: string, plain: string, html: string, subject: string) {
       const apiBase =
         import.meta.env.VITE_API_URL ||
-        (import.meta.env.DEV ? "http://localhost:3001" : "");
+        (import.meta.env.DEV ? "http://localhost:3001" : "/api");
       const response = await fetch(`${apiBase}/email/accountverified`, {
         method: "POST",
         headers: {

@@ -9,16 +9,28 @@ import { supabase } from "./supabaseClient.js";
 dotenv.config();
 
 const client = new MessageClient({
-  username: process.env.MESSAGE_CLIENT_USERNAME,
-  apiKey: process.env.MESSAGE_CLIENT_API_KEY,
+  username: process.env.MESSAGE_CLIENT_USERNAME || "unused",
+  apiKey: process.env.MESSAGE_CLIENT_API_KEY || "unused",
 });
 const app = express();
 app.use(cors());
-const stripe = new Stripe(process.env.VITE_STRIPE_SECRET_KEY);
+// Placeholder keeps the service booting when secrets are not set yet.
+const stripe = new Stripe(
+  process.env.VITE_STRIPE_SECRET_KEY ||
+    process.env.STRIPE_SECRET_KEY ||
+    "sk_test_placeholder"
+);
 const port = process.env.PORT || 3001;
 
 app.use(express.json());
 
+// Vercel Services forwards /api/* with the prefix intact — strip for existing routes.
+app.use((req, _res, next) => {
+  if (req.url === "/api" || req.url.startsWith("/api/")) {
+    req.url = req.url.slice(4) || "/";
+  }
+  next();
+});
 
 app.post("/email/accountverified", async (req, res) => {
   try {

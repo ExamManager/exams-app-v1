@@ -5,6 +5,7 @@
   "description": "ExamManager v1 API",
   "main": "index.js",
   "scripts": {
+    "start": "node index.js",
     "serve": "nodemon index.js"
   },
   "author": "ExamManager",
