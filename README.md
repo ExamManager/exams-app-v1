@@ -1,29 +1,64 @@
 # ExamManager v1
 
-Vue exam timer app (ExamManager / ExamTimer).
+Vue 3 exam timer webapp — create timed exams, run the classroom timer, and manage accounts. Express backend with Supabase and Stripe.
 
-## Related
+This is the earliest ExamManager generation. Prefer [exams-app-v3](https://github.com/ExamManager/exams-app-v3) for the latest architecture.
 
-- [exams-landing](https://github.com/ExamManager/exams-landing)
-- [exams-app-v2](https://github.com/ExamManager/exams-app-v2)
-- [exams-app-v3](https://github.com/ExamManager/exams-app-v3)
+## Stack
+
+- Vue 3, Vite, TypeScript, Tailwind CSS (frontend)
+- Express (backend)
+- Supabase Auth / database
+- Stripe subscriptions
+- Yarn / npm
 
 ## Structure
 
-- `frontend/` — Vue 3 + Vite + Tailwind client
-- `backend/` — Express API (Stripe, email, Supabase)
+```text
+frontend/   Vue 3 client
+backend/    Express API (Stripe, email, Supabase)
+```
 
-## Setup
-
-1. Copy `backend/.env.example` to `backend/.env` and fill in values.
-2. Add frontend env vars (e.g. `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`) as needed.
-3. Install and run:
+## Local development
 
 ```bash
+# Backend
+cp backend/.env.example backend/.env
 cd backend && npm install && npm run serve
-cd frontend && npm install && npm run dev
+
+# Frontend (separate terminal)
+cd frontend
+# set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY in frontend/.env
+npm install && npm run dev
 ```
+
+## Environment
+
+See `backend/.env.example` for Stripe, Supabase, and MessageClient variables. Frontend needs at least:
+
+| Variable | Description |
+| --- | --- |
+| `VITE_SUPABASE_URL` | Supabase project URL |
+| `VITE_SUPABASE_ANON_KEY` | Supabase anon (public) key |
+
+Never put a Supabase **service role** key in the frontend.
+
+## Commands
+
+| Location | Command | Purpose |
+| --- | --- | --- |
+| `backend/` | `npm run serve` | API server |
+| `frontend/` | `npm run dev` | Vite dev server |
+| `frontend/` | `npm run build` | Production build |
+
+## Related repositories
+
+| Repo | Role |
+| --- | --- |
+| [exams-landing](https://github.com/ExamManager/exams-landing) | Waitlist / marketing landing |
+| [exams-app-v2](https://github.com/ExamManager/exams-app-v2) | Next.js + Prisma exam manager |
+| [exams-app-v3](https://github.com/ExamManager/exams-app-v3) | T3 / Drizzle SaaS rewrite |
 
 ## License
 
-MIT
+MIT — see [LICENSE](./LICENSE).
