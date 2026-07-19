@@ -38,3 +38,6 @@ todo.md
 coverage/
 .cache/
 *.tsbuildinfo
+
+.vercel
+.env.local
