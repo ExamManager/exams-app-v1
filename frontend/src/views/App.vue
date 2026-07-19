@@ -3,6 +3,7 @@ import { Popover, PopoverButton, PopoverGroup, PopoverPanel } from "@headlessui/
 import { nextTick, toRaw } from "vue";
 import authenticate from "../functions/authenticate";
 import stripe from "../functions/stripe";
+import DeprecationBanner from "../components/DeprecationBanner.vue";
 import {
   BookmarkSquareIcon,
   CursorArrowRaysIcon,
@@ -21,6 +22,7 @@ import * as SolidIcons from "@heroicons/vue/20/solid";
 export default {
   mixins: [authenticate, stripe],
   components: {
+    DeprecationBanner,
     BookmarkSquareIcon,
     CursorArrowRaysIcon,
     LifebuoyIcon,
@@ -273,6 +275,8 @@ export default {
 </script>
 
 <template>
+  <div>
+    <DeprecationBanner class="sticky top-0 z-50" />
   <transition
     enter-active-class="transform ease-in-out duration-700 transition"
     enter-from-class="opacity-0 "
@@ -680,4 +684,5 @@ export default {
       
     </router-view>
   </main>
+  </div>
 </template>
