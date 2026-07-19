@@ -327,7 +327,7 @@ const growthFeatures = [
                 class="h-full w-full object-cover" />
             </div>
             <div class="relative lg:col-span-1">
-              <img class="h-16 w-auto" src="https://i.vgy.me/a2PZmc.png" alt="" />
+              <img class="h-16 w-auto" src="/logo.png" alt="" />
               <blockquote class="mt-6 text-white">
                 <p class="text-xl font-medium sm:text-2xl">This app has completely transformed how we
                   interact

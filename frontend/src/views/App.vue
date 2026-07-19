@@ -276,7 +276,7 @@ export default {
 
 <template>
   <div>
-    <DeprecationBanner class="sticky top-0 z-50" />
+    <DeprecationBanner />
   <transition
     enter-active-class="transform ease-in-out duration-700 transition"
     enter-from-class="opacity-0 "
@@ -291,7 +291,7 @@ export default {
             <a @click="this.$router.push('/')" class="flex items-center">
               <img
                 class="h-10 justify-start pl-2 sm:h-8 pr-3"
-                src="https://i.vgy.me/HGoEMr.png"
+                src="/logo.png"
                 alt="Workflow"
               />
               <div class="text-4xl font-bold justify-start">Online Exam Timer</div>

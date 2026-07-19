@@ -260,24 +260,34 @@ export default {
                   Easy to use, secure and reliable exam management software for schools.
                 </p>
               </div>
-              <div v-if="!loggedin" class="mt-12 sm:flex sm:w-full sm:max-w-lg">
-                <div class="min-w-0 flex-1">
-                  <label class="sr-only">Email address</label>
-                  <input
-                    v-model="this.email"
-                    type="email"
-                    class="block w-full rounded-md border border-gray-300 px-5 py-3 text-base text-gray-900 placeholder-gray-500 shadow-sm focus:border-orange-500 focus:ring-orange-500"
-                    placeholder="Enter your email"
-                  />
+              <div v-if="!loggedin" class="mt-12 sm:w-full sm:max-w-lg">
+                <div
+                  role="status"
+                  class="mb-3 flex items-center gap-2 rounded-md border border-amber-500/30 bg-amber-500/10 px-3 py-2 text-xs text-amber-950"
+                >
+                  <span>Login is currently unavailable.</span>
                 </div>
-                <div class="mt-4 sm:mt-0 sm:ml-3">
-                  <button
-                    @click="this.$router.push(`/login?${this.email}`)"
-                    class="block w-full rounded-md border border-transparent bg-orange-500 px-5 py-3 text-base font-medium text-white shadow hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 sm:px-10"
-                  >
-                    Sign Up
-                  </button>
-                </div>
+                <fieldset disabled class="sm:flex sm:w-full">
+                  <div class="min-w-0 flex-1">
+                    <label class="sr-only">Email address</label>
+                    <input
+                      type="email"
+                      readonly
+                      value=""
+                      class="block w-full rounded-md border border-gray-300 px-5 py-3 text-base text-gray-900 placeholder-gray-500 opacity-60 shadow-sm"
+                      placeholder="Enter your email"
+                    />
+                  </div>
+                  <div class="mt-4 sm:mt-0 sm:ml-3">
+                    <button
+                      type="button"
+                      disabled
+                      class="block w-full rounded-md border border-transparent bg-orange-500 px-5 py-3 text-base font-medium text-white opacity-60 shadow sm:px-10"
+                    >
+                      Sign Up
+                    </button>
+                  </div>
+                </fieldset>
               </div>
               <div class="mt-6">
                 <div class="inline-flex items-center divide-x divide-gray-300">
@@ -353,7 +363,7 @@ export default {
                 <img
                   v-if="show6"
                   class="w-full rounded-md shadow-xl ring-1 ring-black ring-opacity-5 lg:h-full lg:w-auto lg:max-w-none"
-                  src="https://i.vgy.me/6HTgKc.png"
+                  src="/empty.png"
                   alt=""
                 />
               </transition>
@@ -486,7 +496,7 @@ export default {
                 v-if="show5"
                 class="relative mx-auto shadow-lg rounded-xl"
                 width="490"
-                src="https://i.vgy.me/t1TpuG.png"
+                src="/empty.png"
                 alt=""
               />
             </transition>

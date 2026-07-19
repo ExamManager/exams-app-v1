@@ -164,7 +164,7 @@ export default (await import("vue")).defineComponent({
     <div class="sm:mx-auto sm:w-full sm:max-w-md">
       <img
         class="mx-auto h-12 w-auto"
-        src="https://i.vgy.me/HGoEMr.png"
+        src="/logo.png"
         alt="Workflow"
         @click="showNotification('simple', 'test')"
       />
