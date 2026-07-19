@@ -7,63 +7,46 @@ const router = createRouter({
   routes: [
     {
       path: '/',
-      publicPath: '/',
       component: () => import('./views/Home.vue'),
     },
     {
       path: '/free',
-      publicPath: '/free',
       component: () => import('./views/free/Home.vue'),
     },
     {
       path: '/demo',
-      publicPath: '/demo',
       component: () => import('./views/premium/Home.vue'),
     },
     {
       path: '/demo/studentview',
-      publicPath: '/demo/studentview',
       component: () => import('./views/premium/Fullscreen.vue'),
     },
     {
       path: '/pricing',
-      publicPath: '/pricing',
       component: () => import('./views/Pricing.vue'),
     },
     {
       path: '/privacy',
-      publicPath: '/privacy',
       component: () => import('./views/PrivacyPolicy.vue'),
     },
     {
-      path: '/support', 
-      publicPath: '/support',
+      path: '/support',
       component: () => import('./views/support/HelpCenter.vue'),
     },
     {
       path: '/support/guides',
-      publicPath: '/support/guides',
       component: () => import('./views/support/Guides.vue'),
     },
     {
       path: '/docs',
-      publicPath: '/docs',
       component: () => import('./views/documentation/Home.vue'),
-      
-    },
-    {
-      path: '/testing',
-      publicPath: '/testing',
-      component: () => import('./views/new-version/Home.vue'),
     },
     {
       path: '/login',
-      publicPath: '/login',
       component: () => import('./views/auth/SignIn.vue'),
-      beforeEnter: async (to, from, next) => {
+      beforeEnter: async (_to, _from, next) => {
         const isAuthenticated = await authenticate.methods.checkOnRoute();
         if (isAuthenticated === false) {
-          // do nothing
           next()
         } else {
           next('/account')
@@ -71,19 +54,11 @@ const router = createRouter({
       }
     },
     {
-      path: '/:pathMatch(.*)*',
-      publicPath: '/:pathMatch(.*)*',
-      component: () => import('./views/404.vue'),
-    },
-    {
       path: '/account',
-      publicPath: '/account',
       component: () => import('./views/auth/Account.vue'),
-      // check if user is authenticated
-      beforeEnter: async (to, from, next) => {
+      beforeEnter: async (_to, _from, next) => {
         const isAuthenticated = await authenticate.methods.checkOnRoute();
         if (isAuthenticated != false) {
-          // do nothing
           next()
         } else {
           next('/login')
@@ -92,11 +67,9 @@ const router = createRouter({
     },
     {
       path: '/setup',
-      publicPath: '/setup',
       component: () => import('./views/auth/AccountSetup.vue'),
-      beforeEnter: async (to, from, next) => {
+      beforeEnter: async (_to, _from, next) => {
         const isAuthenticated = await authenticate.methods.checkOnRoute();
-        // returns fals if user is not authenticated and returns the user id if user is authenticated
         if (isAuthenticated != false) {
           next()
         } else {
@@ -106,65 +79,54 @@ const router = createRouter({
     },
     {
       path: '/reset',
-      publicPath: '/reset',
-      component: () => import ('./views/auth/ResetPassword.vue')
+      component: () => import('./views/auth/ResetPassword.vue')
     },
     {
       path: '/setnewpassword',
-      publicPath: '/setnewpassword', 
       component: () => import('./views/auth/SetNewPassword.vue'),
     },
     {
-      path: '/passwordResetTemplate',
-      publicPath: '/emailTemplate',
-      component: () => import('./components/email/passwordResetEmail.vue'),
-    },
-    {
-      path: '/inviteNewUserTemplate',
-      publicPath: '/inviteNewUserTemplate',
-    component: () => import('./components/email/inviteNewUser.vue'),
-    },
-    {
-      path: '/accountDeletedTemplate',
-      publicPath: '/accountDeletedTemplate',
-      component: () => import('./components/email/accountDeleted.vue'),
-    },
-    {
-      path: '/accountCreatedTemplate',
-      publicPath: '/accountCreatedTemplate',
-      component: () => import('./components/email/accountCreated.vue'),
-    },
-    {
-      path: '/accountEditedTemplate',
-      publicPath: '/accountEditedTemplate',
-      component: () => import('./components/email/accountEdited.vue'),
-    },
-    {
-      path: '/passwordChangedTemplate',
-      publicPath: '/passwordChangedTemplate',
-      component: () => import('./components/email/passwordChanged.vue'),
-    },
-    {
-      path: '/newLoginTemplate',
-      publicPath: '/newLoginTemplate',
-      component: () => import('./components/email/newLogin.vue'),
-    },
-    {
       path: '/dashboard',
-      publicPath: '/dashboard',
       component: () => import('./views/dashboard/dashboard.vue'),
     },
     {
       path: '/dashboard/planner',
-      publicPath: '/dashboard/planner',
       component: () => import('./views/dashboard/planner.vue'),
     },
+    // Catch-all must be last so named routes above are reachable
+    {
+      path: '/:pathMatch(.*)*',
+      component: () => import('./views/404.vue'),
+    },
   ],
-  scrollBehavior(to, from, savedPosition) {
+  scrollBehavior() {
     return { top: 0 };
   },
 })
 
+const SITE_NAME = 'ExamManager V1'
 
+const routeTitles: Record<string, string> = {
+  '/': SITE_NAME,
+  '/free': `Free | ${SITE_NAME}`,
+  '/demo': `Demo | ${SITE_NAME}`,
+  '/demo/studentview': `Student View | ${SITE_NAME}`,
+  '/pricing': `Pricing | ${SITE_NAME}`,
+  '/privacy': `Privacy | ${SITE_NAME}`,
+  '/support': `Support | ${SITE_NAME}`,
+  '/support/guides': `Guides | ${SITE_NAME}`,
+  '/docs': `Docs | ${SITE_NAME}`,
+  '/login': `Sign In | ${SITE_NAME}`,
+  '/account': `Account | ${SITE_NAME}`,
+  '/setup': `Setup | ${SITE_NAME}`,
+  '/reset': `Reset Password | ${SITE_NAME}`,
+  '/setnewpassword': `Set New Password | ${SITE_NAME}`,
+  '/dashboard': `Dashboard | ${SITE_NAME}`,
+  '/dashboard/planner': `Planner | ${SITE_NAME}`,
+}
+
+router.afterEach((to) => {
+  document.title = routeTitles[to.path] ?? SITE_NAME
+})
 
 export default router

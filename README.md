@@ -1,8 +1,14 @@
-# ExamManager v1
+# ExamManager v1 (deprecated portfolio demo)
 
 Vue 3 exam timer webapp — create timed exams, run the classroom timer, and manage accounts. Express backend with Supabase and Stripe.
 
-This is the earliest ExamManager generation. Prefer [exams-app-v3](https://github.com/ExamManager/exams-app-v3) for the latest architecture.
+**Status:** Deprecated early generation, kept as a public portfolio showcase. Prefer [exams-app-v3](https://github.com/ExamManager/exams-app-v3) for the latest architecture.
+
+## Showcase notes
+
+- **Public pages work** (`/`, `/pricing`, `/privacy`, `/support`, `/docs`, `/demo`, `/free`, `/login`, etc.).
+- **Auth / signup are disabled** for this deploy — login UI renders but does not authenticate.
+- SPA deep links are handled by root `vercel.json` (static `frontend/dist` + rewrite to `index.html`).
 
 ## Stack
 
@@ -19,14 +25,11 @@ frontend/   Vue 3 client
 backend/    Express API (Stripe, email, Supabase)
 ```
 
-## Deploy (Vercel Services)
+## Deploy (Vercel)
 
-This repo is set up as a multi-service Vercel project (`vercel.json`):
+Production is a **static Vite SPA**: `vercel.json` builds `frontend/` into `frontend/dist` and rewrites all routes to `index.html` so paths like `/pricing` work.
 
-- `frontend` — Vite / Vue at `/`
-- `backend` — Express at `/api/*`
-
-Production defaults `VITE_API_URL` to `/api` (rewritten to the Express service). Optionally set it explicitly on the frontend service. Backend secrets belong on the backend service only.
+The Express `backend/` stays in-repo for local use. Auth and billing are disabled for this public portfolio showcase — backend secrets are not required on Vercel.
 
 ## Local development
 
@@ -38,7 +41,7 @@ cd backend && npm install && npm run serve
 # Frontend (separate terminal)
 cd frontend
 cp .env.example .env
-# set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY
+# set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY (optional for public pages)
 npm install && npm run dev
 ```
 
@@ -48,8 +51,8 @@ See `backend/.env.example` for Stripe, Supabase, and MessageClient variables. Fr
 
 | Variable | Description |
 | --- | --- |
-| `VITE_SUPABASE_URL` | Supabase project URL |
-| `VITE_SUPABASE_ANON_KEY` | Supabase anon (public) key |
+| `VITE_SUPABASE_URL` | Supabase project URL (optional for public pages) |
+| `VITE_SUPABASE_ANON_KEY` | Supabase anon (public) key (optional for public pages) |
 
 Never put a Supabase **service role** key in the frontend.
 

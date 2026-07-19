@@ -33,11 +33,6 @@ export default (await import("vue")).defineComponent({
   },
   mounted() {
     this.resetToken = this.$route.query.token?.toString() || "";
-    window.addEventListener('keyup',  (e) => {
-      if (e.key === 'Enter') {
-        this.updatePassword()
-      }
-    })
   },
   watch: {
     password1: {
@@ -81,79 +76,7 @@ export default (await import("vue")).defineComponent({
     },
     addressPassword() {},
     async updatePassword() {
-      const currentPassword = this.password1;
-      const currentPassword2 = this.password2;
-
-      if (currentPassword.length < 8) {
-        this.notification(
-          "simple",
-          "Invalid password",
-          "Your password must be at least 8 characters long",
-          "XCircleIcon",
-          "red-400",
-          3000
-        );
-        this.password1 = "";
-        this.password2 = "";
-      }
-      else if (this.showNext === 0) {
-        this.showNext = 1;
-      }
-      else if (currentPassword != currentPassword2) {
-        this.notification(
-          "simple",
-          "Passwords don't match",
-          "Your passwords don't match. Check them and resubmit.",
-          "XCircleIcon",
-          "red-400",
-          3000
-        );
-        this.password2 = "";
-      }
-      //JUST MAKE SURE THAT EVERYTHING IS CORRECT
-      else if (currentPassword.length > 7 && currentPassword === currentPassword2 && this.showNext === 1) {
-        this.notification(
-          "loading",
-          "Upadting password...",
-          "Please wait while we update your password",
-          "ArrowPathIcon",
-          "gray-700",
-          9999999
-        )
-        
-        const response = await this.updateUserAuth('none', { password: currentPassword })
-        console.log(response)
-
-        if (response.error == null) {
-          this.notification(
-            "simple",
-            "Password changed succesfully",
-            "You will now be redirected to your account page.",
-            "CheckIcon",
-            "green-400",
-            3000
-          )
-
-          setTimeout(() => {
-            window.location.href="/account"
-          }, 1000);
-        }
-        else {
-          this.notification(
-            "simple",
-            "Error",
-            "An error occured on our end. Try again later.",
-            "XCircleIcon",
-            "red-400",
-            3000
-          )
-        }
-      }
-
-      // if (this.passwordLength && this.passwordsMatch) {
-      //   const response = await this.updateUserAuth('none', { password: currentPassword })
-      //   console.log(response)
-      // }
+      return;
     },
   },
 });
@@ -175,90 +98,48 @@ export default (await import("vue")).defineComponent({
 
     <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
       <div class="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
-        <div class="space-y-6">
-          <div>
-            <!-- <label
-              v-if="!passwordLength || !passwordsMatch"
-              class="block text-sm font-medium text-gray-700"
-            >
-              {{
-                passwordLength
-                  ? showNext == 1
-                    ? passwordsMatch
-                      ? ""
-                      : "Passwords don't match"
-                    : ""
-                  : "Password must be at least 8 characters long"
-              }}
-            </label> -->
-            <div class="mt-1 rounded-md shadow-sm">
-              <transition
-                enter-active-class="transition ease-out duration-400"
-                enter-from-class="opacity-0 translate-y-1"
-                enter-to-class="opacity-100 translate-y-0"
-                leave-active-class="transition ease-in duration-1000"
-                leave-from-class="opacity-100 translate-y-0"
-                leave-to-class="opacity-0 translate-y-10"
+        <div
+          role="status"
+          class="mb-4 flex items-center gap-2 rounded-md border border-amber-500/30 bg-amber-500/10 px-3 py-2 text-xs text-amber-950"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            class="h-3.5 w-3.5 shrink-0 opacity-80"
+            aria-hidden="true"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h18.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z"
+            />
+          </svg>
+          <p>Login is currently unavailable.</p>
+        </div>
+        <fieldset disabled class="min-w-0 space-y-6">
+          <div class="mt-1 rounded-md shadow-sm">
+            <div class="flex z-10 focus:z-20">
+              <input
+                type="password"
+                name="password1"
+                readonly
+                value=""
+                class="block w-full min-w-0 flex-1 rounded-l-md border-gray-300 px-3 py-2 opacity-60 sm:text-sm"
+                placeholder="Enter your new password"
+              />
+              <button
+                type="button"
+                disabled
+                class="items-center rounded-r-md border border-l-0 border-gray-300 bg-gray-50 px-3 text-gray-500 opacity-60 sm:text-sm"
               >
-                <div class="flex z-10 focus:z-20">
-                  <input
-                    type="password"
-                    v-model="password1"
-                    name="password1"
-                    :class="[
-                      ' block w-full min-w-0 flex-1  border-gray-300 px-3 py-2 sm:text-sm focus:border-gray-300 focus:ring-0',
-                      showNext == 1
-                        ? 'rounded-md rounded-b-none rounded-t-md'
-                        : 'rounded-l-md',
-                    ]"
-                    placeholder="Enter your new password"
-                  />
-                  <button
-                    v-if="showNext == 0"
-                    class="items-center border border-l-0 rounded-r-md border-gray-300 bg-gray-50 px-3 text-gray-500 sm:text-sm"
-                    @click="updatePassword()"
-                  >
-                    <ChevronDoubleRightIcon class="z-40 h-6 w-6" aria-hidden="true" />
-                  </button>
-                </div>
-              </transition>
-              <transition
-                enter-active-class="transition ease-out duration-700"
-                enter-from-class="opacity-0 "
-                enter-to-class="opacity-100 "
-                leave-active-class="transition ease-in duration-500"
-                leave-from-class="opacity-100"
-                leave-to-class="opacity-0 "
-              >
-                <div v-if="showNext == 1" class="flex z-10 focus:z-20">
-                  <!-- SignIn -->
-                  <input
-                    type="password"
-                    v-model="password2"
-                    name="password2"
-                    class="focus:border-gray-300 focus:ring-0 block w-full min-w-0 flex-1 rounded-none border-gray-300 px-3 py-2 sm:text-sm rounded-t-none rounded-l-md"
-                    placeholder="Confirm your new password"
-                  />
-                  <button
-                    @click="updatePassword()"
-                    class="items-center border border-l-0 border-gray-300 bg-gray-50 px-3 text-gray-500 sm:text-sm rounded-b-md rounded-r-md rounded-t-none rounded-l-none"
-                  >
-                    <ChevronDoubleRightIcon class="z-40 h-6 w-6" aria-hidden="true" />
-                  </button>
-                </div>
-              </transition>
-              <transition
-                enter-active-class="transition ease-out duration-700"
-                enter-from-class="opacity-0 "
-                enter-to-class="opacity-100 "
-                leave-active-class="transition ease-in duration-500"
-                leave-from-class="opacity-100"
-                leave-to-class="opacity-0 "
-              >
-              </transition>
+                <ChevronDoubleRightIcon class="z-40 h-6 w-6" aria-hidden="true" />
+              </button>
             </div>
           </div>
-        </div>
+        </fieldset>
       </div>
     </div>
   </div>

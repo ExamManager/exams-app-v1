@@ -299,7 +299,7 @@ export default {
                     <StarIcon class="h-5 w-5 text-yellow-400" aria-hidden="true" />
                   </div>
                   <div class="min-w-0 flex-1 py-1 pl-5 text-sm text-gray-500 sm:py-3">
-                    <span class="font-medium text-gray-900">Rated 4.8 Starts</span> by
+                    <span class="font-medium text-gray-900">Rated 4.8 Stars</span> by
                     over <span class="font-medium text-orange-600">200 Schools</span>
                   </div>
                 </div>
@@ -363,8 +363,8 @@ export default {
                 <img
                   v-if="show6"
                   class="w-full rounded-md shadow-xl ring-1 ring-black ring-opacity-5 lg:h-full lg:w-auto lg:max-w-none"
-                  src="/empty.png"
-                  alt=""
+                  src="/hero.png"
+                  alt="ExamTimer exam dashboard"
                 />
               </transition>
             </div>
@@ -496,8 +496,8 @@ export default {
                 v-if="show5"
                 class="relative mx-auto shadow-lg rounded-xl"
                 width="490"
-                src="/empty.png"
-                alt=""
+                src="/feature-example-1.png"
+                alt="Create a new exam"
               />
             </transition>
           </div>
@@ -876,47 +876,7 @@ export default {
       </div>
     </div>
 
-    <div class="bg-white">
-      <div class="mx-auto max-w-7xl py-12 px-4 sm:px-6 lg:px-8">
-        <div class="grid grid-cols-2 gap-8 md:grid-cols-6 lg:grid-cols-5">
-          <div class="col-span-1 flex justify-center md:col-span-2 lg:col-span-1">
-            <img
-              class="h-12"
-              src="/empty.png"
-              alt="Tuple"
-            />
-          </div>
-          <div class="col-span-1 flex justify-center md:col-span-2 lg:col-span-1">
-            <img
-              class="h-12"
-              src="/empty.png"
-              alt="Mirage"
-            />
-          </div>
-          <div class="col-span-1 flex justify-center md:col-span-2 lg:col-span-1">
-            <img
-              class="h-12"
-              src="/empty.png"
-              alt="StaticKit"
-            />
-          </div>
-          <div class="col-span-1 flex justify-center md:col-span-3 lg:col-span-1">
-            <img
-              class="h-12"
-              src="/empty.png"
-              alt="Transistor"
-            />
-          </div>
-          <div class="col-span-2 flex justify-center md:col-span-3 lg:col-span-1">
-            <img
-              class="h-12"
-              src="/empty.png"
-              alt="Workcation"
-            />
-          </div>
-        </div>
-      </div>
-    </div>
+    <!-- Logo strip removed — was placeholder empty.png social proof -->
 
    <div class="bg-white">
       <div class="pt-12 sm:pt-16 lg:pt-20">

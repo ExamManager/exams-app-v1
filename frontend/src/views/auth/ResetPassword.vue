@@ -1,5 +1,5 @@
 <script lang="ts">
-import { HomeIcon, ChevronRightIcon } from '@heroicons/vue/20/solid'
+import { HomeIcon, ChevronDoubleRightIcon, ChevronRightIcon } from '@heroicons/vue/20/solid'
 import authenticate from '../../functions/authenticate';
 import Notification from '../../components/Notifications.vue'
 
@@ -8,15 +8,11 @@ export default {
   name: "requestPwdReset",
   components: {
     HomeIcon,
+    ChevronDoubleRightIcon,
     ChevronRightIcon,
   },
   mounted() {
     this.resetToken = this.$route.query.token?.toString() || "";
-    window.addEventListener('keyup',  (e) => {
-      if (e.key === 'Enter') {
-        this.pwdReset()
-      }
-    })
   },
   data() {
     return {
@@ -88,74 +84,7 @@ export default {
       return response
     },
     async pwdReset() {
-      if (!this.validEmail || this.email == "") {
-        this.notification(
-          "simple",
-          "Invalid email",
-          "Please enter a valid email and try again",
-          "XCircleIcon",
-          "red-400",
-          3000
-        )
-
-        this.email = ""
-        
-        console.log('invalid email')
-        return false
-      }
-
-
-      const currentEmail = this.email
-      const data = await this.checkUserExists({col: 'email', val: currentEmail})
-
-      if (data.length === 1) {
-        if (data[0].provider != 'email') {
-          this.providerIsEmail = false
-          this.notification(
-            "simple", 
-            "Invalid email", 
-            "Your account is linked to a third party provider. Use that account to log in.",
-            "XCircleIcon",
-            "red-400",
-            3000
-            )
-          
-          this.email = ""
-        }
-        else {
-          this.notification(
-            "loading",
-            "Upadting password...",
-            "Please wait while we update your password",
-            "ArrowPathIcon",
-            "gray-700",
-            9999999
-          )
-          const response = await this.sendPasswordResetEmail(currentEmail)
-          console.log(response)
-          this.success = true
-          this.notification(
-            "simple",
-            "Success",
-            "We sent you a link to reset your password.",
-            "CheckIcon",
-            "green-400",
-            3000
-          )
-        }
-      } else {
-        this.emailExists = false
-        this.notification(
-          "simple",
-          "Invalid email",
-          "This email is not linked to any account.",
-          "XCircleIcon",
-          "red-400",
-          3000
-        )
-
-        this.email = ""
-      }
+      return false;
     },
   },
 };
@@ -173,23 +102,59 @@ export default {
 
     <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
       <div class="bg-white pt-8 px-4 shadow sm:rounded-lg sm:px-10">
-        <div class="space-y-6">
+        <div
+          role="status"
+          class="mb-4 flex items-center gap-2 rounded-md border border-amber-500/30 bg-amber-500/10 px-3 py-2 text-xs text-amber-950"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            class="h-3.5 w-3.5 shrink-0 opacity-80"
+            aria-hidden="true"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h18.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z"
+            />
+          </svg>
+          <p>Login is currently unavailable.</p>
+        </div>
+        <fieldset disabled class="min-w-0 space-y-6">
           <div>
-            <div class="mt-1  rounded-md shadow-sm">
+            <div class="mt-1 rounded-md shadow-sm">
               <div class="flex z-10 focus:z-20">
-                <input type="email" name="Email" @change="emailExists = true" v-model="email" placeholder="Enter your email" class="block w-full min-w-0 flex-1 rounded-l-md border-gray-300 px-3 py-2 sm:text-sm focus:border-gray-300 focus:ring-0">
-                <button class="items-center border border-l-0 rounded-r-md border-gray-300 bg-gray-50 px-3 text-gray-500 sm:text-sm" @click="pwdReset()">
-                  <ChevronDoubleRightIcon  class="z-40 h-6 w-6" aria-hidden="true" />
+                <input
+                  type="email"
+                  name="Email"
+                  readonly
+                  value=""
+                  placeholder="Enter your email"
+                  class="block w-full min-w-0 flex-1 rounded-l-md border-gray-300 px-3 py-2 opacity-60 sm:text-sm"
+                />
+                <button
+                  type="button"
+                  disabled
+                  class="items-center border border-l-0 rounded-r-md border-gray-300 bg-gray-50 px-3 text-gray-500 opacity-60 sm:text-sm"
+                >
+                  <ChevronDoubleRightIcon class="z-40 h-6 w-6" aria-hidden="true" />
                 </button>
               </div>
+            </div>
           </div>
-        </div>
+        </fieldset>
       </div>
-      <button @click="$router.push('/login')" class="ml-2 font-medium text-sm mt-4 mb-6 text-orange-600 hover:text-orange-500 h-fit">
+      <button
+        type="button"
+        @click="$router.push('/login')"
+        class="ml-2 mb-6 mt-4 h-fit text-sm font-medium text-orange-600 hover:text-orange-500"
+      >
         Back to login
       </button>
     </div>
-  </div>
   </div>
   <transition
         enter-active-class="transform ease-out duration-300 transition"

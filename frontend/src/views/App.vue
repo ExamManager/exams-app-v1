@@ -90,7 +90,7 @@ export default {
         {
           name: "Exam Timer Premium",
           description: "Time unlimited exams and get access to more features...",
-          href: "/premium",
+          href: "/demo",
           icon: BuildingOffice2Icon,
         },
         {
@@ -175,14 +175,13 @@ export default {
         // on account page
         this.show = false; // hides banner
         this.show2 = 1; // shows minimal navbar
-      } else if (window.location.pathname == "/privacy") {
-        this.show = true; // shows banner
-        this.show2 = 2; // shows full navbar
-      } else if (window.location.pathname == "/support") {
-        this.show = true; // shows banner
-        this.show2 = 2; // shows full navbar
-      } else if (window.location.pathname == "/docs") {
-        this.show = true; // shows banner
+      } else if (
+        window.location.pathname == "/privacy" ||
+        window.location.pathname == "/support" ||
+        window.location.pathname == "/support/guides" ||
+        window.location.pathname == "/docs"
+      ) {
+        this.show = false; // no "Big news" toast
         this.show2 = 2; // shows full navbar
       } else {
         // default
@@ -190,7 +189,7 @@ export default {
         this.show = false; // hides banner
         console.log("default");
       }
-      if (window.location.pathname == "/premium/studentview") {
+      if (window.location.pathname == "/demo/studentview") {
         // Shows enter fullscreen button on studentview page
         this.show3 = true;
         this.show = false;
@@ -294,7 +293,7 @@ export default {
                 src="/logo.png"
                 alt="Workflow"
               />
-              <div class="text-4xl font-bold justify-start">Online Exam Timer</div>
+              <div class="text-4xl font-bold justify-start">ExamManager V1</div>
             </a>
           </div>
           <PopoverGroup as="nav" class="hidden space-x-10 md:flex">
@@ -574,7 +573,7 @@ export default {
         <li class="flex">
           <div class="flex items-center">
             <ChevronRightIcon class="h-10 w-6 flex-shrink-0 text-gray-400" aria-hidden="true" />
-            <a href="/premium" class="mx-4 text-sm font-medium text-gray-500 hover:text-gray-700">Premium</a>
+            <a href="/demo" class="mx-4 text-sm font-medium text-gray-500 hover:text-gray-700">Premium</a>
           </div>
         </li>
       </ol> -->

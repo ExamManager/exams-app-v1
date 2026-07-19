@@ -61,11 +61,22 @@ export default {
       faqs: [
         {
           id: 1,
-          question: "What's the best thing about Switzerland?",
+          question: "Can I subscribe to a plan on this site?",
           answer:
-            "I don't know, but the flag is a big plus. Lorem ipsum dolor sit amet consectetur adipisicing elit. Quas cupiditate laboriosam fugiat.",
+            "No. ExamManager V1 is a deprecated portfolio showcase. Pricing here is illustrative only — signup and billing are disabled.",
         },
-        // More questions...
+        {
+          id: 2,
+          question: "What is the difference between Basic and Professional?",
+          answer:
+            "Basic is aimed at schools under 500 students with planning, timetables, seating, and presets. Professional adds advanced planning and result analysis for schools under 1000 students.",
+        },
+        {
+          id: 3,
+          question: "Where can I try the product?",
+          answer:
+            "Use the free timer at /free or the fuller demo at /demo. For source and related apps, visit the ExamManager organization on GitHub.",
+        },
       ],
       navigation: [
         {
@@ -342,15 +353,13 @@ const growthFeatures = [
             <div class="relative lg:col-span-1">
               <img class="h-16 w-auto" src="/logo.png" alt="" />
               <blockquote class="mt-6 text-white">
-                <p class="text-xl font-medium sm:text-2xl">This app has completely transformed how we
-                  interact
-                  with customers. We've seen record bookings, higher customer satisfaction, and reduced
-                  churn.
+                <p class="text-xl font-medium sm:text-2xl">ExamManager made exam day calmer for our invigilators —
+                  clear timers, fewer spreadsheet surprises, and a room that stays focused when the clock starts.
                 </p>
                 <footer class="mt-6">
                   <p class="flex flex-col font-medium">
-                    <span>Mr Example</span>
-                    <span>CEO, Haileybury</span>
+                    <span>Portfolio testimonial</span>
+                    <span>Illustrative school example</span>
                   </p>
                 </footer>
               </blockquote>

@@ -38,7 +38,7 @@ const links = [
         { 
           title: 'Premium Tier',
           description: "Connect with third-party tools that you're already using.",
-          href: '/premium',
+          href: '/demo',
           icon: BuildingOffice2Icon 
         },
         {

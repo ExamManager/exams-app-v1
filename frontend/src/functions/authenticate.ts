@@ -1,4 +1,4 @@
-import { supabase } from '../supabase'
+import { isSupabaseConfigured, supabase } from '../supabase'
 import * as templates from '../components/email/emailTemplates.js'
 
 export default {
@@ -108,10 +108,16 @@ export default {
       return response;
     },
     async checkOnRoute() { // Important used for before routing to check if user is logged in
-      const response = await supabase.auth.getSession()
-      if (response.data.session != null) {
-        return response.data.session.user.id
-      } else {
+      if (!isSupabaseConfigured) {
+        return false
+      }
+      try {
+        const response = await supabase.auth.getSession()
+        if (response.data.session != null) {
+          return response.data.session.user.id
+        }
+        return false
+      } catch {
         return false
       }
     },

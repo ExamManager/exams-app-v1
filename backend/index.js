@@ -145,24 +145,9 @@ app.post("/stripe/createcustomer", async (req, res) => { // createates custmer i
   }
 });
 
-app.post("/stripe/deletecustomer", async (req, res) => { // deletes customer in stripe | runs on account delete
-  try {
-    const userid = req.body.userid;
-    const { data, error } = await supabase
-      .from("profiles")
-      .select("customerid")
-      .eq("userid", userid);
-    if (error) {
-      throw new Error(error.message);
-    }
-    const customer_id = data[0].customerid;
-    await stripe.customers.del(customer_id);
-    res.status(200).json({ message: "success" });
-  } catch (err) {
-    if (!res.headersSent) {
-      res.status(500).json({ error: err.message }); 
-    } 
-  } 
+// Showcase portfolio deploy: destructive Stripe customer deletion disabled.
+app.post("/stripe/deletecustomer", (_req, res) => {
+  res.status(503).json({ error: "disabled for showcase" });
 });
 
 app.post("/stripe/createpaymentmethod", async (req, res) => { // creates payment method in stripe | runs on adding payment method
@@ -315,23 +300,13 @@ app.post("/stripe/deletepaymentmethod", async (req, res) => { // deletes payment
   }
 });
 
-app.post("/auth/deleteuser", async (req, res) => {
-  try {
-    const userid = req.body.userid;
-    if (!userid) {
-      throw new Error("userid is required");
-    }
-    const { error } = await supabase.auth.admin.deleteUser(userid);
-    if (error) {
-      throw new Error(error.message);
-    }
-    res.status(200).json({ message: "success" });
-  } catch (err) {
-    if (!res.headersSent) {
-      res.status(500).json({ error: err.message });
-    }
-  }
+// Showcase portfolio deploy: destructive auth writes are disabled.
+app.post("/auth/deleteuser", (_req, res) => {
+  res.status(503).json({ error: "disabled for showcase" });
 });
+
+// Other write endpoints (stripe/email) still exist for local/dev; treat as
+// unsafe on a public showcase deploy — prefer unsetting secrets or proxying.
 
 
 
