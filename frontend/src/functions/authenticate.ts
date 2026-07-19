@@ -295,7 +295,7 @@ export default {
       return updateURL
     },
     async resetAvatar(userid: string) {
-      const defaultImgURL =  'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Default_pfp.svg/1200px-Default_pfp.svg.png'
+      const defaultImgURL =  '/empty.png'
       const getAvatar = await supabase
         .from('profiles')
         .select('avatar_filename')

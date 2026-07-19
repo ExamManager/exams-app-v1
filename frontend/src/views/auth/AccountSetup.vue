@@ -69,7 +69,7 @@ export default (await import("vue")).defineComponent({
       savingdata: false,
       showingCustomPlanContact: false,
       uploadData: {},
-      defaultImgURL: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Default_pfp.svg/1200px-Default_pfp.svg.png',
+      defaultImgURL: '/empty.png',
       user: {// stays the same the whole time, to compare values to...
         userid: "",
         username: "",

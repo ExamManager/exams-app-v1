@@ -219,7 +219,7 @@ export default {
       },
       newimg: null,
       hasimg: false,
-      defaultImgURL: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Default_pfp.svg/1200px-Default_pfp.svg.png',
+      defaultImgURL: '/empty.png',
     };
   },
   mounted() {
@@ -309,7 +309,7 @@ export default {
     },
     "editUser.avatarurl": function (val, oldVal) {
       if (val === "") {
-        this.editUser.avatarurl = "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Default_pfp.svg/1200px-Default_pfp.svg.png'::text";
+        this.editUser.avatarurl = "/empty.png'::text";
       }
     },
     // savingData: {
